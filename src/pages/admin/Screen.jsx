@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { supabase, errorMessage } from '../../lib/supabase'
 import { joinUrl, dashboardUrl } from '../../lib/urls'
+import WifiSettings from './Wifi'
 
 const MODES = [
   { id: 'leaderboard', label: '🏆 Tabla general' },
@@ -8,6 +9,7 @@ const MODES = [
   { id: 'codes', label: '🔍 Caza de códigos' },
   { id: 'persona', label: '🕵️ ¿Quién es el personaje?' },
   { id: 'impostor', label: '🃏 El Impostor' },
+  { id: 'gift', label: '🎁 El Regalo Loco' },
   { id: 'final', label: '🏆 Resultados de la noche (final)' },
 ]
 
@@ -49,6 +51,7 @@ export default function Screen({ dashboardMode, frozen }) {
           : <button className="btn" onClick={() => freeze(true)}>🔒 Congelar tabla ahora</button>}
         <p className="small muted">{frozen ? 'Estado: congelada 🔒 (tú, como admin, ves los puntos reales).' : 'Estado: en vivo.'}</p>
       </section>
+      <WifiSettings />
       <section className="card">
         <h3>🔗 Enlaces</h3>
         <p className="small">Dashboard (abrir en la TV): <br /><a href={dashboardUrl()} target="_blank" rel="noreferrer">{dashboardUrl()}</a></p>

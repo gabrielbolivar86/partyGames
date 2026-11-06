@@ -8,6 +8,7 @@ import CostumeAdmin from './admin/Costume'
 import CodesAdmin from './admin/Codes'
 import PersonaAdmin from './admin/Persona'
 import ImpostorAdmin from './admin/Impostor'
+import GiftAdmin from './admin/Gift'
 import Screen from './admin/Screen'
 import Settings from './admin/Settings'
 
@@ -18,6 +19,7 @@ const TABS = [
   { id: 'codes', label: '🔍 Códigos' },
   { id: 'persona', label: '🕵️ Personaje' },
   { id: 'impostor', label: '🃏 Impostor' },
+  { id: 'gift', label: '🎁 Regalo' },
   { id: 'screen', label: '📺 Pantalla' },
   { id: 'settings', label: '🧹 Ajustes' },
 ]
@@ -54,6 +56,7 @@ export default function AdminPanel({ me }) {
       {tab === 'codes' && <CodesAdmin dashboardMode={dashboardMode} />}
       {tab === 'persona' && <PersonaAdmin dashboardMode={dashboardMode} />}
       {tab === 'impostor' && <ImpostorAdmin players={board.rows} dashboardMode={dashboardMode} />}
+      {tab === 'gift' && <GiftAdmin players={board.rows} dashboardMode={dashboardMode} />}
       {tab === 'screen' && <Screen dashboardMode={dashboardMode} frozen={dashboard.data?.frozen} />}
       {tab === 'settings' && <Settings />}
     </main>

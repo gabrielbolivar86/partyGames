@@ -5,6 +5,7 @@
 - **Fase 3:** caza de códigos secretos de 6 caracteres, con hoja para imprimir y tablero en pantalla. Ver [la sección de la fase 3](#fase-3-caza-de-códigos).
 - **Fase 4:** ¿Quién es el personaje?, con rondas de datos curiosos, votación con tiempo y revelación con gráfico. Ver [la sección de la fase 4](#fase-4-quién-es-el-personaje).
 - **Fase 5:** El Impostor, más la tabla congelada y los resultados finales de la noche. Ver [la sección de la fase 5](#fase-5-el-impostor-y-resultados-finales).
+- **Fase 6:** El Regalo Loco, más el QR del wifi en la pantalla. Ver [la sección de la fase 6](#fase-6-el-regalo-loco-y-wifi).
 
 **Stack:** React + Vite · Supabase (base de datos, tiempo real y login anónimo) · Vercel o GitHub Pages. Costo: $0.
 
@@ -163,7 +164,8 @@ El panel de admin también muestra estas URLs en la pestaña **📺 Pantalla**.
 | 🔍 Códigos | Crear e imprimir códigos, empezar o terminar la caza, reglas de puntos (fase 3). |
 | 🕵️ Personaje | Lanzar rondas, revelar, descartar datos y configurar las reglas: tiempo, puntos por adivinar y bonus del dueño (fase 4). |
 | 🃏 Impostor | Elegir jugadores, número de impostores y palabra; abrir votaciones de defensa o eliminación (fase 5). |
-| 📺 Pantalla | Elegir qué muestra el dashboard, 🔒 congelar la tabla, 🏆 resultados finales y enlaces. |
+| 🎁 Regalo | El Regalo Loco: escritura, lectura, votación y revelación (fase 6). |
+| 📺 Pantalla | Elegir qué muestra el dashboard, 🔒 congelar la tabla, 🏆 resultados finales, 📶 wifi y enlaces. |
 | 🧹 Ajustes | **Reiniciar puntos y votaciones**, o **Borrar todo (nueva fiesta)**: elimina a todos menos a los admins y permite renombrar la fiesta. Se confirma escribiendo `BORRAR`. |
 
 ### Cómo correr el concurso en la fiesta
@@ -276,6 +278,34 @@ Al reiniciar desde **🧹 Ajustes**, las rondas se borran pero los datos se cons
 
 ---
 
+## Fase 6: El Regalo Loco y wifi
+
+### Instalar
+1. Supabase → **SQL Editor → New query** → pega todo `supabase/07_fase6_regalo_wifi.sql` → **Run**. No borra nada y se puede correr varias veces.
+2. `git add . && git commit -m "Fase 6: regalo loco y wifi" && git push`
+
+### 📶 QR del wifi en la pantalla (Admin → 📺 Pantalla → 📶 Wifi de la casa)
+- Escribe el **nombre de la red** (exacto, con mayúsculas) y la **contraseña**, y toca **Guardar wifi**. La tabla general muestra un segundo QR para conectarse, debajo del QR de registro.
+- Se guarda en Supabase, **no en GitHub**. Se conserva al reiniciar, así que sirve para próximas fiestas.
+- Ojo: el QR contiene la contraseña, así que quien tenga el enlace de la pantalla podría leerla. Es lo mismo que pegar el QR en la pared.
+- **Pruébalo:** escanea el QR de la pantalla con tu celular y confirma que conecta.
+
+### El Regalo Loco (Admin → 🎁 Regalo)
+1. **Elige jugadores** (mínimo 4; con 10 a 15 la lectura no se hace larga) → **▶︎ Empezar a escribir**. La pantalla cambia sola.
+2. Cada jugador escribe en su celular **3 partes a ciegas**:
+   - 1️⃣ **¿Qué le regalas a X?** (a quien le tocó, como amigo secreto)
+   - 2️⃣ **¿Para qué sirve…?** un regalo que no conoce
+   - 3️⃣ **¿Qué exclama…?** alguien que recibe un regalo que no conoce
+
+   La app reparte para que **cada uno escriba 1 de cada parte** y nunca de su propia frase. La TV muestra el progreso.
+3. **✅ Cerrar escritura:** se arman las frases. Si alguien no escribió su parte, se rellena con algo al azar.
+4. **Lectura:** con ◀︎ ▶︎ pasas los regalos uno por uno en la TV para leerlos en voz alta.
+5. **🗳 Abrir votación:** cada uno marca sus **3 favoritas** (las suyas aparecen bloqueadas). La TV muestra todas las frases numeradas.
+6. **Cerrar votación** y luego **revelar 3.º → 2.º → 1.º**, con cuenta regresiva en la TV.
+7. **Puntos** a **los 3 autores** de cada frase ganadora: 🥇 **10** · 🥈 **6** · 🥉 **4**. Se suman al revelar el 1.º.
+
+---
+
 ## Cómo funciona el tiempo real aquí
 
 ```
@@ -314,6 +344,7 @@ supabase/
   04_fase3_codigos.sql    caza de códigos
   05_fase4_personaje.sql  ¿Quién es el personaje?
   06_fase5_impostor_final.sql  El Impostor, congelar tabla y resultados finales
+  07_fase6_regalo_wifi.sql     El Regalo Loco y wifi
 src/
   lib/supabase.js         cliente de Supabase
   lib/urls.js             URLs de registro y dashboard
@@ -344,6 +375,9 @@ src/
   components/ImpostorGame.jsx   El Impostor (carta, votar, adivinar)
   components/ImpostorBoard.jsx  El Impostor (pantalla)
   components/FinalResults.jsx   resultados de la noche (pantalla)
+  components/GiftGame.jsx       El Regalo Loco (escribir, votar)
+  components/GiftBoard.jsx      El Regalo Loco (pantalla)
+  pages/admin/Gift.jsx, Wifi.jsx
   components/LeaderboardList.jsx
 ```
 

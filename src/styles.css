@@ -481,3 +481,45 @@ select { width: 100%; font: inherit; color: var(--text); background: #0d0a1499; 
 .final-list .pos { width: 2.2em; text-align: center; color: var(--muted); font-weight: 800; }
 .final-list .who { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .final-list .pts { font-weight: 800; color: var(--orange2); min-width: 2.5em; text-align: right; }
+
+/* =====================================================================
+   FASE 6 · Wifi + El Regalo Loco
+   ===================================================================== */
+.wifi-box { margin-top: 3vh; }
+.qr-box.small-qr { padding: 12px; box-shadow: 0 0 40px #9b5cff55; }
+.qr-box.small-qr svg { width: min(13vw, 190px); }
+.wifi-box h3 { justify-content: center; margin-top: 1.5vh; font-size: clamp(1rem, 1.4vw, 1.6rem); }
+.wifi-box p { color: var(--muted); font-size: clamp(.9rem, 1.1vw, 1.2rem); margin: 0; }
+.dash-qr .qr-box svg { width: min(15vw, 230px); }
+
+.live-gift { border-color: #39d98a; box-shadow: 0 0 30px #39d98a33; }
+.gift-progress, .gift-bar { height: 10px; border-radius: 999px; background: #1d1531; overflow: hidden; margin: 6px 0; }
+.gift-progress span, .gift-bar span { display: block; height: 100%; background: var(--green); transition: width .4s; }
+.gift-bar { width: min(900px, 80vw); height: 26px; margin: 2vh 0; }
+.gift-field { display: grid; gap: 4px; margin: 10px 0; }
+.gift-field label { font-weight: 600; font-size: .95rem; }
+.gift-vote { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.gift-opt { width: 100%; text-align: left; display: flex; gap: 10px; align-items: flex-start; padding: 10px; border-radius: 12px; border: 1px solid var(--line); background: #0d0a1488; color: var(--text); font: inherit; font-size: .92rem; cursor: pointer; }
+.gift-opt.active { border-color: #ffcf40; background: #ffcf4014; }
+.gift-opt:disabled { opacity: .45; cursor: not-allowed; }
+.gift-n { min-width: 26px; height: 26px; border-radius: 50%; background: var(--purple); color: #fff; display: inline-grid; place-items: center; font-weight: 800; font-size: .8rem; flex: 0 0 auto; }
+.gift-check { font-size: 1.3rem; color: #ffcf40; }
+.gift-podium-mini { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+.gift-nav { justify-content: space-between; margin: 8px 0; }
+.gift-admin-results { padding-left: 18px; display: grid; gap: 6px; font-size: .9rem; }
+
+.gift-read { padding: 0 6vw; }
+.gift-phrase { font-size: clamp(2rem, 4.2vw, 4.8rem); font-weight: 800; line-height: 1.2; margin: 3vh 0; max-width: 1500px; animation: revealIn .9s cubic-bezier(.2, 1.4, .4, 1) both; }
+.gift-screen { display: flex; flex-direction: column; gap: 2vh; }
+.gift-all { list-style: none; margin: 0; padding: 0; columns: 2 520px; column-gap: 2vw; }
+.gift-all li { break-inside: avoid; display: flex; gap: 1vw; align-items: flex-start; padding: 1vh 1vw; margin-bottom: 1vh; border-radius: 12px; background: #1d1531cc; font-size: clamp(.95rem, 1.25vw, 1.4rem); }
+.gift-results { padding: 0 4vw; }
+.gift-winners { display: grid; gap: 2.5vh; width: min(1400px, 92vw); }
+.gift-win { display: grid; grid-template-columns: auto 1fr; gap: .5vh 2vw; align-items: center; text-align: left; padding: 2vh 2vw; border-radius: 20px; background: linear-gradient(180deg, #2b1d4a, #160f27); border: 3px solid var(--line); animation: revealIn .9s cubic-bezier(.2, 1.4, .4, 1) both; }
+.gift-win.p1 { border-color: #ffcf40; box-shadow: 0 0 60px #ffcf4055; }
+.gift-win.p2 { border-color: #cfd6e6; }
+.gift-win.p3 { border-color: #d98a4a; }
+.gift-win-medal { font-size: clamp(2.5rem, 5vw, 5rem); grid-row: span 2; }
+.gift-win-text { font-size: clamp(1.2rem, 2.2vw, 2.4rem); font-weight: 700; }
+.gift-win.p1 .gift-win-text { font-size: clamp(1.4rem, 2.8vw, 3rem); }
+.gift-win-authors { color: var(--orange2); font-size: clamp(.9rem, 1.3vw, 1.4rem); }

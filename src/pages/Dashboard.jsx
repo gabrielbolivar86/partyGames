@@ -8,6 +8,7 @@ import HuntBoard from '../components/HuntBoard'
 import PersonaBoard from '../components/PersonaBoard'
 import ImpostorBoard from '../components/ImpostorBoard'
 import FinalResults from '../components/FinalResults'
+import GiftBoard from '../components/GiftBoard'
 
 /**
  * Pantalla para la TV/proyector. No necesita login (solo lectura).
@@ -30,13 +31,16 @@ export default function Dashboard() {
   if (data?.mode === 'impostor') {
     return <div className="dash"><ImpostorBoard /></div>
   }
+  if (data?.mode === 'gift') {
+    return <div className="dash"><GiftBoard /></div>
+  }
   if (data?.mode === 'final') {
     return <div className="dash"><FinalResults /></div>
   }
-  return <LeaderboardScreen eventName={data?.event_name} frozen={data?.frozen} />
+  return <LeaderboardScreen eventName={data?.event_name} frozen={data?.frozen} wifi={data?.wifi} />
 }
 
-function LeaderboardScreen({ eventName, frozen }) {
+function LeaderboardScreen({ eventName, frozen, wifi }) {
   const { rows, loading, error } = useLeaderboard()
   const deltas = useDeltas(rows)
   const showQr = !window.location.hash.includes('noqr')
@@ -86,6 +90,13 @@ function LeaderboardScreen({ eventName, frozen }) {
             <div className="qr-box"><QRCodeSVG value={joinUrl()} size={220} bgColor="#ffffff" fgColor="#0d0a14" /></div>
             <h2>¿Acabas de llegar?</h2>
             <p>Escanea y regístrate 👻</p>
+            {wifi && (
+              <div className="wifi-box">
+                <div className="qr-box small-qr"><QRCodeSVG value={wifi.qr} size={180} bgColor="#ffffff" fgColor="#0d0a14" /></div>
+                <h3>📶 Wifi: {wifi.ssid}</h3>
+                <p>Escanea para conectarte</p>
+              </div>
+            )}
           </aside>
         )}
       </div>
