@@ -9,6 +9,7 @@ import PersonaBoard from '../components/PersonaBoard'
 import ImpostorBoard from '../components/ImpostorBoard'
 import FinalResults from '../components/FinalResults'
 import GiftBoard from '../components/GiftBoard'
+import WolfBoard from '../components/WolfBoard'
 
 /**
  * Pantalla para la TV/proyector. No necesita login (solo lectura).
@@ -30,6 +31,9 @@ export default function Dashboard() {
   }
   if (data?.mode === 'impostor') {
     return <div className="dash"><ImpostorBoard /></div>
+  }
+  if (data?.mode === 'wolf') {
+    return <div className="dash"><WolfBoard /></div>
   }
   if (data?.mode === 'gift') {
     return <div className="dash"><GiftBoard /></div>

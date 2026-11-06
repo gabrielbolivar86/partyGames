@@ -10,6 +10,7 @@ const MODES = [
   { id: 'persona', label: '🕵️ ¿Quién es el personaje?' },
   { id: 'impostor', label: '🃏 El Impostor' },
   { id: 'gift', label: '🎁 El Regalo Loco' },
+  { id: 'wolf', label: '🐺 Hombre Lobo' },
   { id: 'final', label: '🏆 Resultados de la noche (final)' },
 ]
 

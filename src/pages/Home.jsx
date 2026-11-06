@@ -5,6 +5,7 @@ import CodeHunt from '../components/CodeHunt'
 import PersonaGame, { MyFactCard } from '../components/PersonaGame'
 import ImpostorGame from '../components/ImpostorGame'
 import GiftGame from '../components/GiftGame'
+import WolfPlay from '../components/WolfPlay'
 import { useDashboard } from '../hooks/useDashboard'
 
 export default function Home({ me }) {
@@ -26,6 +27,7 @@ export default function Home({ me }) {
         </div>
       </section>
 
+      <WolfPlay />
       <GiftGame />
       <ImpostorGame myId={me.player.id} />
       <PersonaGame />

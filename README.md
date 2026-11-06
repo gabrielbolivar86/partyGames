@@ -6,6 +6,7 @@
 - **Fase 4:** ¿Quién es el personaje?, con rondas de datos curiosos, votación con tiempo y revelación con gráfico. Ver [la sección de la fase 4](#fase-4-quién-es-el-personaje).
 - **Fase 5:** El Impostor, más la tabla congelada y los resultados finales de la noche. Ver [la sección de la fase 5](#fase-5-el-impostor-y-resultados-finales).
 - **Fase 6:** El Regalo Loco, más el QR del wifi en la pantalla. Ver [la sección de la fase 6](#fase-6-el-regalo-loco-y-wifi).
+- **Fase 7:** Hombre Lobo, etapa 1: narrador, baraja sugerida, noche simultánea, alcalde y TV con la mesa. Ver [la sección de la fase 7](#fase-7-hombre-lobo-etapa-1).
 
 **Stack:** React + Vite · Supabase (base de datos, tiempo real y login anónimo) · Vercel o GitHub Pages. Costo: $0.
 
@@ -165,6 +166,7 @@ El panel de admin también muestra estas URLs en la pestaña **📺 Pantalla**.
 | 🕵️ Personaje | Lanzar rondas, revelar, descartar datos y configurar las reglas: tiempo, puntos por adivinar y bonus del dueño (fase 4). |
 | 🃏 Impostor | Elegir jugadores, número de impostores y palabra; abrir votaciones de defensa o eliminación (fase 5). |
 | 🎁 Regalo | El Regalo Loco: escritura, lectura, votación y revelación (fase 6). |
+| 🐺 Lobo | Abrir la mesa del Hombre Lobo, asignar o cambiar el narrador, cancelar y configurar puntos (fase 7). |
 | 📺 Pantalla | Elegir qué muestra el dashboard, 🔒 congelar la tabla, 🏆 resultados finales, 📶 wifi y enlaces. |
 | 🧹 Ajustes | **Reiniciar puntos y votaciones**, o **Borrar todo (nueva fiesta)**: elimina a todos menos a los admins y permite renombrar la fiesta. Se confirma escribiendo `BORRAR`. |
 
@@ -306,6 +308,34 @@ Al reiniciar desde **🧹 Ajustes**, las rondas se borran pero los datos se cons
 
 ---
 
+## Fase 7: Hombre Lobo (etapa 1)
+
+### Instalar
+1. Supabase → **SQL Editor → New query** → pega todo `supabase/08_fase7_lobo.sql` → **Run**. No borra nada y se puede correr varias veces.
+2. `git add . && git commit -m "Fase 7: hombre lobo" && git push`
+
+**Roles de esta etapa:** 🐺 Lobo · 👤 Aldeano · 🔮 Vidente · 🧪 Bruja · 🏹 Cazador, más 🎖️ Alcalde (se vota el día 1). Alcanza para jugar de 6 a 25 personas. Los roles avanzados (Cupido, Tonto, Traidor, Feroz, Infectador, Zorro, Flautista, Anciano, Lobo Blanco y Niña) quedan para la etapa 2, según `fase5-hombre-lobo.md` del proyecto.
+
+### Cómo se juega
+1. **Admin → 🐺 Lobo:** elige un **narrador** (no juega; puede ser cualquiera, incluso tú) → **🚪 Abrir mesa**.
+2. A los invitados les aparece **"🐺 Unirme al Hombre Lobo"**. El narrador ve la lista en su celular, puede quitar gente y toca **🔒 Cerrar mesa**.
+3. **Baraja:** la app sugiere una **explicando por qué** (porcentaje de lobos, cuándo conviene la Bruja, el alcalde desde 12 jugadores). El narrador ajusta con ＋/−: los aldeanos se calculan solos y hay un **medidor de balance** 🟢🟡🔴 con avisos. También elige si hay alcalde, si la baraja es pública y los minutos de debate. Luego **🃏 Repartir**.
+4. **Reparto:** roles y **asientos al azar**. Cada celular dice "Siéntate entre X e Y" y la TV dibuja la mesa en círculo con la explicación de los roles. Cada uno **mantiene presionada** su carta para verla; los lobos ven a su manada.
+5. El narrador avanza con **▶︎ Siguiente fase** y tiene un **guion para leer en voz alta** en cada una:
+   - 🌙 **Noche, todos a la vez:** los lobos eligen víctima y ven en vivo lo que elige su manada; la Vidente mira una carta; **los demás responden "¿De quién sospechas?"**, así nadie se delata por no tocar el celular.
+   - 🧪 **Turno de la Bruja:** ve a la víctima y puede salvarla o envenenar a alguien (una vez cada poción).
+   - ☀️ **Amanecer:** la TV anuncia a los muertos **con su rol**.
+   - 🎖️ **Alcalde** (día 1) → 🗣 **Debate** con temporizador → 🗳 **Votación** en el celular (el alcalde vale doble; con empate, nadie muere) → ⚖️ **Veredicto**, donde la TV muestra **quién votó a quién**.
+   - 🏹 Si muere el **Cazador**, dispara desde su celular. Si muere el **Alcalde**, elige a su sucesor.
+6. **Fin:** gana la aldea cuando mueren todos los lobos, o los lobos cuando igualan a los aldeanos vivos. La TV revela todas las cartas.
+   - **Puntos:** **+8** al bando ganador y **+2 extra** a los ganadores que sobrevivieron.
+
+**El narrador** ve todos los roles, quién ya respondió, la víctima de la manada y las pociones. Puede **💀 matar o 💚 revivir** a mano y **terminar la partida** declarando un ganador. Si alguien no responde a tiempo, pierde su acción.
+
+**Seguridad:** los roles nunca viajan por el canal en vivo. Cada celular pide **su propia vista** al servidor, y el **admin no ve roles** en su panel, por si juega.
+
+---
+
 ## Cómo funciona el tiempo real aquí
 
 ```
@@ -345,6 +375,7 @@ supabase/
   05_fase4_personaje.sql  ¿Quién es el personaje?
   06_fase5_impostor_final.sql  El Impostor, congelar tabla y resultados finales
   07_fase6_regalo_wifi.sql     El Regalo Loco y wifi
+  08_fase7_lobo.sql            Hombre Lobo (etapa 1)
 src/
   lib/supabase.js         cliente de Supabase
   lib/urls.js             URLs de registro y dashboard
@@ -377,7 +408,11 @@ src/
   components/FinalResults.jsx   resultados de la noche (pantalla)
   components/GiftGame.jsx       El Regalo Loco (escribir, votar)
   components/GiftBoard.jsx      El Regalo Loco (pantalla)
-  pages/admin/Gift.jsx, Wifi.jsx
+  pages/admin/Gift.jsx, Wifi.jsx, Wolf.jsx
+  lib/wolfRoles.js              roles, baraja sugerida, balance y guion
+  components/WolfPlay.jsx       Hombre Lobo en el celular (carta, acciones)
+  components/WolfNarrator.jsx   panel del narrador
+  components/WolfBoard.jsx      Hombre Lobo en la TV
   components/LeaderboardList.jsx
 ```
 

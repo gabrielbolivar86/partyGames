@@ -523,3 +523,66 @@ select { width: 100%; font: inherit; color: var(--text); background: #0d0a1499; 
 .gift-win-text { font-size: clamp(1.2rem, 2.2vw, 2.4rem); font-weight: 700; }
 .gift-win.p1 .gift-win-text { font-size: clamp(1.4rem, 2.8vw, 3rem); }
 .gift-win-authors { color: var(--orange2); font-size: clamp(.9rem, 1.3vw, 1.4rem); }
+
+/* =====================================================================
+   FASE 7 · Hombre Lobo
+   ===================================================================== */
+.live-wolf { border-color: #8b5a2b; box-shadow: 0 0 30px #c0603a33; }
+.narrator { border-color: var(--purple); }
+.wolf-pill { background: #3a2a63; }
+.wolf-card { min-height: 190px; }
+.wolf-emoji { font-size: 3rem; }
+.wolf-dead { padding: 12px; border-radius: 12px; background: #1a1424; border: 1px solid var(--line); text-align: center; }
+.wolf-action { display: grid; gap: 8px; margin-top: 8px; }
+.wolf-q { font-weight: 700; }
+.wolf-votes { margin-top: 6px; font-size: .9em; color: var(--muted); display: grid; gap: 2px; }
+.wolf-reasons { background: #9b5cff14; border: 1px solid #9b5cff44; border-radius: 12px; padding: 10px 12px; font-size: .88rem; }
+.wolf-reasons ul { margin: 6px 0 0; padding-left: 18px; }
+.deck-editor { display: grid; gap: 6px; margin: 10px 0; }
+.deck-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 10px; border-radius: 12px; background: #0d0a1466; border: 1px solid var(--line); }
+.deck-n { min-width: 28px; text-align: center; font-size: 1.2rem; }
+.balance { padding: 8px 12px; border-radius: 12px; font-weight: 700; margin: 6px 0; }
+.balance.green { background: #39d98a1f; color: var(--green); }
+.balance.yellow { background: #ffb0571f; color: var(--orange2); }
+.balance.red { background: #ff4d6d1f; color: #ffc2cd; }
+.wolf-opts { display: grid; gap: 8px; margin: 10px 0; }
+.narr-phase { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin: 8px 0; }
+.narr-phase-title { font-size: 1.3rem; font-weight: 800; }
+.narr-script { margin: 6px 0 10px; padding: 12px 14px; border-left: 4px solid var(--orange); background: #ff7a1a14; border-radius: 0 12px 12px 0; font-size: 1.02rem; line-height: 1.4; }
+.narr-seats { list-style: none; padding: 0; margin: 10px 0; display: grid; gap: 4px; }
+.narr-seats li { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 10px; background: #0d0a1466; }
+.narr-seats li.dead { opacity: .5; }
+.narr-seats li.dead b { text-decoration: line-through; }
+.seat-n { width: 24px; height: 24px; border-radius: 50%; background: #3a2a63; display: grid; place-items: center; font-size: .75rem; font-weight: 800; flex: 0 0 auto; }
+details summary { cursor: pointer; color: var(--muted); margin: 6px 0; }
+
+/* TV */
+.wolf-screen { display: flex; flex-direction: column; gap: 2vh; flex: 1; transition: background .8s; border-radius: 20px; }
+.wolf-screen.night { background: radial-gradient(ellipse at top, #10204a55, transparent 70%); }
+.wolf-banner { display: flex; align-items: center; gap: 2vw; padding: 1.5vh 2vw; border-radius: 20px; background: #1d1531cc; border: 1px solid var(--line); }
+.wolf-banner-emoji { font-size: clamp(2.5rem, 5vw, 5rem); }
+.wolf-banner-title { font-size: clamp(1.6rem, 3.2vw, 3.6rem); font-weight: 800; }
+.wolf-banner-sub { color: var(--muted); font-size: clamp(1rem, 1.6vw, 1.8rem); }
+.wolf-clock { margin-left: auto; font-family: 'Creepster', cursive; font-size: clamp(2.5rem, 5vw, 5.5rem); color: var(--orange); }
+.wolf-body { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(300px, 1fr); gap: 2vw; flex: 1; }
+.wolf-circle { position: relative; aspect-ratio: 1; max-height: 74vh; width: 100%; margin: auto; }
+.wolf-campfire { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: clamp(3rem, 6vw, 6rem); animation: float 3s ease-in-out infinite; }
+.wolf-seat { position: absolute; transform: translate(-50%, -50%); text-align: center; background: #2a1d45; border: 2px solid var(--line); border-radius: 14px; padding: .6vh .8vw; min-width: 7vw; max-width: 12vw; }
+.wolf-seat.dead { background: #140f1d; opacity: .7; border-style: dashed; }
+.wolf-seat.dead .seat-name { text-decoration: line-through; color: var(--muted); }
+.seat-name { font-weight: 800; font-size: clamp(.8rem, 1.2vw, 1.4rem); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.seat-role { font-size: clamp(.7rem, .95vw, 1.1rem); color: var(--orange2); }
+.seat-vote { font-size: clamp(.8rem, 1vw, 1.2rem); }
+.wolf-side { display: flex; flex-direction: column; gap: 2vh; }
+.deck-progress { background: #1d1531cc; border-radius: 16px; padding: 1.5vh 1.5vw; }
+.deck-progress h3 { margin: 0 0 1vh; font-size: clamp(1rem, 1.5vw, 1.7rem); }
+.deck-line { display: flex; justify-content: space-between; align-items: center; font-size: clamp(.95rem, 1.3vw, 1.5rem); padding: .4vh 0; }
+.deck-card { margin-left: .3vw; display: inline-block; }
+.deck-card.gone { opacity: .3; filter: grayscale(1); text-decoration: line-through; position: relative; }
+.deck-card.gone::after { content: '✕'; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); color: var(--red); font-weight: 800; }
+.wolf-explain { background: #1d1531cc; border-radius: 16px; padding: 1.5vh 1.5vw; display: grid; gap: 1.2vh; }
+.wolf-explain h3 { margin: 0; font-size: clamp(1rem, 1.6vw, 1.8rem); }
+.explain-role { display: flex; gap: 1vw; align-items: flex-start; font-size: clamp(.9rem, 1.15vw, 1.3rem); }
+.explain-emoji { font-size: clamp(1.6rem, 2.4vw, 2.6rem); }
+.wolf-lobby { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; max-width: 80vw; margin: 3vh auto; font-size: 1.4rem; }
+@media (max-width: 900px) { .wolf-body { grid-template-columns: 1fr; } .wolf-seat { min-width: 18vw; max-width: 26vw; } }
