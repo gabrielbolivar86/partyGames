@@ -1,18 +1,29 @@
 import { useEffect, useRef, useState } from 'react'
 import { QRCodeSVG } from 'qrcode.react'
 import { useLeaderboard } from '../hooks/useLeaderboard'
+import { useDashboard } from '../hooks/useDashboard'
 import { joinUrl } from '../lib/urls'
+import CostumeReveal from '../components/CostumeReveal'
 
 /**
  * Pantalla para la TV/proyector. No necesita login (solo lectura).
- * En fases siguientes cambiará de "modo" según el juego que active el admin.
+ * Cambia de "modo" según lo que active el admin (tabla general, revelación de disfraces…).
  * Añade ?noqr al final de la URL para ocultar el QR: #/dashboard?noqr
  */
 export default function Dashboard() {
+  const { data } = useDashboard()
+  useWakeLock()
+
+  if (data?.mode === 'costume_reveal') {
+    return <div className="dash"><CostumeReveal costume={data.costume} /></div>
+  }
+  return <LeaderboardScreen eventName={data?.event_name} />
+}
+
+function LeaderboardScreen({ eventName }) {
   const { rows, loading, error } = useLeaderboard()
   const deltas = useDeltas(rows)
   const showQr = !window.location.hash.includes('noqr')
-  useWakeLock()
 
   const podium = rows.slice(0, 3)
   const rest = rows.slice(3)
@@ -21,7 +32,7 @@ export default function Dashboard() {
     <div className="dash">
       <header className="dash-head">
         <h1 className="spooky">🎃 Tabla de la noche</h1>
-        <div className="dash-meta">{rows.length} invitados</div>
+        <div className="dash-meta">{eventName ? `${eventName} · ` : ''}{rows.length} invitados</div>
       </header>
 
       {error && <div className="error">{error}</div>}

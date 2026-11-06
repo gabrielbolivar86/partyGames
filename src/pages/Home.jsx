@@ -1,5 +1,6 @@
 import { useLeaderboard } from '../hooks/useLeaderboard'
 import LeaderboardList from '../components/LeaderboardList'
+import CostumeVote from '../components/CostumeVote'
 
 export default function Home({ me }) {
   const { rows, loading } = useLeaderboard()
@@ -18,10 +19,7 @@ export default function Home({ me }) {
         </div>
       </section>
 
-      <section className="card soon">
-        <h3>🎮 Juegos</h3>
-        <p className="muted">Aquí aparecerán las votaciones y los juegos cuando el admin los inicie.</p>
-      </section>
+      <CostumeVote />
 
       <section className="card">
         <h3>🏆 Tabla general</h3>

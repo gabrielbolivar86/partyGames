@@ -1,6 +1,7 @@
-# 🎃 Party Games App · Fase 1
+# 🎃 Party Games App
 
-Registro de invitados con aprobación del admin, modo admin/invitado, puntos (dar, quitar y deshacer) y dashboard en vivo con QR para registrarse.
+- **Fase 1:** registro con aprobación del admin, modo admin/invitado, puntos (dar, quitar y deshacer) y dashboard en vivo con QR.
+- **Fase 2:** votación del mejor disfraz con revelación en pantalla, gestión de invitados y opción de borrar todo para una nueva fiesta. Ver [la sección de la fase 2](#fase-2-mejor-disfraz-y-limpieza).
 
 **Stack:** React + Vite · Supabase (base de datos, tiempo real y login anónimo) · Vercel o GitHub Pages. Costo: $0.
 
@@ -27,7 +28,7 @@ Registro de invitados con aprobación del admin, modo admin/invitado, puntos (da
 2. Copia y pega todo el archivo `supabase/01_fase1_schema.sql` y presiona **Run**.
 3. Debe decir *Success. No rows returned*.
 
-> ⚠️ Volver a correr ese archivo **borra todos los datos** (está pensado para preparar el proyecto, no para usarlo durante la fiesta).
+> ⚠️ Volver a correr `01_fase1_schema.sql` **borra todos los datos** y rompe las tablas de la fase 2. Córrelo solo una vez. Para limpiar datos usa **Admin → 🧹 Ajustes**.
 
 ### 1.2 Activar el login anónimo
 **Authentication → Sign In / Providers →** activa **Allow anonymous sign-ins** → **Save**.
@@ -120,7 +121,7 @@ El archivo `.github/workflows/deploy.yml` ya hace el build. Si usas Vercel, pued
 | Dashboard sin QR | `https://tu-app/#/dashboard?noqr` |
 | Admin | la misma de invitados; activa el interruptor **Admin** |
 
-El panel de admin también muestra estas URLs en la sección **Enlaces**.
+El panel de admin también muestra estas URLs en la pestaña **📺 Pantalla**.
 
 ---
 
@@ -133,7 +134,7 @@ El panel de admin también muestra estas URLs en la sección **Enlaces**.
 - [ ] **Deshacer** el movimiento → vuelve a 0.
 - [ ] En el celular de prueba: cierra el navegador y vuelve a abrir → sigue dentro.
 - [ ] Prueba "Ya tengo perfil" desde otra ventana de incógnito → apruébalo → entra al mismo perfil.
-- [ ] Borra los datos de prueba: Supabase → **Table Editor** → `players` → selecciona los de prueba → Delete. Sus puntos y dispositivos se borran en cascada.
+- [ ] Borra los datos de prueba: **Admin → 🧹 Ajustes → Borrar todo**.
 
 ## 7. Checklist del día
 
@@ -141,6 +142,48 @@ El panel de admin también muestra estas URLs en la sección **Enlaces**.
 - Imprime el QR o deja el dashboard visible en la entrada.
 - Pon la TV/compu del dashboard sin suspensión de pantalla (la app intenta mantenerla encendida en Chrome).
 - Ten tu celular cargado: eres quien aprueba a todos.
+
+---
+
+## Fase 2: mejor disfraz y limpieza
+
+### Instalar (2 minutos)
+1. Supabase → **SQL Editor → New query** → pega todo `supabase/03_fase2_disfraces.sql` → **Run**. Debe decir *Success*. **No borra nada** de la fase 1 y se puede correr varias veces.
+2. Sube el código (`git add . && git commit -m "Fase 2" && git push`). Vercel lo publica solo.
+
+### Panel de admin (pestañas)
+| Pestaña | Qué hace |
+|---|---|
+| 👥 Invitados | Aprobar solicitudes. Lista de invitados: ✏️ corregir nombre o disfraz (ej. marcó "sin disfraz" por error) y 🗑 eliminar. |
+| ✨ Puntos | Dar o quitar puntos y deshacer movimientos manuales. |
+| 🎭 Disfraces | Abrir y cerrar la votación, revelar el podio y configurar los puntos. |
+| 📺 Pantalla | Elegir qué muestra el dashboard y ver los enlaces. |
+| 🧹 Ajustes | **Reiniciar puntos y votaciones**, o **Borrar todo (nueva fiesta)**: elimina a todos menos a los admins y permite renombrar la fiesta. Se confirma escribiendo `BORRAR`. |
+
+### Cómo correr el concurso en la fiesta
+1. **🎭 Disfraces → Abrir votación.** A los invitados les aparece la tarjeta "Vota por el mejor disfraz".
+2. Cada invitado toca a los disfrazados en el orden que prefiere (el primero es su 1.º), reordena con ▲▼ y quita con ✕. **Se guarda solo** con cada cambio. Nadie se ve a sí mismo en la lista.
+3. Cuando llega alguien disfrazado, aparece en todos los celulares con la etiqueta **¡Nuevo!**.
+4. **Cerrar votación y calcular.** Se calcula el resultado y se generan los puntos **ocultos**. La pantalla sigue mostrando la tabla general.
+5. **📺 Mostrar revelación en la pantalla**, luego **Revelar 3.er lugar**, **Revelar 2.º** y **Revelar 1.º**. Cada paso tiene una cuenta regresiva 3-2-1 en la TV.
+6. Al revelar el 1.º, los puntos del concurso se suman a la tabla general.
+7. **Volver a tabla general.**
+
+Si te equivocas: **Paso atrás** deshace la última revelación, y **Reabrir votación** borra los resultados pero conserva los votos.
+
+### Cómo se calcula el ganador (Borda normalizado)
+- En cada voto con *n* disfrazados posibles (todos menos el votante), el 1.º recibe 1 punto, el último 0, y los del medio la parte proporcional: `(n − posición) / (n − 1)`.
+- Quien no fue ordenado en ese voto recibe 0.
+- El puntaje final es el **promedio** de todos los votos. Así no importa cuántos disfrazados haya, y nadie pierde por no poder votarse a sí mismo.
+- Desempate: más veces en 1.er lugar, luego más veces en 2.º. Si sigue empatado, se marca con ⚠️ en "Ver resultados" y puedes ajustarlo con puntos manuales.
+- Puntos a la tabla general (editables antes de cerrar): 🥇 15 · 🥈 10 · 🥉 6 · resto de disfrazados 2.
+
+**Para que la votación sea justa**, recuerda a los invitados que actualicen su voto cuando llegue gente nueva: el que no aparece en un voto recibe 0 de ese votante. La etiqueta **¡Nuevo!** sirve para eso.
+
+### Antes de la fiesta
+- [ ] Corre `03_fase2_disfraces.sql`.
+- [ ] Prueba el flujo completo con 2 o 3 invitados de prueba (abrir, votar, cerrar, revelar).
+- [ ] **🧹 Ajustes → Borrar todo** para empezar la fiesta limpia. Tú sigues como admin.
 
 ---
 
@@ -176,8 +219,9 @@ Celular admin ──rpc('admin_add_points')──► Supabase (Postgres)
 
 ```
 supabase/
-  01_fase1_schema.sql     tablas, seguridad y funciones
+  01_fase1_schema.sql     tablas, seguridad y funciones (correr UNA vez)
   02_hacerme_admin.sql    convertir tu usuario en admin
+  03_fase2_disfraces.sql  concurso de disfraces, modos de pantalla, gestión y reinicio
 src/
   lib/supabase.js         cliente de Supabase
   lib/urls.js             URLs de registro y dashboard
@@ -188,8 +232,13 @@ src/
   pages/Join.jsx          registro / "ya tengo perfil"
   pages/Waiting.jsx       esperando aprobación
   pages/Home.jsx          vista del invitado
-  pages/AdminPanel.jsx    solicitudes, puntos y movimientos
-  pages/Dashboard.jsx     pantalla de la TV
+  pages/AdminPanel.jsx    pestañas del admin
+  pages/admin/*.jsx       Invitados, Puntos, Disfraces, Pantalla, Ajustes
+  pages/Dashboard.jsx     pantalla de la TV (cambia según el modo)
+  hooks/useCostume.js     estado del concurso para el invitado
+  hooks/useDashboard.js   modo de la pantalla
+  components/CostumeVote.jsx    votación del invitado
+  components/CostumeReveal.jsx  revelación con cuenta regresiva
   components/LeaderboardList.jsx
 ```
 

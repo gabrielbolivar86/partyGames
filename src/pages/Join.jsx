@@ -48,7 +48,10 @@ function RegisterForm({ onDone }) {
     })
     setSending(false)
     if (error) setError(errorMessage(error))
-    else onDone(data)
+    else {
+      try { localStorage.removeItem('pg-costume-seen') } catch { /* sin storage */ }
+      onDone(data)
+    }
   }
 
   return (
