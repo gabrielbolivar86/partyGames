@@ -5,6 +5,7 @@ import { useDashboard } from '../hooks/useDashboard'
 import { joinUrl } from '../lib/urls'
 import CostumeReveal from '../components/CostumeReveal'
 import HuntBoard from '../components/HuntBoard'
+import PersonaBoard from '../components/PersonaBoard'
 
 /**
  * Pantalla para la TV/proyector. No necesita login (solo lectura).
@@ -20,6 +21,9 @@ export default function Dashboard() {
   }
   if (data?.mode === 'codes') {
     return <div className="dash"><HuntBoard /></div>
+  }
+  if (data?.mode === 'persona') {
+    return <div className="dash"><PersonaBoard /></div>
   }
   return <LeaderboardScreen eventName={data?.event_name} />
 }

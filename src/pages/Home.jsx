@@ -2,6 +2,7 @@ import { useLeaderboard } from '../hooks/useLeaderboard'
 import LeaderboardList from '../components/LeaderboardList'
 import CostumeVote from '../components/CostumeVote'
 import CodeHunt from '../components/CodeHunt'
+import PersonaGame, { MyFactCard } from '../components/PersonaGame'
 
 export default function Home({ me }) {
   const { rows, loading } = useLeaderboard()
@@ -20,6 +21,7 @@ export default function Home({ me }) {
         </div>
       </section>
 
+      <PersonaGame />
       <CodeHunt />
       <CostumeVote />
 
@@ -27,6 +29,8 @@ export default function Home({ me }) {
         <h3>🏆 Tabla general</h3>
         {loading ? <p className="muted">Cargando…</p> : <LeaderboardList rows={rows} highlightId={me.player.id} compact />}
       </section>
+
+      <MyFactCard />
     </main>
   )
 }

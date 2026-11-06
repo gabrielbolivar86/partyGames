@@ -6,6 +6,7 @@ import Players from './admin/Players'
 import { PointsForm, LedgerList } from './admin/Points'
 import CostumeAdmin from './admin/Costume'
 import CodesAdmin from './admin/Codes'
+import PersonaAdmin from './admin/Persona'
 import Screen from './admin/Screen'
 import Settings from './admin/Settings'
 
@@ -14,6 +15,7 @@ const TABS = [
   { id: 'points', label: '✨ Puntos' },
   { id: 'costume', label: '🎭 Disfraces' },
   { id: 'codes', label: '🔍 Códigos' },
+  { id: 'persona', label: '🕵️ Personaje' },
   { id: 'screen', label: '📺 Pantalla' },
   { id: 'settings', label: '🧹 Ajustes' },
 ]
@@ -48,6 +50,7 @@ export default function AdminPanel({ me }) {
       {tab === 'points' && (<><PointsForm players={board.rows} /><LedgerList /></>)}
       {tab === 'costume' && <CostumeAdmin dashboardMode={dashboardMode} />}
       {tab === 'codes' && <CodesAdmin dashboardMode={dashboardMode} />}
+      {tab === 'persona' && <PersonaAdmin dashboardMode={dashboardMode} />}
       {tab === 'screen' && <Screen dashboardMode={dashboardMode} />}
       {tab === 'settings' && <Settings />}
     </main>

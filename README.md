@@ -3,6 +3,7 @@
 - **Fase 1:** registro con aprobación del admin, modo admin/invitado, puntos (dar, quitar y deshacer) y dashboard en vivo con QR.
 - **Fase 2:** votación del mejor disfraz con revelación en pantalla, gestión de invitados y opción de borrar todo para una nueva fiesta. Ver [la sección de la fase 2](#fase-2-mejor-disfraz-y-limpieza).
 - **Fase 3:** caza de códigos secretos de 6 caracteres, con hoja para imprimir y tablero en pantalla. Ver [la sección de la fase 3](#fase-3-caza-de-códigos).
+- **Fase 4:** ¿Quién es el personaje?, con rondas de datos curiosos, votación con tiempo y revelación con gráfico. Ver [la sección de la fase 4](#fase-4-quién-es-el-personaje).
 
 **Stack:** React + Vite · Supabase (base de datos, tiempo real y login anónimo) · Vercel o GitHub Pages. Costo: $0.
 
@@ -159,6 +160,7 @@ El panel de admin también muestra estas URLs en la pestaña **📺 Pantalla**.
 | ✨ Puntos | Dar o quitar puntos y deshacer movimientos manuales. |
 | 🎭 Disfraces | Abrir y cerrar la votación, revelar el podio y configurar los puntos. |
 | 🔍 Códigos | Crear e imprimir códigos, empezar o terminar la caza, reglas de puntos (fase 3). |
+| 🕵️ Personaje | Lanzar rondas, revelar, descartar datos y configurar las reglas: tiempo, puntos por adivinar y bonus del dueño (fase 4). |
 | 📺 Pantalla | Elegir qué muestra el dashboard y ver los enlaces. |
 | 🧹 Ajustes | **Reiniciar puntos y votaciones**, o **Borrar todo (nueva fiesta)**: elimina a todos menos a los admins y permite renombrar la fiesta. Se confirma escribiendo `BORRAR`. |
 
@@ -213,6 +215,35 @@ Si te equivocas: **Paso atrás** deshace la última revelación, y **Reabrir vot
 
 ---
 
+## Fase 4: ¿Quién es el personaje?
+
+### Instalar
+1. Supabase → **SQL Editor → New query** → pega todo `supabase/05_fase4_personaje.sql` → **Run**. No borra nada y se puede correr varias veces.
+2. `git add . && git commit -m "Fase 4: quién es el personaje" && git push`
+
+### Los datos curiosos
+- Al registrarse, cada invitado puede escribir un dato (opcional). Ve una explicación e **ideas de ejemplo** (🔄 para ver otras).
+- El texto deja claro que **no es anónimo para siempre**: se muestra sin nombre para adivinar, pero al final de la ronda se revela de quién es, y conviene evitar cosas muy personales.
+- Cada invitado puede tener **hasta 2 datos**. En su celular, la tarjeta **🤫 Mis datos curiosos** tiene el botón *"Si tienes otra anécdota o dato, agrégala aquí"*, y ahí también se editan o borran los datos que aún no salieron.
+- Cada ronda saca **un dato al azar de todo el pool**. Como cualquiera puede tener varios datos, **nadie puede adivinar por descarte** al final.
+
+### Cómo jugar
+1. **Admin → 🕵️ Personaje → ▶︎ Nueva ronda.** Se elige un dato al azar que no haya salido, y **la pantalla cambia sola** a este juego.
+2. La TV muestra el dato (sin el nombre de su dueño), la cuenta regresiva (30 s) y cuántos han votado.
+3. En los celulares aparece arriba la tarjeta para votar. Se toca un nombre y el voto se puede cambiar mientras quede tiempo. El dueño del dato ve "🤫 ¡Es tu dato!" y no vota.
+4. **🎭 Revelar quién es:** la TV muestra al personaje y un gráfico de los votos, y en cada celular aparece si acertó. Los puntos se suman solos.
+5. La persona puede contar su historia, y luego **▶︎ Siguiente ronda**.
+
+**Puntos** (editables en ⚙️ Reglas):
+- Adivinar: **+5**.
+- Dueño del dato (puntos extra por participar): **+5** cuando su dato sale. **Si no lo atrapan** (menos de la mitad de los votos acierta), **se duplican: +10**. La pantalla muestra "🎯 ¡Atrapado!" o "😎 ¡No lo atraparon! Puntos x2".
+
+**Si sale un dato que no conviene:** **🚫 Descartar dato** (ese dato no vuelve a salir) o **↩︎ Cancelar ronda** (vuelve al pool). Con **👀 Ver de quién es** puedes ver al dueño antes de revelar.
+
+Al reiniciar desde **🧹 Ajustes**, las rondas se borran pero los datos se conservan y vuelven a estar disponibles.
+
+---
+
 ## Cómo funciona el tiempo real aquí
 
 ```
@@ -249,6 +280,7 @@ supabase/
   02_hacerme_admin.sql    convertir tu usuario en admin
   03_fase2_disfraces.sql  concurso de disfraces, modos de pantalla, gestión y reinicio
   04_fase3_codigos.sql    caza de códigos
+  05_fase4_personaje.sql  ¿Quién es el personaje?
 src/
   lib/supabase.js         cliente de Supabase
   lib/urls.js             URLs de registro y dashboard
@@ -270,6 +302,10 @@ src/
   components/HuntBoard.jsx      caza de códigos (pantalla)
   hooks/useHunt.js              estado de la caza
   pages/PrintCodes.jsx          hoja para imprimir códigos (#/imprimir-codigos)
+  components/PersonaGame.jsx    ¿Quién es el personaje? (votar + mis datos curiosos)
+  components/FactTips.jsx       explicación e ideas para escribir datos curiosos
+  components/PersonaBoard.jsx   ¿Quién es el personaje? (pantalla)
+  hooks/usePersona.js           estado del juego + cuenta regresiva sincronizada
   components/LeaderboardList.jsx
 ```
 

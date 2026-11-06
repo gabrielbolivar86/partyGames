@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { supabase, errorMessage } from '../lib/supabase'
+import FactTips from '../components/FactTips'
 
 export default function Join({ notice, clearNotice, onDone }) {
   const [tab, setTab] = useState('new')
@@ -28,7 +29,7 @@ export default function Join({ notice, clearNotice, onDone }) {
 
 function RegisterForm({ onDone }) {
   const [form, setForm] = useState({
-    name: '', nickname: '', hasCostume: true, costume: '', funFact: '', funFactOptIn: true,
+    name: '', nickname: '', hasCostume: true, costume: '', funFact: '',
   })
   const [sending, setSending] = useState(false)
   const [error, setError] = useState(null)
@@ -44,7 +45,7 @@ function RegisterForm({ onDone }) {
       p_has_costume: form.hasCostume,
       p_costume: form.costume,
       p_fun_fact: form.funFact,
-      p_fun_fact_opt_in: form.funFactOptIn && form.funFact.trim() !== '',
+      p_fun_fact_opt_in: form.funFact.trim() !== '',
     })
     setSending(false)
     if (error) setError(errorMessage(error))
@@ -77,14 +78,14 @@ function RegisterForm({ onDone }) {
       )}
       {!form.hasCostume && <p className="hint">Sin disfraz no entras al concurso de mejor disfraz, pero sí votas y juegas todo lo demás.</p>}
 
-      <label>Un dato curioso o anécdota tuya 🤫
-        <textarea value={form.funFact} onChange={set('funFact')} maxLength={200} rows={3}
-          placeholder="Algo gracioso que poca gente sepa de ti (es para un juego, será anónimo)" />
-      </label>
-      <label className="check">
-        <input type="checkbox" checked={form.funFactOptIn} onChange={set('funFactOptIn')} />
-        Quiero que mi dato entre al juego "¿Quién es el personaje?"
-      </label>
+      <div className="fact-block">
+        <label>Un dato curioso o anécdota tuya 🤫 <span className="muted small">(opcional)</span>
+          <textarea value={form.funFact} onChange={set('funFact')} maxLength={200} rows={3}
+            placeholder="Escribe tu dato aquí…" />
+        </label>
+        <FactTips />
+        <p className="hint">¿Tienes otra anécdota? Podrás agregar un segundo dato desde la app después de entrar.</p>
+      </div>
 
       {error && <div className="error">{error}</div>}
       <button className="btn primary" disabled={sending}>{sending ? 'Enviando…' : 'Entrar a la fiesta'}</button>

@@ -6,6 +6,7 @@ const MODES = [
   { id: 'leaderboard', label: '🏆 Tabla general' },
   { id: 'costume_reveal', label: '🎭 Revelación de disfraces' },
   { id: 'codes', label: '🔍 Caza de códigos' },
+  { id: 'persona', label: '🕵️ ¿Quién es el personaje?' },
 ]
 
 export default function Screen({ dashboardMode }) {
