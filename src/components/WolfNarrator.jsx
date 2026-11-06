@@ -48,7 +48,7 @@ export default function WolfNarrator() {
 function NarratorLobby({ v, busy, call }) {
   return (
     <>
-      <p className="hint">✅ <b>Todos los presentes entran automáticamente.</b> Los que marcan “⏸️ Me ausento” quedan fuera de esta partida. Puedes sacar a alguien con ✕ o volver a sumarlo abajo. Cuando estén listos, cierra la mesa.</p>
+      <p className="hint">Ya están todos los presentes. Saca con ✕ o suma abajo.</p>
       <ul className="players-list compact-list lobby-list">
         {v.seats.map((s) => (
           <li key={s.id}><span className="grow">{s.name}</span>
@@ -74,7 +74,7 @@ export function Bench({ v, call }) {
       <ul className="players-list">
         {v.benched.map((b) => (
           <li key={b.id}>
-            <span className="grow">{b.name} <span className="small muted">{b.away ? '⏸️ ausente' : '✕ sacado'}</span></span>
+            <span className="grow">{b.name} <span className="small muted">{b.away ? '⏸️ en pausa' : '✕ sacado'}</span></span>
             <button className="btn small" onClick={() => call('wolf_unkick', { p_player: b.id })}>＋ Sumar</button>
           </li>
         ))}
@@ -207,7 +207,7 @@ function SeatList({ v, call }) {
   return (
     <>
       {call && away.length > 0 && (
-        <div className="away-note small">⏸️ Ausentes: <b>{away.map((s) => s.name).join(', ')}</b>. Siguen con su carta pero no actúan. Si alguien no vuelve, usa 🚪 para darlo por muerto (se revela su carta).</div>
+        <div className="away-note small">⏸️ En pausa: <b>{away.map((s) => s.name).join(', ')}</b>. Si no vuelve, 🚪 lo da por muerto.</div>
       )}
       <ul className="narr-seats">
         {v.seats.map((s) => {
@@ -222,7 +222,7 @@ function SeatList({ v, call }) {
                     <button className="btn small ghost-btn" title="Volvió" onClick={() => call('admin_set_away', { p_player: s.id, p_away: false })}>▶︎</button>
                     <button className="btn small ghost-btn" title="Se fue: darlo por muerto" onClick={() => call('wolf_kill_away', { p_player: s.id }, `¿${s.name} no vuelve? Se da por muerto y se revela su carta.`)}>🚪</button>
                   </>
-                : <button className="btn small ghost-btn" title="Marcar ausente" onClick={() => call('admin_set_away', { p_player: s.id, p_away: true })}>⏸️</button>)}
+                : <button className="btn small ghost-btn" title="Poner en pausa" onClick={() => call('admin_set_away', { p_player: s.id, p_away: true })}>⏸️</button>)}
               {call && (s.alive
                 ? <button className="btn small ghost-btn" title="Matar" onClick={() => call('wolf_override', { p_player: s.id, p_alive: false }, `¿Matar a ${s.name}?`)}>💀</button>
                 : <button className="btn small ghost-btn" title="Revivir" onClick={() => call('wolf_override', { p_player: s.id, p_alive: true }, `¿Revivir a ${s.name}?`)}>💚</button>)}

@@ -134,7 +134,7 @@ function Setup({ players, busy, call, again }) {
       </div>
       <div className="check-grid">
         {sorted.map((p) => (
-          <label key={p.player_id} className={`check-chip ${selected.has(p.player_id) && !p.away ? 'on' : ''} ${p.away ? 'away' : ''}`} title={p.away ? 'Ausente: entra en la siguiente ronda' : ''}>
+          <label key={p.player_id} className={`check-chip ${selected.has(p.player_id) && !p.away ? 'on' : ''} ${p.away ? 'away' : ''}`} title={p.away ? 'En pausa: entra en la siguiente ronda' : ''}>
             <input type="checkbox" checked={selected.has(p.player_id)} onChange={() => toggle(p.player_id)} />
             {p.away ? '⏸️ ' : ''}{p.nickname || p.name}
           </label>
@@ -146,7 +146,7 @@ function Setup({ players, busy, call, again }) {
         ▶︎ Empezar a escribir
       </button>
       {n < 4 && <p className="hint">Se necesitan al menos 4 jugadores presentes.</p>}
-      {players.some((p) => p.away) && <p className="small muted">⏸️ Los ausentes no entran a esta ronda.</p>}
+      {players.some((p) => p.away) && <p className="small muted">⏸️ Los que están en pausa entran en la siguiente ronda.</p>}
     </div>
   )
 }
@@ -162,7 +162,7 @@ function Reassign({ ov, players, busy, call }) {
       <ul className="players-list compact-list">
         {ov.missing.map((m) => (
           <li key={m.id}>
-            <span className="grow">{m.name}{m.away && <span className="away-tag"> ⏸️ ausente</span>} <span className="small muted">· {m.parts} {m.parts === 1 ? 'parte' : 'partes'}</span></span>
+            <span className="grow">{m.name}{m.away && <span className="away-tag"> ⏸️ en pausa</span>} <span className="small muted">· {m.parts} {m.parts === 1 ? 'parte' : 'partes'}</span></span>
             <button className="btn small ghost-btn" onClick={() => { setFrom(from === m.id ? null : m.id); setTo('') }}>{from === m.id ? 'Cancelar' : '↪︎ Pasar a…'}</button>
           </li>
         ))}

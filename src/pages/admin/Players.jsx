@@ -40,8 +40,8 @@ export default function Players({ myId }) {
 
   return (
     <section className="card">
-      <h3>👥 Invitados <span className="muted small">{players.length} · {costumed} disfrazados{players.some((p) => p.away) ? ` · ⏸️ ${players.filter((p) => p.away).length} ausentes` : ''}</span></h3>
-      <p className="hint">⏸️ = sacar a alguien de los juegos un rato (conserva su carta). Ellos también pueden marcarlo desde su celular.</p>
+      <h3>👥 Invitados <span className="muted small">{players.length} · {costumed} disfrazados{players.some((p) => p.away) ? ` · ⏸️ ${players.filter((p) => p.away).length} en pausa` : ''}</span></h3>
+      <p className="small muted">⏸️ pone a alguien en pausa (conserva su carta).</p>
       {error && <div className="error">{error}</div>}
       <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Buscar…" />
       <ul className="players-list">
@@ -54,11 +54,11 @@ export default function Players({ myId }) {
                   <div className="grow">
                     <strong>{p.name}</strong>{p.nickname && <span className="muted"> “{p.nickname}”</span>}
                     {p.is_admin && <span className="tag">admin</span>}
-                    {p.away && <span className="away-tag"> ⏸️ ausente</span>}
+                    {p.away && <span className="away-tag"> ⏸️ en pausa</span>}
                     <div className="small muted">{p.has_costume ? `🧛 ${p.costume}` : 'Sin disfraz'} · 📱 {p.devices}</div>
                   </div>
                   <div className="row nowrap">
-                    <button className="btn small ghost-btn" title={p.away ? 'Volvió' : 'Marcar ausente (sale de las rondas un rato)'} onClick={() => setAway(p)}>{p.away ? '▶︎' : '⏸️'}</button>
+                    <button className="btn small ghost-btn" title={p.away ? 'Volvió' : 'Poner en pausa'} onClick={() => setAway(p)}>{p.away ? '▶︎' : '⏸️'}</button>
                     <button className="btn small" onClick={() => setEditing(p.player_id)}>✏️</button>
                     {p.player_id !== myId && <button className="btn small ghost-btn" onClick={() => remove(p)}>🗑</button>}
                   </div>

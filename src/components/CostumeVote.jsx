@@ -30,7 +30,7 @@ export default function CostumeVote() {
       <section className="card">
         <h3>🎭 Mejor disfraz</h3>
         {data.podium.length === 0
-          ? <p className="muted">¡Votación cerrada! 🤫 Los resultados se revelarán en la pantalla.</p>
+          ? <p className="muted">¡Votación cerrada! 🤫 Resultados en la pantalla.</p>
           : <MiniPodium podium={data.podium} />}
       </section>
     )
@@ -114,7 +114,7 @@ function Ballot({ data }) {
         <h3>🎭 Vota por el mejor disfraz</h3>
         <SaveBadge state={saveState} />
       </div>
-      <p className="hint">Toca a los disfrazados en orden: el primero que tocas es tu 1.º lugar. Puedes cambiarlo hasta que el admin cierre la votación.</p>
+      <p className="hint">Tócalos en orden: el primero es tu 1.º lugar.</p>
       {saveError && <div className="error">{saveError}</div>}
 
       {data.candidates.length === 0 && <p className="muted">Aún no hay otros invitados disfrazados.</p>}

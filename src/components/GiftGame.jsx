@@ -19,8 +19,8 @@ export default function GiftGame() {
       <h3>🎁 El Regalo Loco</h3>
       {data.status === 'writing' && (data.tasks?.length
         ? <Writing data={data} onSaved={refresh} />
-        : <><GiftTimer data={data} onExpire={refresh} /><p className="hint">{data.participant ? '✅ ¡Listo! Ya no tienes partes por escribir. Espera a los demás.' : '👀 No juegas esta ronda (entras en la siguiente). ¡Mira la pantalla!'}</p></>)}
-      {data.status === 'reading' && <p className="hint">📺 ¡Mira la pantalla! Se están leyendo los regalos… luego votarás tus 3 favoritos.</p>}
+        : <><GiftTimer data={data} onExpire={refresh} /><p className="hint">{data.participant ? '✅ ¡Listo! Espera a los demás.' : '👀 Esta ronda no juegas. ¡Mira la pantalla!'}</p></>)}
+      {data.status === 'reading' && <p className="hint">📺 ¡Mira la pantalla! Luego votas tus 3 favoritos.</p>}
       {data.status === 'voting' && <Voting data={data} onVoted={refresh} />}
       {data.status === 'results' && (
         data.podium?.length
@@ -43,7 +43,7 @@ function Writing({ data, onSaved }) {
   return (
     <>
       <GiftTimer data={data} onExpire={onSaved} />
-      <p className="hint">Escribe rápido ⚡ Cada parte va a un regalo distinto y <b>nadie ve lo que escribieron los demás</b>: la gracia es que la frase final salga absurda. 🤪 Se guarda sola.</p>
+      <p className="hint">⚡ ¡Rápido! Nadie ve lo que escriben los demás. Se guarda solo.</p>
       <div className="gift-progress"><span style={{ width: `${tasks.length ? (done / tasks.length) * 100 : 0}%` }} /></div>
       <p className="small muted">{done}/{tasks.length} listas</p>
       {tasks.map((t, i) => {
@@ -138,7 +138,7 @@ function Voting({ data, onVoted }) {
 
   return (
     <>
-      <p className="hint">Elige tus <b>3 regalos más graciosos</b>. Los tuyos no se pueden votar.</p>
+      <p className="hint">Elige tus <b>3 favoritos</b>.</p>
       {state && <p className="small muted">{state}</p>}
       <ul className="gift-vote">
         {data.phrases.map((p) => (

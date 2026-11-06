@@ -77,13 +77,13 @@ function WolfSeats({ ov, call }) {
       <ul className="players-list compact-list">
         {ov.seats.map((s) => (
           <li key={s.id} className={s.alive ? '' : 'dead'}>
-            <span className="grow">{s.alive ? '' : '💀 '}{s.name}{s.alive && s.away && <span className="away-tag"> ⏸️ ausente</span>}</span>
+            <span className="grow">{s.alive ? '' : '💀 '}{s.name}{s.alive && s.away && <span className="away-tag"> ⏸️ en pausa</span>}</span>
             {s.alive && (s.away
               ? <>
                   <button className="btn small ghost-btn" title="Volvió" onClick={() => call('admin_set_away', { p_player: s.id, p_away: false })}>▶︎ Volvió</button>
                   {playing && <button className="btn small ghost-btn" title="Darlo por muerto" onClick={() => call('wolf_kill_away', { p_player: s.id }, `¿${s.name} no vuelve? Se da por muerto y se revela su carta en la pantalla.`)}>🚪 Matar</button>}
                 </>
-              : <button className="btn small ghost-btn" title="Marcar ausente" onClick={() => call('admin_set_away', { p_player: s.id, p_away: true })}>⏸️</button>)}
+              : <button className="btn small ghost-btn" title="Poner en pausa" onClick={() => call('admin_set_away', { p_player: s.id, p_away: true })}>⏸️</button>)}
           </li>
         ))}
       </ul>
@@ -93,7 +93,7 @@ function WolfSeats({ ov, call }) {
           <ul className="players-list compact-list">
             {ov.benched.map((b) => (
               <li key={b.id}>
-                <span className="grow">{b.name} <span className="small muted">{b.away ? '⏸️ ausente' : b.excluded ? '✕ sacado' : 'llegó tarde'}</span></span>
+                <span className="grow">{b.name} <span className="small muted">{b.away ? '⏸️ en pausa' : b.excluded ? '✕ sacado' : 'llegó tarde'}</span></span>
                 {!playing && <button className="btn small" onClick={() => call('wolf_unkick', { p_player: b.id })}>＋ Sumar</button>}
               </li>
             ))}

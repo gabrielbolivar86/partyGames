@@ -73,7 +73,7 @@ function Circle({ players, showVotes }) {
             <div className="seat-name">{pl.mayor ? '🎖️ ' : ''}{pl.name}</div>
             {!pl.alive && <div className="seat-role">💀 {r.emoji} {r.name}</div>}
             {pl.alive && pl.role && <div className="seat-role">{r.emoji} {r.name}</div>}
-            {pl.alive && pl.away && <div className="seat-role">⏸️ ausente</div>}
+            {pl.alive && pl.away && <div className="seat-role">⏸️ en pausa</div>}
             {showVotes && pl.alive && !pl.away && <div className="seat-vote">{pl.voted ? '✅' : '⏳'}</div>}
           </div>
         )

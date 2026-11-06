@@ -17,9 +17,8 @@ const GAMES = {
   gift: { emoji: '🎁', name: 'El Regalo Loco', short: 'Regalo' },
   impostor: { emoji: '🃏', name: 'El Impostor', short: 'Impostor' },
   persona: { emoji: '🕵️', name: '¿Quién es el personaje?', short: 'Personaje', newRound: true },
-  codes: { emoji: '🔍', name: 'Caza de códigos', short: 'Códigos' },
-  costume: { emoji: '🎭', name: 'Votación de disfraces', short: 'Disfraces' },
 }
+// Caza de códigos y voto de disfraz duran toda la noche: van en el menú, no como pestaña
 
 const OPEN_KEY = 'pg-open-game'
 const SEEN_KEY = 'pg-seen-games'
@@ -30,7 +29,9 @@ const label = (g) => (g.id === 'wolf' && g.narrator ? 'Narrar' : GAMES[g.id].sho
 
 export default function Home({ me }) {
   const { data: mg, refresh: refreshGames } = useMyGames()
-  const games = (mg?.games || []).filter((g) => GAMES[g.id])
+  const all = mg?.games || []
+  const games = all.filter((g) => GAMES[g.id])
+  const onMenu = { codes: all.some((g) => g.id === 'codes'), costume: all.some((g) => g.id === 'costume') }
   const away = !!mg?.away
   const [open, setOpenState] = useState(() => { try { return sessionStorage.getItem(OPEN_KEY) } catch { return null } })
   const [seen, setSeen] = useState(readSeen)
@@ -65,7 +66,7 @@ export default function Home({ me }) {
           </main>
         </div>
       ) : (
-        <Menu me={me} games={games} away={away} setOpen={setOpen} refreshGames={refreshGames} />
+        <Menu me={me} games={games} onMenu={onMenu} away={away} setOpen={setOpen} refreshGames={refreshGames} />
       )}
     </>
   )
@@ -77,8 +78,6 @@ function GameView({ id, me }) {
     case 'gift': return <GiftGame />
     case 'impostor': return <ImpostorGame myId={me.player.id} />
     case 'persona': return <PersonaGame />
-    case 'codes': return <CodeHunt />
-    case 'costume': return <CostumeVote />
     default: return null
   }
 }
@@ -115,7 +114,7 @@ function StartBanner({ g, onEnter, onLater }) {
   )
 }
 
-function Menu({ me, games, away, setOpen, refreshGames }) {
+function Menu({ me, games, onMenu, away, setOpen, refreshGames }) {
   const { rows, loading } = useLeaderboard()
   const dash = useDashboard()
   const frozen = dash.data?.frozen && dash.data?.mode !== 'final'
@@ -138,7 +137,7 @@ function Menu({ me, games, away, setOpen, refreshGames }) {
       <section className="card">
         <h3>🎮 Juegos</h3>
         {games.length === 0
-          ? <p className="muted">Aún no hay juegos activos. ¡Atento a la pantalla! 📺</p>
+          ? <p className="muted">Nada por ahora. ¡Atento a la pantalla! 📺</p>
           : (
             <div className="game-list">
               {games.map((g) => (
@@ -153,8 +152,10 @@ function Menu({ me, games, away, setOpen, refreshGames }) {
               ))}
             </div>
           )}
-        {!away && <AwayButton onChange={refreshGames} />}
       </section>
+
+      {onMenu.costume && <CostumeVote />}
+      {onMenu.codes && <CodeHunt />}
 
       <section className="card">
         <h3>🏆 Tabla general</h3>
@@ -163,6 +164,7 @@ function Menu({ me, games, away, setOpen, refreshGames }) {
       </section>
 
       <MyFactCard />
+      {!away && <AwayButton onChange={refreshGames} />}
     </main>
   )
 }
@@ -177,10 +179,10 @@ function AwayButton({ onChange }) {
   const [err, setErr] = useState(null)
   return (
     <div className="away-box">
+      <span className="small muted">¿Necesitas hacer algo o ausentarte? Ponte en pausa.</span>
       <button className="btn small ghost-btn" onClick={() => {
-        if (window.confirm('¿Te ausentas un rato? Mientras tanto no actúas ni votas en los juegos, y nadie te puede elegir. Tu carta se guarda.')) setAway(true, onChange, setErr)
-      }}>⏸️ Me ausento un rato</button>
-      <span className="small muted">¿Tienes que irte un momento (ej. ver a tu hijo)? Márcalo para no trabar los juegos.</span>
+        if (window.confirm('¿Ponerte en pausa? No jugarás hasta que vuelvas.')) setAway(true, onChange, setErr)
+      }}>⏸️ Ponerme en pausa</button>
       {err && <div className="error">{err}</div>}
     </div>
   )
@@ -190,7 +192,7 @@ function AwayBar({ onChange }) {
   const [busy, setBusy] = useState(false)
   return (
     <div className="away-bar">
-      <span>⏸️ <b>Estás ausente.</b> Los juegos siguen sin ti.</span>
+      <span>⏸️ <b>Estás en pausa</b></span>
       <button className="btn small primary" disabled={busy} onClick={async () => { setBusy(true); await setAway(false, onChange); setBusy(false) }}>▶︎ Ya volví</button>
     </div>
   )

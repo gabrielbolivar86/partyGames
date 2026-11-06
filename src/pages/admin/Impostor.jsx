@@ -97,14 +97,14 @@ function Setup({ ov, players, busy, call }) {
       </div>
       <div className="check-grid">
         {sorted.map((p) => (
-          <label key={p.player_id} className={`check-chip ${selected.has(p.player_id) && !p.away ? 'on' : ''} ${p.away ? 'away' : ''}`} title={p.away ? 'Ausente: entra en la siguiente ronda' : ''}>
+          <label key={p.player_id} className={`check-chip ${selected.has(p.player_id) && !p.away ? 'on' : ''} ${p.away ? 'away' : ''}`} title={p.away ? 'En pausa: entra en la siguiente ronda' : ''}>
             <input type="checkbox" checked={selected.has(p.player_id)} onChange={() => toggle(p.player_id)} />
             {p.away ? '⏸️ ' : ''}{p.nickname || p.name}
           </label>
         ))}
       </div>
 
-      {players.some((p) => p.away) && <p className="small muted">⏸️ Los ausentes no entran a esta ronda (entran en la siguiente cuando vuelvan).</p>}
+      {players.some((p) => p.away) && <p className="small muted">⏸️ Los que están en pausa entran en la siguiente ronda.</p>}
 
       <div className="imp-k">
         <span><b>Impostores</b></span>

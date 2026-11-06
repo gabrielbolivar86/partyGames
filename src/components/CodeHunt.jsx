@@ -57,7 +57,7 @@ export default function CodeHunt() {
 
       {data.status === 'open' && !limitReached && (
         <>
-          <p className="hint">Busca los códigos secretos escondidos y escríbelos aquí. ¡Mientras antes lo encuentres, más puntos! ({data.points.p1}, {data.points.p2}, {data.points.p3}…)</p>
+          <p className="hint">Encuentra los códigos escondidos. ¡Los primeros ganan más!</p>
           <form className="pin-row" onSubmit={(e) => { e.preventDefault(); claim(pin) }}>
             <input
               className="pin-input" autoCapitalize="characters" autoCorrect="off" spellCheck={false} autoComplete="off"
@@ -69,7 +69,7 @@ export default function CodeHunt() {
         </>
       )}
       {data.status === 'open' && limitReached && (
-        <p className="hint">¡Encontraste tu máximo de {data.max} códigos! 🎉 Deja los demás para otros cazadores.</p>
+        <p className="hint">¡Llegaste al máximo de {data.max} códigos! 🎉</p>
       )}
       {data.status === 'closed' && <p className="hint">La caza de códigos terminó.</p>}
 

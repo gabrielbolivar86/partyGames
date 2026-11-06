@@ -23,9 +23,9 @@ export default function ImpostorGame({ myId }) {
         <span className="save-badge">{data.impostor_count} {data.impostor_count === 1 ? 'impostor' : 'impostores'}</span>
       </div>
 
-      {!data.participant && !finished && <p className="hint">👀 No juegas esta ronda. ¡Mira la pantalla y disfruta!</p>}
+      {!data.participant && !finished && <p className="hint">👀 Esta ronda no juegas. ¡Mira la pantalla!</p>}
 
-      {data.participant && !finished && data.me_away && <p className="away-note">⏸️ Estás ausente: tu carta se guarda, pero no votas ni te pueden votar hasta que toques <b>“Ya volví”</b>.</p>}
+      {data.participant && !finished && data.me_away && <p className="away-note">⏸️ Estás en pausa. Tu carta se guarda.</p>}
       {data.participant && !finished && <SecretCard data={data} />}
       {data.participant && !finished && !data.alive && <p className="hint">☠️ Fuiste eliminado. Ya no votas{data.role === 'impostor' ? ', pero aún puedes adivinar la palabra.' : '.'}</p>}
 
@@ -108,7 +108,7 @@ function VoteBox({ data, myId, onVoted }) {
   return (
     <div className="imp-vote">
       <div className={`kind-badge ${data.vote.kind}`}>{KIND_LABEL[data.vote.kind].long}</div>
-      <p className="hint">¿Quién crees que es impostor? Puedes cambiar tu voto hasta que se cierre.</p>
+      <p className="hint">¿Quién es el impostor?</p>
       <div className="vote-grid">
         {options.map((p) => (
           <button key={p.id} type="button" className={`vote-btn ${myVote === p.id ? 'active' : ''}`} onClick={() => vote(p.id)}>

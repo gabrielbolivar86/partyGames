@@ -48,12 +48,12 @@ function Voting({ round, candidates, offset, onVoted }) {
       <blockquote className="persona-fact">“{round.fact}”</blockquote>
 
       {round.is_owner ? (
-        <div className="owner-box">🤫 <b>¡Es tu dato!</b> Pon cara de póker… ganas puntos por cada persona que no te descubra.</div>
+        <div className="owner-box">🤫 <b>¡Es tu dato!</b> Ponte serio y no te hagas atrapar 😶</div>
       ) : timeUp ? (
         <p className="hint">¡Tiempo! {voted ? <>Votaste por <b>{voted.nickname || voted.name}</b>.</> : 'No alcanzaste a votar.'} Mira la pantalla 👀</p>
       ) : (
         <>
-          <p className="hint">{voted ? <>Tu voto: <b>{voted.nickname || voted.name}</b> ✓ (puedes cambiarlo)</> : '¿De quién crees que es? Toca un nombre.'}</p>
+          <p className="hint">{voted ? <>Tu voto: <b>{voted.nickname || voted.name}</b> ✓ (puedes cambiarlo)</> : '¿De quién es?'}</p>
           {candidates.length > 8 && <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Buscar…" />}
           <div className="vote-grid">
             {filtered.map((c) => (
@@ -137,7 +137,7 @@ export function MyFactCard() {
       <h3>🤫 Mis datos curiosos <span className="muted small">{facts.length}/{MAX_FACTS}</span></h3>
 
       {facts.length === 0 && editing === null && (
-        <p className="muted">Aún no tienes datos para el juego <i>¿Quién es el personaje?</i></p>
+        <p className="muted">Aún no tienes datos.</p>
       )}
 
       {facts.length > 0 && (
@@ -176,11 +176,11 @@ export function MyFactCard() {
           {msg && <div className="error">{msg}</div>}
           {canAdd && (
             <button className="btn add-fact" onClick={() => open(null)}>
-              {facts.length === 0 ? '＋ Escribir mi dato curioso' : '＋ Si tienes otra anécdota o dato, agrégala aquí'}
+              {facts.length === 0 ? '＋ Escribir mi dato curioso' : '＋ Agregar otro dato'}
             </button>
           )}
           {facts.length > 0 && (
-            <p className="hint">Se muestran sin tu nombre para que adivinen, y al final de la ronda se revela que eres tú. Si tu dato sale, ganas puntos extra… ¡y el doble si no te atrapan!</p>
+            <p className="small muted">Si sale tu dato: puntos extra, ¡x2 si no te atrapan!</p>
           )}
         </>
       )}

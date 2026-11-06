@@ -30,12 +30,9 @@ export default function FactTips() {
   const [examples, setExamples] = useState(() => pick(3))
   return (
     <div className="fact-tips">
-      <p>
-        Algo <b>gracioso o curioso</b> que poca gente sepa de ti. En el juego <i>¿Quién es el personaje?</i> se mostrará
-        en pantalla <b>sin tu nombre</b> para que los demás adivinen, y <b>al final de la ronda se revela que eres tú</b>.
-      </p>
-      <p className="fact-bonus">🎁 Si tu dato sale en el juego ganas <b>puntos extra</b>, ¡y <b>el doble</b> si no te atrapan!</p>
-      <p className="fact-warn">⚠️ Evita cosas muy personales o que te incomoden contar.</p>
+      <p>Algo <b>gracioso o curioso</b> de ti que pocos sepan. Sale en pantalla sin tu nombre y, al final de la ronda, se revela que eres tú.</p>
+      <p className="fact-bonus">🎁 Puntos extra si sale, <b>¡x2 si no te atrapan!</b></p>
+      <p className="fact-warn">⚠️ Nada muy personal.</p>
       <div className="fact-examples">
         <span className="small muted">Ideas:</span>
         <ul>{examples.map((e) => <li key={e}>“{e}”</li>)}</ul>

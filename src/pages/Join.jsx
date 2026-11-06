@@ -76,7 +76,7 @@ function RegisterForm({ onDone }) {
           <input value={form.costume} onChange={set('costume')} maxLength={80} required placeholder="Ej. Momia egipcia" />
         </label>
       )}
-      {!form.hasCostume && <p className="hint">Sin disfraz no entras al concurso de mejor disfraz, pero sí votas y juegas todo lo demás.</p>}
+      {!form.hasCostume && <p className="hint">Sin disfraz no compites por el mejor disfraz, pero juegas todo lo demás.</p>}
 
       <div className="fact-block">
         <label>Un dato curioso o anécdota tuya 🤫 <span className="muted small">(opcional)</span>
@@ -84,7 +84,6 @@ function RegisterForm({ onDone }) {
             placeholder="Escribe tu dato aquí…" />
         </label>
         <FactTips />
-        <p className="hint">¿Tienes otra anécdota? Podrás agregar un segundo dato desde la app después de entrar.</p>
       </div>
 
       {error && <div className="error">{error}</div>}
@@ -122,7 +121,7 @@ function LinkForm({ onDone }) {
 
   return (
     <div className="card form">
-      <p className="hint">¿Cambiaste de celular o se borró tu sesión? Busca tu nombre y el admin aprobará este dispositivo.</p>
+      <p className="hint">¿Cambiaste de celular? Busca tu nombre y el admin te aprueba.</p>
       <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Buscar tu nombre…" />
       <div className="pick-list">
         {filtered.map((p) => (

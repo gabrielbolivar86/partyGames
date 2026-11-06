@@ -22,9 +22,9 @@ export default function WolfPlay() {
       </div>
       {v.status === 'lobby' && <Lobby v={v} />}
       {v.status === 'setup' && (v.joined
-        ? <p className="hint">🃏 El narrador está preparando la baraja… en un momento te llega tu carta.</p>
+        ? <p className="hint">🃏 Preparando las cartas…</p>
         : <NotSeated v={v} />)}
-      {(v.status === 'playing' || v.status === 'finished') && (v.joined ? <Playing v={v} onDone={refresh} /> : <p className="hint">👀 Esta partida ya empezó: entras automáticamente en la siguiente. ¡Mírala en la pantalla! Narra {v.narrator}.</p>)}
+      {(v.status === 'playing' || v.status === 'finished') && (v.joined ? <Playing v={v} onDone={refresh} /> : <p className="hint">👀 Partida en curso: entras en la siguiente.</p>)}
     </section>
   )
 }
@@ -42,16 +42,16 @@ function Lobby({ v }) {
   if (!v.joined) return <NotSeated v={v} />
   return (
     <>
-      <p className="hint">Se abrió una mesa de <b>Hombre Lobo</b>. Narra <b>{v.narrator}</b>. Juegan <b>{v.joined_count}</b> personas.</p>
-      <div className="success">✅ Ya estás en la mesa (entran todos automáticamente). Espera a que el narrador reparta las cartas.</div>
+      <div className="success">✅ Estás en la mesa · {v.joined_count} jugadores</div>
+      <p className="hint">Narra <b>{v.narrator}</b>. Espera tu carta.</p>
     </>
   )
 }
 
 function NotSeated({ v }) {
   return v.away
-    ? <p className="away-note">⏸️ Estás ausente, así que no entras en esta partida. Toca <b>“Ya volví”</b> antes de que repartan para entrar.</p>
-    : <p className="hint">El narrador te dejó fuera de esta partida. Si quieres jugar, avísale a <b>{v.narrator}</b>.</p>
+    ? <p className="away-note">⏸️ Estás en pausa. Vuelve antes de que repartan para jugar.</p>
+    : <p className="hint">Esta partida no juegas. Si quieres entrar, avísale a <b>{v.narrator}</b>.</p>
 }
 
 function Playing({ v, onDone }) {
@@ -74,14 +74,14 @@ function Playing({ v, onDone }) {
       <>
         <div className="wolf-dead">💀 <b>Estás muerto</b> · Eras {role.emoji} <b>{role.name}</b><div className="small muted">{v.death_text}</div></div>
         {(v.action === 'shoot' || v.action === 'successor') && <ActionBox v={v} onDone={onDone} />}
-        {!v.action && <p className="hint">Ya no puedes hablar ni votar. ¡Disfruta viendo cómo sigue la partida! 🤐</p>}
+        {!v.action && <p className="hint">Ya no hablas ni votas 🤐</p>}
       </>
     )
   }
 
   return (
     <>
-      {v.away && <p className="away-note">⏸️ Estás ausente: tu carta se guarda, pero no actúas ni te pueden elegir. Toca <b>“Ya volví”</b> para seguir.</p>}
+      {v.away && <p className="away-note">⏸️ Estás en pausa. Tu carta se guarda.</p>}
       <WolfCard v={v} />
       {v.neighbors && <p className="small muted">🪑 Siéntate entre <b>{v.neighbors[0]}</b> y <b>{v.neighbors[1]}</b>{v.is_mayor ? ' · 🎖️ Eres el alcalde' : ''}</p>}
       <p className="hint">{p.emoji} {p.player}</p>
