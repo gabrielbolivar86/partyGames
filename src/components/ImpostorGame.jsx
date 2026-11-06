@@ -10,8 +10,9 @@ import { KIND_LABEL } from '../lib/impostor'
  * - Los impostores tienen 1 intento para adivinar la palabra.
  */
 export default function ImpostorGame({ myId }) {
-  const { data, refresh } = useLiveRpc('get_impostor_status', ['impostor_game', 'impostor_votes'])
-  if (!data || data.status === 'none') return null
+  const { data: raw, refresh } = useLiveRpc('get_impostor_status', ['impostor_game', 'impostor_votes'])
+  if (!raw || raw.status === 'none') return null
+  const data = { ...raw, me_away: !!raw.players?.find((p) => p.id === myId)?.away }
 
   const finished = data.status === 'finished'
 
@@ -24,12 +25,13 @@ export default function ImpostorGame({ myId }) {
 
       {!data.participant && !finished && <p className="hint">👀 No juegas esta ronda. ¡Mira la pantalla y disfruta!</p>}
 
+      {data.participant && !finished && data.me_away && <p className="away-note">⏸️ Estás ausente: tu carta se guarda, pero no votas ni te pueden votar hasta que toques <b>“Ya volví”</b>.</p>}
       {data.participant && !finished && <SecretCard data={data} />}
       {data.participant && !finished && !data.alive && <p className="hint">☠️ Fuiste eliminado. Ya no votas{data.role === 'impostor' ? ', pero aún puedes adivinar la palabra.' : '.'}</p>}
 
       {data.last_result && !finished && <LastResult r={data.last_result} />}
 
-      {data.participant && data.alive && data.vote.status === 'open' && !finished && (
+      {data.participant && data.alive && !data.me_away && data.vote.status === 'open' && !finished && (
         <VoteBox data={data} myId={myId} onVoted={refresh} />
       )}
 
@@ -93,7 +95,7 @@ function VoteBox({ data, myId, onVoted }) {
   const [msg, setMsg] = useState(null)
   const [pending, setPending] = useState(null)
   const myVote = pending ?? data.vote.my_vote
-  const options = data.players.filter((p) => p.alive && p.id !== myId)
+  const options = data.players.filter((p) => p.alive && !p.away && p.id !== myId)
 
   async function vote(id) {
     setPending(id)

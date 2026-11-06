@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { supabase, errorMessage } from '../../lib/supabase'
 import { useLiveRpc } from '../../hooks/useLiveRpc'
+import { GiftTimer } from '../../components/GiftGame'
 
 const STATUS = {
   none: 'Sin empezar', writing: 'Escribiendo', reading: 'Leyendo frases', voting: 'Votando', results: 'Resultados',
@@ -32,15 +33,23 @@ export default function GiftAdmin({ players, dashboardMode }) {
 
         {s === 'writing' && (
           <>
+            <GiftTimer data={ov} onExpire={refresh} />
+            {ov.ends_at && (
+              <div className="row">
+                <button className="btn small" disabled={busy} onClick={() => call('admin_gift_add_time', { p_seconds: 15 })}>＋15 s</button>
+                <button className="btn small" disabled={busy} onClick={() => call('admin_gift_add_time', { p_seconds: 30 })}>＋30 s</button>
+              </div>
+            )}
             <div className="stats two">
               <div><b>{ov.progress.done}/{ov.progress.total}</b><span>partes escritas</span></div>
               <div><b>{ov.missing.length}</b><span>personas faltan</span></div>
             </div>
-            {ov.missing.length > 0 && <p className="small muted">Faltan: {ov.missing.join(', ')}</p>}
+            {ov.missing.length > 0 && <Reassign ov={ov} players={players} busy={busy} call={call} />}
             <button className="btn primary" disabled={busy}
               onClick={() => call('admin_gift_close_writing', {}, ov.missing.length ? `Faltan ${ov.missing.length} personas. Lo que falte se rellena con algo al azar. ¿Cerrar?` : null)}>
               ✅ Cerrar escritura y armar frases
             </button>
+            {ov.ends_at && <p className="hint">Al acabarse el tiempo se cierra sola y lo que falte se rellena al azar.</p>}
           </>
         )}
 
@@ -114,28 +123,60 @@ function Setup({ players, busy, call, again }) {
   }, [ids]) // eslint-disable-line
   const toggle = (id) => setSelected((s) => { const c = new Set(s); c.has(id) ? c.delete(id) : c.add(id); return c })
   const sorted = [...players].sort((a, b) => a.name.localeCompare(b.name))
+  const n = players.filter((p) => selected.has(p.player_id) && !p.away).length
 
   return (
     <div className="form" style={{ marginTop: 10 }}>
       <div className="row">
-        <b>{again ? 'Otra ronda' : 'Jugadores'}: {selected.size}</b>
+        <b>{again ? 'Otra ronda' : 'Jugadores'}: {n}</b>
         <button className="link-btn" onClick={() => setSelected(new Set(players.map((p) => p.player_id)))}>Todos</button>
         <button className="link-btn" onClick={() => setSelected(new Set())}>Ninguno</button>
       </div>
       <div className="check-grid">
         {sorted.map((p) => (
-          <label key={p.player_id} className={`check-chip ${selected.has(p.player_id) ? 'on' : ''}`}>
+          <label key={p.player_id} className={`check-chip ${selected.has(p.player_id) && !p.away ? 'on' : ''} ${p.away ? 'away' : ''}`} title={p.away ? 'Ausente: entra en la siguiente ronda' : ''}>
             <input type="checkbox" checked={selected.has(p.player_id)} onChange={() => toggle(p.player_id)} />
-            {p.nickname || p.name}
+            {p.away ? '⏸️ ' : ''}{p.nickname || p.name}
           </label>
         ))}
       </div>
       <p className="hint">Cada jugador escribe 3 cosas a ciegas y se arma una frase por jugador. Con muchos jugadores la lectura es larga: con 10–15 queda bien.</p>
-      <button className="btn primary" disabled={busy || selected.size < 4}
+      <button className="btn primary" disabled={busy || n < 4}
         onClick={() => call('admin_gift_start', { p_players: [...selected] }, again ? '¿Empezar una nueva ronda?' : null)}>
         ▶︎ Empezar a escribir
       </button>
-      {selected.size < 4 && <p className="hint">Se necesitan al menos 4 jugadores.</p>}
+      {n < 4 && <p className="hint">Se necesitan al menos 4 jugadores presentes.</p>}
+      {players.some((p) => p.away) && <p className="small muted">⏸️ Los ausentes no entran a esta ronda.</p>}
+    </div>
+  )
+}
+
+// Quién falta: se le pueden pasar sus partes a otra persona (ej. tuvo que ir a ver a su hijo)
+function Reassign({ ov, players, busy, call }) {
+  const [from, setFrom] = useState(null)
+  const [to, setTo] = useState('')
+  const options = [...players].filter((p) => !p.away && p.player_id !== from).sort((a, b) => a.name.localeCompare(b.name))
+  return (
+    <div className="reassign">
+      <div className="small"><b>Faltan:</b></div>
+      <ul className="players-list compact-list">
+        {ov.missing.map((m) => (
+          <li key={m.id}>
+            <span className="grow">{m.name}{m.away && <span className="away-tag"> ⏸️ ausente</span>} <span className="small muted">· {m.parts} {m.parts === 1 ? 'parte' : 'partes'}</span></span>
+            <button className="btn small ghost-btn" onClick={() => { setFrom(from === m.id ? null : m.id); setTo('') }}>{from === m.id ? 'Cancelar' : '↪︎ Pasar a…'}</button>
+          </li>
+        ))}
+      </ul>
+      {from && (
+        <div className="row nowrap">
+          <select value={to} onChange={(e) => setTo(e.target.value)}>
+            <option value="">¿Quién las escribe?</option>
+            {options.map((p) => <option key={p.player_id} value={p.player_id}>{p.nickname || p.name}</option>)}
+          </select>
+          <button className="btn small primary" disabled={busy || !to}
+            onClick={async () => { await call('admin_gift_reassign', { p_from: from, p_to: to }); setFrom(null); setTo('') }}>OK</button>
+        </div>
+      )}
     </div>
   )
 }
@@ -146,7 +187,9 @@ function GiftSettings({ settings, onSaved }) {
   useEffect(() => { setS(settings) }, [JSON.stringify(settings)]) // eslint-disable-line
 
   async function save() {
-    const { error } = await supabase.rpc('admin_gift_settings', { p1: Number(s.p1), p2: Number(s.p2), p3: Number(s.p3) })
+    const r1 = await supabase.rpc('admin_gift_settings', { p1: Number(s.p1), p2: Number(s.p2), p3: Number(s.p3) })
+    const r2 = await supabase.rpc('admin_gift_timer', { p_seconds: Number(s.seconds) })
+    const error = r1.error || r2.error
     setMsg(error ? { type: 'error', text: errorMessage(error) } : { type: 'ok', text: 'Guardado' })
     onSaved()
   }
@@ -157,11 +200,14 @@ function GiftSettings({ settings, onSaved }) {
   )
   return (
     <section className="card form">
-      <h3>⚙️ Puntos</h3>
+      <h3>⚙️ Tiempo y puntos</h3>
+      <label className="pts-field">⏱ Segundos para escribir (0 = sin tiempo)
+        <input type="number" min="0" max="600" value={s.seconds} onChange={(e) => setS({ ...s, seconds: e.target.value })} />
+      </label>
       <div className="pts-grid three">{field('p1', '🥇 1.º')}{field('p2', '🥈 2.º')}{field('p3', '🥉 3.º')}</div>
       <p className="hint">Se dan a <b>los 3 autores</b> de cada frase ganadora (quien eligió el objeto, el uso y la reacción). Se suman al revelar el 1.º.</p>
       {msg && <div className={msg.type === 'error' ? 'error' : 'success'}>{msg.text}</div>}
-      <button className="btn" onClick={save}>Guardar puntos</button>
+      <button className="btn" onClick={save}>Guardar</button>
     </section>
   )
 }

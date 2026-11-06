@@ -44,6 +44,7 @@ export default function ImpostorBoard() {
                 <span className="who">{p.name}</span>
                 {p.role && <span className="role-tag">{p.role === 'impostor' ? '🕵️ Impostor' : '🛡 Tripulante'}</span>}
                 {!p.alive && <span className="skull">☠️</span>}
+                {p.alive && p.away && <span className="away-tag">⏸️ ausente</span>}
               </li>
             ))}
           </ol>

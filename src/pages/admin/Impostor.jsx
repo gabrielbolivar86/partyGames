@@ -55,7 +55,7 @@ export default function ImpostorAdmin({ players, dashboardMode }) {
 /* ---------- Preparar ronda ---------- */
 function Setup({ ov, players, busy, call }) {
   const [selected, setSelected] = useState(() => new Set(players.map((p) => p.player_id)))
-  const n = selected.size
+  const n = players.filter((p) => selected.has(p.player_id) && !p.away).length
   const sug = suggestImpostors(n)
   const [k, setK] = useState(sug.k)
   const [touchedK, setTouchedK] = useState(false)
@@ -97,12 +97,14 @@ function Setup({ ov, players, busy, call }) {
       </div>
       <div className="check-grid">
         {sorted.map((p) => (
-          <label key={p.player_id} className={`check-chip ${selected.has(p.player_id) ? 'on' : ''}`}>
+          <label key={p.player_id} className={`check-chip ${selected.has(p.player_id) && !p.away ? 'on' : ''} ${p.away ? 'away' : ''}`} title={p.away ? 'Ausente: entra en la siguiente ronda' : ''}>
             <input type="checkbox" checked={selected.has(p.player_id)} onChange={() => toggle(p.player_id)} />
-            {p.nickname || p.name}
+            {p.away ? '⏸️ ' : ''}{p.nickname || p.name}
           </label>
         ))}
       </div>
+
+      {players.some((p) => p.away) && <p className="small muted">⏸️ Los ausentes no entran a esta ronda (entran en la siguiente cuando vuelvan).</p>}
 
       <div className="imp-k">
         <span><b>Impostores</b></span>

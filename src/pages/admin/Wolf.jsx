@@ -33,7 +33,7 @@ export default function WolfAdmin({ players, dashboardMode }) {
 
         {!active ? (
           <>
-            <p className="hint">Elige a un <b>narrador</b> (no juega: ve todos los roles y avanza las fases desde su celular). Puede ser cualquiera, incluso tú.</p>
+            <p className="hint">Elige a un <b>narrador</b> (no juega: ve todos los roles y avanza las fases desde su celular). Puede ser cualquiera, incluso tú. <b>Todos los demás presentes entran automáticamente</b> a la mesa.</p>
             <select value={narrator} onChange={(e) => setNarrator(e.target.value)}>
               <option value="">— Elegir narrador —</option>
               {sorted.map((p) => <option key={p.player_id} value={p.player_id}>{p.nickname || p.name}</option>)}
@@ -45,7 +45,7 @@ export default function WolfAdmin({ players, dashboardMode }) {
           <>
             <p>Narrador: <b>{ov.narrator}</b> · {ov.players.length} jugadores</p>
             {ov.status === 'playing' && <p className="small">Fase: {PHASES[ov.phase]?.emoji} {PHASES[ov.phase]?.label} · noche {ov.night_no} · día {ov.day_no}</p>}
-            {ov.players.length > 0 && <p className="small muted">{ov.players.join(', ')}</p>}
+            <WolfSeats ov={ov} call={call} />
             <div className="row nowrap">
               <select value={narrator} onChange={(e) => setNarrator(e.target.value)}>
                 <option value="">Cambiar narrador…</option>
@@ -65,6 +65,41 @@ export default function WolfAdmin({ players, dashboardMode }) {
         </div>
       </section>
       <WolfSettings settings={ov.settings} onSaved={refresh} />
+    </>
+  )
+}
+
+// Lista de la mesa: el admin puede marcar ausentes, volver a sumar, o dar por muerto a quien se fue
+function WolfSeats({ ov, call }) {
+  const playing = ov.status === 'playing'
+  return (
+    <>
+      <ul className="players-list compact-list">
+        {ov.seats.map((s) => (
+          <li key={s.id} className={s.alive ? '' : 'dead'}>
+            <span className="grow">{s.alive ? '' : '💀 '}{s.name}{s.alive && s.away && <span className="away-tag"> ⏸️ ausente</span>}</span>
+            {s.alive && (s.away
+              ? <>
+                  <button className="btn small ghost-btn" title="Volvió" onClick={() => call('admin_set_away', { p_player: s.id, p_away: false })}>▶︎ Volvió</button>
+                  {playing && <button className="btn small ghost-btn" title="Darlo por muerto" onClick={() => call('wolf_kill_away', { p_player: s.id }, `¿${s.name} no vuelve? Se da por muerto y se revela su carta en la pantalla.`)}>🚪 Matar</button>}
+                </>
+              : <button className="btn small ghost-btn" title="Marcar ausente" onClick={() => call('admin_set_away', { p_player: s.id, p_away: true })}>⏸️</button>)}
+          </li>
+        ))}
+      </ul>
+      {ov.benched?.length > 0 && (
+        <div className="bench">
+          <div className="small"><b>Fuera de la mesa ({ov.benched.length})</b>{playing && <span className="muted"> · entran en la próxima partida</span>}</div>
+          <ul className="players-list compact-list">
+            {ov.benched.map((b) => (
+              <li key={b.id}>
+                <span className="grow">{b.name} <span className="small muted">{b.away ? '⏸️ ausente' : b.excluded ? '✕ sacado' : 'llegó tarde'}</span></span>
+                {!playing && <button className="btn small" onClick={() => call('wolf_unkick', { p_player: b.id })}>＋ Sumar</button>}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </>
   )
 }

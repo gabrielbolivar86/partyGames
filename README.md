@@ -7,6 +7,7 @@
 - **Fase 5:** El Impostor, más la tabla congelada y los resultados finales de la noche. Ver [la sección de la fase 5](#fase-5-el-impostor-y-resultados-finales).
 - **Fase 6:** El Regalo Loco, más el QR del wifi en la pantalla. Ver [la sección de la fase 6](#fase-6-el-regalo-loco-y-wifi).
 - **Fase 7:** Hombre Lobo, etapa 1: narrador, baraja sugerida, noche simultánea, alcalde y TV con la mesa. Ver [la sección de la fase 7](#fase-7-hombre-lobo-etapa-1).
+- **Fase 8:** cada juego en su pestaña a pantalla completa, aviso "¡Empezó!", todos entran automáticamente, "⏸️ Me ausento un rato" y temporizador del Regalo Loco. Ver [la sección de la fase 8](#fase-8-pestañas-de-juegos-me-ausento-un-rato-y-temporizador-del-regalo).
 
 **Stack:** React + Vite · Supabase (base de datos, tiempo real y login anónimo) · Vercel o GitHub Pages. Costo: $0.
 
@@ -318,7 +319,7 @@ Al reiniciar desde **🧹 Ajustes**, las rondas se borran pero los datos se cons
 
 ### Cómo se juega
 1. **Admin → 🐺 Lobo:** elige un **narrador** (no juega; puede ser cualquiera, incluso tú) → **🚪 Abrir mesa**.
-2. A los invitados les aparece **"🐺 Unirme al Hombre Lobo"**. El narrador ve la lista en su celular, puede quitar gente y toca **🔒 Cerrar mesa**.
+2. **Todos los presentes quedan en la mesa automáticamente** (desde la fase 8; menos el narrador y los ausentes ⏸️). El narrador ve la lista en su celular, puede sacar a alguien con ✕ o volver a sumarlo, y toca **🔒 Cerrar mesa**.
 3. **Baraja:** la app sugiere una **explicando por qué** (porcentaje de lobos, cuándo conviene la Bruja, el alcalde desde 12 jugadores). El narrador ajusta con ＋/−: los aldeanos se calculan solos y hay un **medidor de balance** 🟢🟡🔴 con avisos. También elige si hay alcalde, si la baraja es pública y los minutos de debate. Luego **🃏 Repartir**.
 4. **Reparto:** roles y **asientos al azar**. Cada celular dice "Siéntate entre X e Y" y la TV dibuja la mesa en círculo con la explicación de los roles. Cada uno **mantiene presionada** su carta para verla; los lobos ven a su manada.
 5. El narrador avanza con **▶︎ Siguiente fase** y tiene un **guion para leer en voz alta** en cada una:
@@ -333,6 +334,40 @@ Al reiniciar desde **🧹 Ajustes**, las rondas se borran pero los datos se cons
 **El narrador** ve todos los roles, quién ya respondió, la víctima de la manada y las pociones. Puede **💀 matar o 💚 revivir** a mano y **terminar la partida** declarando un ganador. Si alguien no responde a tiempo, pierde su acción.
 
 **Seguridad:** los roles nunca viajan por el canal en vivo. Cada celular pide **su propia vista** al servidor, y el **admin no ve roles** en su panel, por si juega.
+
+---
+
+## Fase 8: pestañas de juegos, "Me ausento un rato" y temporizador del Regalo
+
+### Instalar
+1. Supabase → **SQL Editor → New query** → pega todo `supabase/09_fase8_ausentes_pestanas.sql` → **Run**. No borra nada y se puede correr varias veces.
+   - ⚠️ Si alguna vez vuelves a correr un script anterior (06, 07 u 08), corre de nuevo el 09 después, porque los anteriores pisan algunas funciones.
+2. `git add . && git commit -m "Fase 8: pestañas y ausentes" && git push`
+
+### Pestañas de juegos (invitados)
+- El inicio ahora es un **menú**: tu puntaje, la lista **🎮 Juegos** activos, la tabla general y tus datos curiosos.
+- Cuando el admin empieza un juego (o una ronda nueva del Personaje), aparece un **aviso grande "¡Empezó…! → Entrar"**.
+- Cada juego se abre en **pantalla completa** (ocupa todo el navegador) con una barra arriba: **← Menú** y una pestaña por cada juego activo. Puede haber varios a la vez (ej. la caza de códigos toda la noche mientras se juega el Impostor).
+- Un **punto rojo** en la pestaña (o el recuadro naranja en el menú) indica **"¡te toca!"**: votar, escribir, ver tu carta, etc.
+- El narrador del Lobo ve la pestaña **🐺 Narrar** con su panel.
+
+### ⏸️ Me ausento un rato
+Para quien tiene que salir un momento (por ejemplo, a ver a sus hijos):
+- **El invitado** toca **"⏸️ Me ausento un rato"** en el menú; al volver, **"▶︎ Ya volví"**.
+- **El admin** lo puede hacer por cualquiera en **👥 Invitados** (⏸️ / ▶︎), en **🐺 Lobo** y desde el panel del narrador.
+- Mientras está ausente:
+  - **🐺 Lobo / 🃏 Impostor:** conserva su carta. No actúa, no vota y nadie lo puede elegir. Lo que había votado en ese momento deja de contar. La TV lo marca "⏸️ ausente". Al volver, sigue con el mismo rol.
+  - **🐺 Si no vuelve:** el admin (**🚪 Matar**) o el narrador (**🚪**) lo dan por muerto. La TV anuncia que se retiró y revela su carta.
+  - **Rondas nuevas:** los ausentes no entran; entran en la siguiente cuando vuelvan. Nadie entra a mitad de una partida.
+  - **🕵️ Personaje:** sus datos curiosos no salen mientras está ausente.
+  - **🎁 Regalo:** si falta alguien, el admin toca **↪︎ Pasar a…** y elige a otra persona para que escriba sus partes (se le dan al menos 20 s).
+- **🧹 Borrar y limpiar** también quita las marcas de ausente.
+
+### 🎁 Regalo Loco con temporizador
+- Por defecto hay **30 s para escribir** (Admin → 🎁 Regalo → ⚙️ Tiempo y puntos; **0 = sin tiempo**).
+- El tiempo se ve en los celulares, en la TV y en el admin. El admin puede sumar **＋15 s / ＋30 s**.
+- Lo escrito **se guarda solo** al dejar de escribir. Al llegar a 0, la escritura se cierra sola y lo que falte se rellena al azar.
+- 💡 30 s es poco para 3 partes. Si ves que no alcanza, súbelo a 45–60 s.
 
 ---
 
@@ -376,6 +411,7 @@ supabase/
   06_fase5_impostor_final.sql  El Impostor, congelar tabla y resultados finales
   07_fase6_regalo_wifi.sql     El Regalo Loco y wifi
   08_fase7_lobo.sql            Hombre Lobo (etapa 1)
+  09_fase8_ausentes_pestanas.sql  ausentes, pestañas, Lobo automático, temporizador del Regalo
 src/
   lib/supabase.js         cliente de Supabase
   lib/urls.js             URLs de registro y dashboard
@@ -413,6 +449,7 @@ src/
   components/WolfPlay.jsx       Hombre Lobo en el celular (carta, acciones)
   components/WolfNarrator.jsx   panel del narrador
   components/WolfBoard.jsx      Hombre Lobo en la TV
+  hooks/useMyGames.js           juegos activos para las pestañas (get_my_games)
   components/LeaderboardList.jsx
 ```
 

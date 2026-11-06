@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import { useLiveRpc } from '../hooks/useLiveRpc'
+import { GiftTimer } from './GiftGame'
 
 const MEDALS = { 1: '🥇', 2: '🥈', 3: '🥉' }
 
 // Pantalla de El Regalo Loco: progreso de escritura → lectura de frases → votación → podio
 export default function GiftBoard() {
-  const { data } = useLiveRpc('get_gift_board', ['gift_game'])
+  const { data, refresh } = useLiveRpc('get_gift_board', ['gift_game'])
   if (!data) return <div className="reveal"><p className="muted">Cargando…</p></div>
   if (data.status === 'none') {
     return <div className="reveal"><h1 className="spooky reveal-title">🎁 El Regalo Loco</h1><p className="reveal-sub">Muy pronto…</p></div>
@@ -17,6 +18,7 @@ export default function GiftBoard() {
       <div className="reveal">
         <h1 className="spooky reveal-title">🎁 El Regalo Loco</h1>
         <p className="reveal-sub">Escriban en su celular: <b>un regalo</b>, <b>para qué sirve</b> y <b>una reacción</b>… ¡a ciegas! 🙈</p>
+        <GiftTimer data={data} onExpire={refresh} big />
         <div className="gift-bar"><span style={{ width: `${pct}%` }} /></div>
         <div className="reveal-sub">{pct}% listo · {data.players} participantes</div>
       </div>

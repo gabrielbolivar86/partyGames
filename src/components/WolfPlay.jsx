@@ -20,9 +20,11 @@ export default function WolfPlay() {
         <h3>🐺 Hombre Lobo</h3>
         {v.status === 'playing' && <PhasePill v={v} />}
       </div>
-      {v.status === 'lobby' && <Lobby v={v} onDone={refresh} />}
-      {v.status === 'setup' && <p className="hint">{v.joined ? '🃏 El narrador está preparando la baraja… en un momento te llega tu carta.' : 'La mesa ya cerró. ¡Mira la partida en la pantalla!'}</p>}
-      {(v.status === 'playing' || v.status === 'finished') && (v.joined ? <Playing v={v} onDone={refresh} /> : <p className="hint">👀 No juegas esta partida. ¡Mírala en la pantalla! Narra {v.narrator}.</p>)}
+      {v.status === 'lobby' && <Lobby v={v} />}
+      {v.status === 'setup' && (v.joined
+        ? <p className="hint">🃏 El narrador está preparando la baraja… en un momento te llega tu carta.</p>
+        : <NotSeated v={v} />)}
+      {(v.status === 'playing' || v.status === 'finished') && (v.joined ? <Playing v={v} onDone={refresh} /> : <p className="hint">👀 Esta partida ya empezó: entras automáticamente en la siguiente. ¡Mírala en la pantalla! Narra {v.narrator}.</p>)}
     </section>
   )
 }
@@ -36,23 +38,20 @@ function PhasePill({ v }) {
 
 const fmt = (s) => (s >= 60 ? `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}` : `${s}s`)
 
-function Lobby({ v, onDone }) {
-  const [msg, setMsg] = useState(null)
-  async function join() {
-    const { data, error } = await supabase.rpc('wolf_join')
-    setMsg(error ? errorMessage(error) : data.ok ? null : data.error)
-    onDone()
-  }
-  async function leave() { await supabase.rpc('wolf_leave'); onDone() }
+function Lobby({ v }) {
+  if (!v.joined) return <NotSeated v={v} />
   return (
     <>
-      <p className="hint">Se abrió una mesa de <b>Hombre Lobo</b>. Narra <b>{v.narrator}</b>. {v.joined_count} {v.joined_count === 1 ? 'persona se unió' : 'personas se unieron'}.</p>
-      {v.joined
-        ? <><div className="success">✅ Estás dentro. Espera a que el narrador cierre la mesa.</div><button className="btn small ghost-btn" onClick={leave}>Salir de la mesa</button></>
-        : <button className="btn primary" onClick={join}>🐺 Unirme al Hombre Lobo</button>}
-      {msg && <div className="error">{msg}</div>}
+      <p className="hint">Se abrió una mesa de <b>Hombre Lobo</b>. Narra <b>{v.narrator}</b>. Juegan <b>{v.joined_count}</b> personas.</p>
+      <div className="success">✅ Ya estás en la mesa (entran todos automáticamente). Espera a que el narrador reparta las cartas.</div>
     </>
   )
+}
+
+function NotSeated({ v }) {
+  return v.away
+    ? <p className="away-note">⏸️ Estás ausente, así que no entras en esta partida. Toca <b>“Ya volví”</b> antes de que repartan para entrar.</p>
+    : <p className="hint">El narrador te dejó fuera de esta partida. Si quieres jugar, avísale a <b>{v.narrator}</b>.</p>
 }
 
 function Playing({ v, onDone }) {
@@ -82,6 +81,7 @@ function Playing({ v, onDone }) {
 
   return (
     <>
+      {v.away && <p className="away-note">⏸️ Estás ausente: tu carta se guarda, pero no actúas ni te pueden elegir. Toca <b>“Ya volví”</b> para seguir.</p>}
       <WolfCard v={v} />
       {v.neighbors && <p className="small muted">🪑 Siéntate entre <b>{v.neighbors[0]}</b> y <b>{v.neighbors[1]}</b>{v.is_mayor ? ' · 🎖️ Eres el alcalde' : ''}</p>}
       <p className="hint">{p.emoji} {p.player}</p>
@@ -124,7 +124,7 @@ function ActionBox({ v, onDone }) {
   const [msg, setMsg] = useState(null)
   const [busy, setBusy] = useState(false)
   const choice = v.my_choice || {}
-  const alive = (v.players || []).filter((p) => p.alive)
+  const alive = (v.players || []).filter((p) => p.alive && !p.away)
   const others = alive.filter((p) => p.id !== v.me)
 
   async function act(kind, target) {
@@ -216,7 +216,9 @@ function ActionBox({ v, onDone }) {
 export function WolfResult({ r, big = false }) {
   if (!r) return null
   let content = null
-  if (r.type === 'night' || r.type === 'shot') {
+  if (r.type === 'left') {
+    content = r.deaths.map((d) => <div key={d.name}>🚪 <b>{d.name}</b> se retiró de la partida. Era <b>{d.role}</b>.</div>)
+  } else if (r.type === 'night' || r.type === 'shot') {
     content = r.deaths?.length
       ? r.deaths.map((d) => <div key={d.name}>☠️ <b>{d.name}</b> murió. Era <b>{d.role}</b>.</div>)
       : <div>🌅 La aldea despierta sin bajas.</div>

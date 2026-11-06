@@ -10,6 +10,7 @@ export default function LeaderboardList({ rows, highlightId, compact = false }) 
           <span className="who">
             <strong>{r.name}</strong>
             {r.nickname && <span className="muted"> “{r.nickname}”</span>}
+            {r.away && <span className="away-tag" title="Ausente un rato"> ⏸️</span>}
           </span>
           <span className="pts">{r.points}</span>
         </li>

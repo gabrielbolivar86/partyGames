@@ -48,19 +48,38 @@ export default function WolfNarrator() {
 function NarratorLobby({ v, busy, call }) {
   return (
     <>
-      <p className="hint">Los invitados se unen desde su celular. Cuando estén todos, cierra la mesa (ideal 6 a 25).</p>
-      <ul className="players-list">
+      <p className="hint">✅ <b>Todos los presentes entran automáticamente.</b> Los que marcan “⏸️ Me ausento” quedan fuera de esta partida. Puedes sacar a alguien con ✕ o volver a sumarlo abajo. Cuando estén listos, cierra la mesa.</p>
+      <ul className="players-list compact-list lobby-list">
         {v.seats.map((s) => (
           <li key={s.id}><span className="grow">{s.name}</span>
-            <button className="btn small ghost-btn" onClick={() => call('wolf_kick', { p_player: s.id })}>✕</button></li>
+            <button className="btn small ghost-btn" title="Sacar de esta partida" onClick={() => call('wolf_kick', { p_player: s.id })}>✕</button></li>
         ))}
-        {v.seats.length === 0 && <p className="muted">Aún nadie se unió…</p>}
+        {v.seats.length === 0 && <p className="muted">No hay nadie presente…</p>}
       </ul>
+      <Bench v={v} call={call} />
       <button className="btn primary" disabled={busy || v.seats.length < 4} onClick={() => call('wolf_close_table', {},
         v.seats.length < 6 ? `Solo hay ${v.seats.length} jugadores (lo ideal es 6+). ¿Cerrar igual?` : null)}>
         🔒 Cerrar mesa ({v.seats.length})
       </button>
     </>
+  )
+}
+
+// Quiénes no están en la mesa (ausentes o sacados): se pueden volver a sumar antes de repartir
+export function Bench({ v, call }) {
+  if (!v.benched?.length) return null
+  return (
+    <div className="bench">
+      <div className="small"><b>Fuera de la mesa ({v.benched.length})</b></div>
+      <ul className="players-list">
+        {v.benched.map((b) => (
+          <li key={b.id}>
+            <span className="grow">{b.name} <span className="small muted">{b.away ? '⏸️ ausente' : '✕ sacado'}</span></span>
+            <button className="btn small" onClick={() => call('wolf_unkick', { p_player: b.id })}>＋ Sumar</button>
+          </li>
+        ))}
+      </ul>
+    </div>
   )
 }
 
@@ -116,6 +135,7 @@ function DeckEditor({ v, busy, call }) {
         </label>
       </div>
 
+      <Bench v={v} call={call} />
       <button className="btn primary" disabled={busy || !a.ok} onClick={deal}>🃏 Repartir cartas</button>
       <button className="btn small ghost-btn" onClick={() => call('wolf_reopen_table', {})}>↩︎ Reabrir mesa</button>
     </>
@@ -131,6 +151,7 @@ function NarratorGame({ v, busy, call }) {
 
   // Quién debe actuar en esta fase
   const needs = (s) => {
+    if (s.away) return false
     if (v.phase === 'night') return s.alive
     if (v.phase === 'night_witch') return s.alive && s.role === 'bruja'
     if (v.phase === 'mayor' || v.phase === 'vote') return s.alive
@@ -182,21 +203,33 @@ function NarratorGame({ v, busy, call }) {
 }
 
 function SeatList({ v, call }) {
+  const away = v.seats.filter((s) => s.alive && s.away)
   return (
-    <ul className="narr-seats">
-      {v.seats.map((s) => {
-        const r = roleOf(s.role)
-        return (
-          <li key={s.id} className={s.alive ? '' : 'dead'}>
-            <span className="seat-n">{s.seat}</span>
-            <span className="grow"><b>{s.name}</b>{s.mayor ? ' 🎖️' : ''} <span className="small muted">{r.emoji} {r.name}{s.role === 'bruja' ? ` (${s.heal_left ? '💚' : '·'}${s.kill_left ? '☠️' : '·'})` : ''}</span></span>
-            {s.alive && (s.acted ? <span title="respondió">✅</span> : null)}
-            {call && (s.alive
-              ? <button className="btn small ghost-btn" title="Matar" onClick={() => call('wolf_override', { p_player: s.id, p_alive: false }, `¿Matar a ${s.name}?`)}>💀</button>
-              : <button className="btn small ghost-btn" title="Revivir" onClick={() => call('wolf_override', { p_player: s.id, p_alive: true }, `¿Revivir a ${s.name}?`)}>💚</button>)}
-          </li>
-        )
-      })}
-    </ul>
+    <>
+      {call && away.length > 0 && (
+        <div className="away-note small">⏸️ Ausentes: <b>{away.map((s) => s.name).join(', ')}</b>. Siguen con su carta pero no actúan. Si alguien no vuelve, usa 🚪 para darlo por muerto (se revela su carta).</div>
+      )}
+      <ul className="narr-seats">
+        {v.seats.map((s) => {
+          const r = roleOf(s.role)
+          return (
+            <li key={s.id} className={`${s.alive ? '' : 'dead'} ${s.alive && s.away ? 'away' : ''}`}>
+              <span className="seat-n">{s.seat}</span>
+              <span className="grow"><b>{s.name}</b>{s.mayor ? ' 🎖️' : ''}{s.alive && s.away ? ' ⏸️' : ''} <span className="small muted">{r.emoji} {r.name}{s.role === 'bruja' ? ` (${s.heal_left ? '💚' : '·'}${s.kill_left ? '☠️' : '·'})` : ''}</span></span>
+              {s.alive && (s.acted ? <span title="respondió">✅</span> : null)}
+              {call && s.alive && (s.away
+                ? <>
+                    <button className="btn small ghost-btn" title="Volvió" onClick={() => call('admin_set_away', { p_player: s.id, p_away: false })}>▶︎</button>
+                    <button className="btn small ghost-btn" title="Se fue: darlo por muerto" onClick={() => call('wolf_kill_away', { p_player: s.id }, `¿${s.name} no vuelve? Se da por muerto y se revela su carta.`)}>🚪</button>
+                  </>
+                : <button className="btn small ghost-btn" title="Marcar ausente" onClick={() => call('admin_set_away', { p_player: s.id, p_away: true })}>⏸️</button>)}
+              {call && (s.alive
+                ? <button className="btn small ghost-btn" title="Matar" onClick={() => call('wolf_override', { p_player: s.id, p_alive: false }, `¿Matar a ${s.name}?`)}>💀</button>
+                : <button className="btn small ghost-btn" title="Revivir" onClick={() => call('wolf_override', { p_player: s.id, p_alive: true }, `¿Revivir a ${s.name}?`)}>💚</button>)}
+            </li>
+          )
+        })}
+      </ul>
+    </>
   )
 }

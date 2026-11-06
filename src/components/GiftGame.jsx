@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { supabase, errorMessage } from '../lib/supabase'
 import { useLiveRpc } from '../hooks/useLiveRpc'
+import { useCountdown } from '../hooks/usePersona'
 
 const MEDALS = { 1: '🥇', 2: '🥈', 3: '🥉' }
 
@@ -16,7 +17,9 @@ export default function GiftGame() {
   return (
     <section className="card gift live-gift">
       <h3>🎁 El Regalo Loco</h3>
-      {data.status === 'writing' && (data.participant ? <Writing data={data} onSaved={refresh} /> : <p className="hint">👀 No juegas esta ronda. ¡Mira la pantalla!</p>)}
+      {data.status === 'writing' && (data.tasks?.length
+        ? <Writing data={data} onSaved={refresh} />
+        : <><GiftTimer data={data} onExpire={refresh} /><p className="hint">{data.participant ? '✅ ¡Listo! Ya no tienes partes por escribir. Espera a los demás.' : '👀 No juegas esta ronda (entras en la siguiente). ¡Mira la pantalla!'}</p></>)}
       {data.status === 'reading' && <p className="hint">📺 ¡Mira la pantalla! Se están leyendo los regalos… luego votarás tus 3 favoritos.</p>}
       {data.status === 'voting' && <Voting data={data} onVoted={refresh} />}
       {data.status === 'results' && (
@@ -28,38 +31,78 @@ export default function GiftGame() {
   )
 }
 
+const PART_INFO = {
+  object: { emoji: '🎁', placeholder: 'ej. un pato de hule gigante' },
+  use: { emoji: '🔧', placeholder: 'ej. espantar a los vecinos', prefix: 'sirve para…' },
+  reaction: { emoji: '😲', placeholder: 'ej. ¡Justo lo que necesitaba!' },
+}
+
 function Writing({ data, onSaved }) {
-  const done = [data.my_object, data.my_use, data.my_reaction].filter(Boolean).length
+  const tasks = data.tasks || []
+  const done = tasks.filter((t) => t.text).length
   return (
     <>
-      <p className="hint">Escribe las 3 partes. Cada una va a un regalo distinto y <b>nadie ve lo que escribieron los demás</b>: la gracia es que la frase final salga absurda. 🤪</p>
-      <div className="gift-progress"><span style={{ width: `${(done / 3) * 100}%` }} /></div>
-      <p className="small muted">{done}/3 listas</p>
-      <GiftField part="object" saved={data.my_object} onSaved={onSaved}
-        label={<>1️⃣ ¿Qué le regalas a <b>{data.recipient}</b>?</>}
-        placeholder="ej. un pato de hule gigante" />
-      <GiftField part="use" saved={data.my_use} onSaved={onSaved}
-        label={<>2️⃣ Un regalo misterioso… <b>¿para qué sirve?</b></>}
-        placeholder="ej. espantar a los vecinos" prefix="sirve para…" />
-      <GiftField part="reaction" saved={data.my_reaction} onSaved={onSaved}
-        label={<>3️⃣ Alguien recibe un regalo… <b>¿qué exclama?</b></>}
-        placeholder="ej. ¡Justo lo que necesitaba!" />
+      <GiftTimer data={data} onExpire={onSaved} />
+      <p className="hint">Escribe rápido ⚡ Cada parte va a un regalo distinto y <b>nadie ve lo que escribieron los demás</b>: la gracia es que la frase final salga absurda. 🤪 Se guarda sola.</p>
+      <div className="gift-progress"><span style={{ width: `${tasks.length ? (done / tasks.length) * 100 : 0}%` }} /></div>
+      <p className="small muted">{done}/{tasks.length} listas</p>
+      {tasks.map((t, i) => {
+        const info = PART_INFO[t.part]
+        const label = t.part === 'object'
+          ? <>{i + 1}. {info.emoji} ¿Qué le regalas a <b>{t.recipient}</b>?</>
+          : t.part === 'use'
+            ? <>{i + 1}. {info.emoji} Un regalo misterioso… <b>¿para qué sirve?</b></>
+            : <>{i + 1}. {info.emoji} Alguien recibe un regalo… <b>¿qué exclama?</b></>
+        return <GiftField key={`${t.chain}-${t.part}`} chain={t.chain} part={t.part} saved={t.text} onSaved={onSaved}
+          label={label} placeholder={info.placeholder} prefix={info.prefix} />
+      })}
     </>
   )
 }
 
-function GiftField({ part, saved, label, placeholder, prefix, onSaved }) {
+// Cuenta regresiva de la escritura. Al llegar a 0, cualquier pantalla le avisa al servidor (gift_tick),
+// que solo cierra si de verdad se acabó el tiempo.
+export function GiftTimer({ data, onExpire, big = false }) {
+  const offset = useMemo(() => (data.now ? new Date(data.now).getTime() - Date.now() : 0), [data.now])
+  const left = useCountdown(data.ends_at, offset)
+  const expired = !!data.ends_at && left === 0
+  const cb = useRef(onExpire)
+  cb.current = onExpire
+  useEffect(() => {
+    if (!expired) return
+    const tick = () => supabase.rpc('gift_tick').then(() => cb.current?.())
+    const t1 = setTimeout(tick, 2500 + Math.random() * 1500)
+    const t2 = setInterval(tick, 5000)
+    return () => { clearTimeout(t1); clearInterval(t2) }
+  }, [expired])
+  if (!data.ends_at) return null
+  return (
+    <div className={`gift-timer ${left <= 10 ? 'hurry' : ''} ${big ? 'big' : ''}`}>
+      {expired ? '⏰ ¡Tiempo!' : `⏱ ${left >= 60 ? `${Math.floor(left / 60)}:${String(left % 60).padStart(2, '0')}` : `${left} s`}`}
+    </div>
+  )
+}
+
+function GiftField({ chain, part, saved, label, placeholder, prefix, onSaved }) {
   const [text, setText] = useState(saved || '')
   const [state, setState] = useState(saved ? 'saved' : 'idle')
   const [msg, setMsg] = useState(null)
   useEffect(() => { if (saved && state !== 'dirty') setText(saved) }, [saved]) // eslint-disable-line
 
   async function save() {
+    if (!text.trim()) return
     setState('saving')
-    const { data, error } = await supabase.rpc('save_gift_part', { p_part: part, p_text: text })
+    const { data, error } = await supabase.rpc('save_gift_text', { p_chain: chain, p_part: part, p_text: text })
     if (error || !data.ok) { setMsg(error ? errorMessage(error) : data.error); setState('dirty') }
-    else { setMsg(null); setState('saved'); onSaved() }
+    else { setMsg(null); setState((st) => (st === 'saving' ? 'saved' : st)); onSaved() }
   }
+
+  // Guardado automático un momento después de dejar de escribir (con 30 s no hay tiempo para botones)
+  useEffect(() => {
+    if (state !== 'dirty' || !text.trim()) return
+    const t = setTimeout(save, 700)
+    return () => clearTimeout(t)
+  }, [text, state]) // eslint-disable-line
 
   return (
     <div className="gift-field">
@@ -68,10 +111,9 @@ function GiftField({ part, saved, label, placeholder, prefix, onSaved }) {
       <div className="row nowrap">
         <input value={text} maxLength={80} placeholder={placeholder}
           onChange={(e) => { setText(e.target.value); setState('dirty') }}
+          onBlur={() => state === 'dirty' && save()}
           onKeyDown={(e) => e.key === 'Enter' && text.trim() && save()} />
-        <button className={`btn small ${state === 'saved' ? 'ok' : ''}`} disabled={!text.trim() || state === 'saving' || state === 'saved'} onClick={save}>
-          {state === 'saved' ? '✓' : state === 'saving' ? '…' : 'Guardar'}
-        </button>
+        <span className={`gift-saved ${state}`}>{state === 'saved' ? '✓' : state === 'saving' ? '…' : ''}</span>
       </div>
       {msg && <div className="error">{msg}</div>}
     </div>

@@ -25,6 +25,12 @@ export default function Players({ myId }) {
 
   const costumed = players.filter((p) => p.has_costume).length
 
+  async function setAway(p) {
+    const { error } = await supabase.rpc('admin_set_away', { p_player: p.player_id, p_away: !p.away })
+    if (error) setError(errorMessage(error))
+    refresh()
+  }
+
   async function remove(p) {
     if (!window.confirm(`¿Eliminar a ${p.name}? Se borran sus puntos y votos.`)) return
     const { error } = await supabase.rpc('admin_delete_player', { p_player_id: p.player_id })
@@ -34,7 +40,8 @@ export default function Players({ myId }) {
 
   return (
     <section className="card">
-      <h3>👥 Invitados <span className="muted small">{players.length} · {costumed} disfrazados</span></h3>
+      <h3>👥 Invitados <span className="muted small">{players.length} · {costumed} disfrazados{players.some((p) => p.away) ? ` · ⏸️ ${players.filter((p) => p.away).length} ausentes` : ''}</span></h3>
+      <p className="hint">⏸️ = sacar a alguien de los juegos un rato (conserva su carta). Ellos también pueden marcarlo desde su celular.</p>
       {error && <div className="error">{error}</div>}
       <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Buscar…" />
       <ul className="players-list">
@@ -47,9 +54,11 @@ export default function Players({ myId }) {
                   <div className="grow">
                     <strong>{p.name}</strong>{p.nickname && <span className="muted"> “{p.nickname}”</span>}
                     {p.is_admin && <span className="tag">admin</span>}
+                    {p.away && <span className="away-tag"> ⏸️ ausente</span>}
                     <div className="small muted">{p.has_costume ? `🧛 ${p.costume}` : 'Sin disfraz'} · 📱 {p.devices}</div>
                   </div>
                   <div className="row nowrap">
+                    <button className="btn small ghost-btn" title={p.away ? 'Volvió' : 'Marcar ausente (sale de las rondas un rato)'} onClick={() => setAway(p)}>{p.away ? '▶︎' : '⏸️'}</button>
                     <button className="btn small" onClick={() => setEditing(p.player_id)}>✏️</button>
                     {p.player_id !== myId && <button className="btn small ghost-btn" onClick={() => remove(p)}>🗑</button>}
                   </div>
