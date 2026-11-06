@@ -285,3 +285,68 @@ label.check input { width: 20px; height: 20px; accent-color: var(--orange); }
 .confetti { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
 .confetti span { position: absolute; top: -10%; animation-name: fall; animation-timing-function: linear; animation-iteration-count: infinite; }
 @keyframes fall { 0% { transform: translateY(0) rotate(0); opacity: 1; } 100% { transform: translateY(115vh) rotate(540deg); opacity: .8; } }
+
+/* =====================================================================
+   FASE 3 · Caza de códigos
+   ===================================================================== */
+.pin-row { display: flex; gap: 8px; margin: 10px 0; }
+.pin-row .btn.primary { width: auto; flex: 0 0 auto; }
+.pin-input { flex: 1; text-align: center; font-size: 1.6rem; font-weight: 800; letter-spacing: .35em; text-transform: uppercase; font-family: ui-monospace, 'SF Mono', Menlo, monospace; }
+.pin-input::placeholder { letter-spacing: .35em; opacity: .35; }
+.hunt-result { border-radius: 14px; padding: 14px; display: flex; gap: 12px; align-items: center; margin: 8px 0; }
+.hunt-result.ok { background: #39d98a1f; border: 1px solid var(--green); animation: revealIn .6s cubic-bezier(.2, 1.4, .4, 1) both; }
+.hunt-result.err { background: #ff4d6d1f; border: 1px solid var(--red); color: #ffc2cd; }
+.hunt-pts { font-size: 2rem; font-weight: 800; color: var(--green); }
+.hunt-mine { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 4px; }
+.hunt-mine li { display: grid; grid-template-columns: 1fr auto auto; gap: 12px; align-items: center; padding: 6px 4px; border-bottom: 1px solid var(--line); }
+.hunt-mine li b { color: var(--green); min-width: 40px; text-align: right; }
+.hunt-mine li.total { border-bottom: 0; font-weight: 700; }
+.hunt-mine li.total b { color: var(--orange); }
+
+/* Admin */
+.codes-list { list-style: none; margin: 4px 0; padding: 0; display: grid; gap: 6px; }
+.codes-list li { display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: 12px; background: #0d0a1466; border: 1px solid var(--line); }
+.code-num { font-weight: 800; color: var(--orange); min-width: 34px; }
+.code-pin { font-family: ui-monospace, Menlo, monospace; font-weight: 800; letter-spacing: .15em; margin-right: 8px; }
+.link-btn { background: none; border: 0; color: var(--orange2); font: inherit; font-size: .85rem; padding: 0; cursor: pointer; }
+a.btn { text-align: center; text-decoration: none; display: block; }
+.pts-grid.five { grid-template-columns: repeat(5, 1fr); }
+
+/* Pantalla */
+.hunt-screen { display: flex; flex-direction: column; gap: 2vh; flex: 1; }
+.hunt-body { display: grid; grid-template-columns: 1fr minmax(280px, 26vw); gap: 2.5vw; flex: 1; }
+.hunt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1.2vw; align-content: start; }
+.hunt-tile { border-radius: 18px; padding: 2vh 1vw; text-align: center; background: #1d1531cc; border: 2px dashed var(--line); min-height: 15vh; display: flex; flex-direction: column; justify-content: center; gap: .4vh; }
+.hunt-tile.found { border-style: solid; border-color: var(--orange); background: linear-gradient(180deg, #3a1f12, #1d1531); }
+.hunt-tile.flash { animation: tileFlash 1s ease-in-out 3; }
+@keyframes tileFlash { 50% { transform: scale(1.08); box-shadow: 0 0 60px #ff7a1a; } }
+.hunt-num { font-family: 'Creepster', cursive; font-size: clamp(1.8rem, 3vw, 3rem); color: var(--orange); }
+.hunt-q { font-size: clamp(1.6rem, 2.4vw, 2.6rem); color: var(--purple); animation: float 2.5s ease-in-out infinite; }
+.hunt-first { font-weight: 800; font-size: clamp(1rem, 1.5vw, 1.6rem); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hunt-count { color: var(--muted); font-size: clamp(.8rem, 1vw, 1.1rem); }
+.hunt-side h2 { font-size: clamp(1.1rem, 1.6vw, 1.8rem); margin: 0 0 1vh; }
+.hunt-feed, .hunt-top { list-style: none; margin: 0 0 3vh; padding: 0; display: grid; gap: .8vh; }
+.hunt-feed li { background: #1d1531cc; border-radius: 12px; padding: 1vh 1vw; font-size: clamp(.95rem, 1.2vw, 1.3rem); display: flex; gap: 6px; align-items: center; animation: revealIn .6s ease both; }
+.hunt-feed li b { color: var(--orange2); }
+.feed-pts { margin-left: auto; background: var(--green); color: #04210f; font-weight: 800; border-radius: 999px; padding: 2px 10px; }
+.hunt-top li { display: flex; justify-content: space-between; font-size: clamp(.95rem, 1.2vw, 1.3rem); padding: .6vh 0; border-bottom: 1px solid var(--line); }
+.hunt-top b { color: var(--orange2); }
+@media (max-width: 800px) { .hunt-body { grid-template-columns: 1fr; } }
+
+/* Hoja para imprimir */
+.print-page { background: #fff; color: #111; min-height: 100vh; padding: 20px; }
+.print-toolbar { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; margin-bottom: 20px; }
+.print-toolbar .btn.primary { width: auto; }
+.print-toolbar .check, .print-toolbar .muted { color: #555; }
+.print-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
+.print-card { border: 2px dashed #999; border-radius: 14px; padding: 18px 12px; text-align: center; break-inside: avoid; page-break-inside: avoid; }
+.print-title { font-size: 1.05rem; margin-bottom: 10px; }
+.print-pin { font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace; font-size: 2.6rem; font-weight: 800; letter-spacing: .18em; margin: 6px 0 10px; }
+.print-help { font-size: .8rem; color: #444; }
+.print-label { margin-top: 8px; font-size: .7rem; color: #888; }
+@media print {
+  body { background: #fff !important; }
+  .no-print { display: none !important; }
+  .print-page { padding: 0; }
+  .print-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+}

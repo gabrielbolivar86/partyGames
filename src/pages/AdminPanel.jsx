@@ -5,6 +5,7 @@ import Requests, { usePendingRequests } from './admin/Requests'
 import Players from './admin/Players'
 import { PointsForm, LedgerList } from './admin/Points'
 import CostumeAdmin from './admin/Costume'
+import CodesAdmin from './admin/Codes'
 import Screen from './admin/Screen'
 import Settings from './admin/Settings'
 
@@ -12,6 +13,7 @@ const TABS = [
   { id: 'guests', label: '👥 Invitados' },
   { id: 'points', label: '✨ Puntos' },
   { id: 'costume', label: '🎭 Disfraces' },
+  { id: 'codes', label: '🔍 Códigos' },
   { id: 'screen', label: '📺 Pantalla' },
   { id: 'settings', label: '🧹 Ajustes' },
 ]
@@ -45,6 +47,7 @@ export default function AdminPanel({ me }) {
       {tab === 'guests' && (<><Requests pending={pending} /><Players myId={me.player.id} /></>)}
       {tab === 'points' && (<><PointsForm players={board.rows} /><LedgerList /></>)}
       {tab === 'costume' && <CostumeAdmin dashboardMode={dashboardMode} />}
+      {tab === 'codes' && <CodesAdmin dashboardMode={dashboardMode} />}
       {tab === 'screen' && <Screen dashboardMode={dashboardMode} />}
       {tab === 'settings' && <Settings />}
     </main>

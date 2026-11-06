@@ -5,6 +5,7 @@ import { joinUrl, dashboardUrl } from '../../lib/urls'
 const MODES = [
   { id: 'leaderboard', label: '🏆 Tabla general' },
   { id: 'costume_reveal', label: '🎭 Revelación de disfraces' },
+  { id: 'codes', label: '🔍 Caza de códigos' },
 ]
 
 export default function Screen({ dashboardMode }) {

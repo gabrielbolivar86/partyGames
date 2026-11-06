@@ -1,6 +1,7 @@
 import { useLeaderboard } from '../hooks/useLeaderboard'
 import LeaderboardList from '../components/LeaderboardList'
 import CostumeVote from '../components/CostumeVote'
+import CodeHunt from '../components/CodeHunt'
 
 export default function Home({ me }) {
   const { rows, loading } = useLeaderboard()
@@ -19,6 +20,7 @@ export default function Home({ me }) {
         </div>
       </section>
 
+      <CodeHunt />
       <CostumeVote />
 
       <section className="card">

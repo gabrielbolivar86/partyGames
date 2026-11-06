@@ -2,6 +2,7 @@ import { HashRouter, Routes, Route } from 'react-router-dom'
 import { isConfigured } from './lib/supabase'
 import GuestApp from './pages/GuestApp'
 import Dashboard from './pages/Dashboard'
+import PrintCodes from './pages/PrintCodes'
 
 // HashRouter (#/dashboard) funciona igual en Vercel y en GitHub Pages sin configuración extra.
 export default function App() {
@@ -22,6 +23,7 @@ export default function App() {
     <HashRouter>
       <Routes>
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/imprimir-codigos" element={<PrintCodes />} />
         <Route path="/*" element={<GuestApp />} />
       </Routes>
     </HashRouter>

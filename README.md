@@ -2,6 +2,7 @@
 
 - **Fase 1:** registro con aprobación del admin, modo admin/invitado, puntos (dar, quitar y deshacer) y dashboard en vivo con QR.
 - **Fase 2:** votación del mejor disfraz con revelación en pantalla, gestión de invitados y opción de borrar todo para una nueva fiesta. Ver [la sección de la fase 2](#fase-2-mejor-disfraz-y-limpieza).
+- **Fase 3:** caza de códigos secretos de 6 caracteres, con hoja para imprimir y tablero en pantalla. Ver [la sección de la fase 3](#fase-3-caza-de-códigos).
 
 **Stack:** React + Vite · Supabase (base de datos, tiempo real y login anónimo) · Vercel o GitHub Pages. Costo: $0.
 
@@ -157,6 +158,7 @@ El panel de admin también muestra estas URLs en la pestaña **📺 Pantalla**.
 | 👥 Invitados | Aprobar solicitudes. Lista de invitados: ✏️ corregir nombre o disfraz (ej. marcó "sin disfraz" por error) y 🗑 eliminar. |
 | ✨ Puntos | Dar o quitar puntos y deshacer movimientos manuales. |
 | 🎭 Disfraces | Abrir y cerrar la votación, revelar el podio y configurar los puntos. |
+| 🔍 Códigos | Crear e imprimir códigos, empezar o terminar la caza, reglas de puntos (fase 3). |
 | 📺 Pantalla | Elegir qué muestra el dashboard y ver los enlaces. |
 | 🧹 Ajustes | **Reiniciar puntos y votaciones**, o **Borrar todo (nueva fiesta)**: elimina a todos menos a los admins y permite renombrar la fiesta. Se confirma escribiendo `BORRAR`. |
 
@@ -184,6 +186,30 @@ Si te equivocas: **Paso atrás** deshace la última revelación, y **Reabrir vot
 - [ ] Corre `03_fase2_disfraces.sql`.
 - [ ] Prueba el flujo completo con 2 o 3 invitados de prueba (abrir, votar, cerrar, revelar).
 - [ ] **🧹 Ajustes → Borrar todo** para empezar la fiesta limpia. Tú sigues como admin.
+
+---
+
+## Fase 3: caza de códigos
+
+### Instalar
+1. Supabase → **SQL Editor → New query** → pega todo `supabase/04_fase3_codigos.sql` → **Run**. No borra nada y se puede correr varias veces.
+2. `git add . && git commit -m "Fase 3: caza de códigos" && git push`
+
+### Preparar los códigos (antes de la fiesta)
+1. **Admin → 🔍 Códigos → ＋ Crear códigos** (ej. 8). Cada uno tiene 6 caracteres, por ejemplo `K7PX3M`. No se usan caracteres que se confunden (0/O, 1/I/L).
+2. Opcional: toca **📍 agregar ubicación** en cada código para anotar dónde lo esconderás. Solo lo ves tú.
+3. **🖨 Imprimir códigos** abre una hoja lista para imprimir. Recorta las tarjetas y escóndelas.
+   - Esa página solo funciona en un dispositivo vinculado a tu perfil de admin. Para imprimir desde la compu: abre la app ahí, usa **"Ya tengo perfil"** y aprueba esa solicitud desde tu celular.
+4. Usa **🧹 Ajustes → Borrar todo** sin miedo: **los códigos se conservan**. Solo se borran los hallazgos y los puntos. Para borrar los códigos usa **🗑 Borrar todos los códigos** en la pestaña Códigos.
+
+### Durante la fiesta
+1. **▶︎ Empezar la caza.** A los invitados les aparece la tarjeta 🔍 *Caza de códigos*.
+2. Quien encuentra un código lo escribe en la app (acepta minúsculas, espacios y guiones).
+3. Puntos según el orden de llegada **a ese código**: 1.º 10 · 2.º 8 · 3.º 6 · 4.º a 6.º 4 · 7.º en adelante 2. Máximo 4 códigos por persona. Todo se puede cambiar en **⚙️ Reglas**.
+4. **📺 Mostrar en pantalla:** la TV muestra qué códigos se descubrieron, quién encontró cada uno primero, los últimos hallazgos y el top de cazadores.
+5. **■ Terminar la caza** cuando quieras cerrarla.
+
+**Protección:** tras 5 códigos incorrectos en un minuto, esa persona debe esperar un minuto, para evitar que alguien pruebe al azar. Si borras un código, también se quitan los puntos que dio.
 
 ---
 
@@ -222,6 +248,7 @@ supabase/
   01_fase1_schema.sql     tablas, seguridad y funciones (correr UNA vez)
   02_hacerme_admin.sql    convertir tu usuario en admin
   03_fase2_disfraces.sql  concurso de disfraces, modos de pantalla, gestión y reinicio
+  04_fase3_codigos.sql    caza de códigos
 src/
   lib/supabase.js         cliente de Supabase
   lib/urls.js             URLs de registro y dashboard
@@ -239,6 +266,10 @@ src/
   hooks/useDashboard.js   modo de la pantalla
   components/CostumeVote.jsx    votación del invitado
   components/CostumeReveal.jsx  revelación con cuenta regresiva
+  components/CodeHunt.jsx       caza de códigos (invitado)
+  components/HuntBoard.jsx      caza de códigos (pantalla)
+  hooks/useHunt.js              estado de la caza
+  pages/PrintCodes.jsx          hoja para imprimir códigos (#/imprimir-codigos)
   components/LeaderboardList.jsx
 ```
 
