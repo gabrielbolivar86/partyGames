@@ -11,7 +11,6 @@ export default function GiftAdmin({ players, dashboardMode }) {
   const { data: ov, error: loadError, refresh } = useLiveRpc('admin_gift_overview', ['gift_game'])
   const [error, setError] = useState(null)
   const [busy, setBusy] = useState(false)
-  const [spoil, setSpoil] = useState(false)
 
   async function call(fn, args, confirmText) {
     if (confirmText && !window.confirm(confirmText)) return
@@ -28,7 +27,7 @@ export default function GiftAdmin({ players, dashboardMode }) {
   return (
     <>
       <section className="card">
-        <h3>🎁 El Regalo Loco <span className={`status ${s === 'none' ? '' : 'ok'}`}>{STATUS[s]}</span></h3>
+        <h3>🎁 El Regalo <span className={`status ${s === 'none' ? '' : 'ok'}`}>{STATUS[s]}</span></h3>
         {error && <div className="error">{error}</div>}
 
         {s === 'writing' && (
@@ -72,29 +71,18 @@ export default function GiftAdmin({ players, dashboardMode }) {
               <div><b>{ov.voters_done}</b><span>ya votaron</span></div>
               <div><b>{ov.count}</b><span>frases</span></div>
             </div>
-            <button className="btn danger wide" disabled={busy} onClick={() => call('admin_gift_close_vote', {}, '¿Cerrar la votación y calcular ganadores?')}>Cerrar votación y calcular</button>
+            <button className="btn danger wide" disabled={busy} onClick={() => call('admin_gift_close_vote', {}, '¿Cerrar la votación y mostrar los ganadores?')}>🏆 Cerrar votación y mostrar ganadores</button>
           </>
         )}
 
         {s === 'results' && (
           <>
-            <p className="small">Revelación: <b>{['nada', '3.º', '2.º', '🏆 1.º'][ov.reveal_step]}</b></p>
-            {ov.reveal_step < 3
-              ? <button className="btn primary" disabled={busy} onClick={() => call('admin_gift_reveal', { p_step: ov.reveal_step + 1 })}>
-                  {['Revelar 3.er lugar 🥉', 'Revelar 2.º lugar 🥈', 'Revelar 1.er lugar 🥇'][ov.reveal_step]}
-                </button>
-              : <p className="success">¡Revelado! Los puntos se sumaron a los 3 autores de cada frase ganadora.</p>}
-            <div className="row" style={{ marginTop: 8 }}>
-              <button className="btn small ghost-btn" disabled={busy || ov.reveal_step === 0} onClick={() => call('admin_gift_reveal', { p_step: ov.reveal_step - 1 })}>↩︎ Paso atrás</button>
-              <button className="btn small ghost-btn" onClick={() => setSpoil((x) => !x)}>{spoil ? '🙈 Ocultar' : '👀 Ver resultados'}</button>
-            </div>
-            {spoil && (
-              <ol className="gift-admin-results">
-                {ov.results.map((r) => (
-                  <li key={r.place}><b>{r.place}.º</b> ({r.votes} votos{r.tied ? ' ⚠️ empate' : ''}) {r.phrase} <span className="small muted">· {r.authors.join(', ')}</span></li>
-                ))}
-              </ol>
-            )}
+            <p className="success">🏆 Resultados en pantalla. Los puntos ya se sumaron.</p>
+            <ol className="gift-admin-results">
+              {ov.results.filter((r) => r.place <= 3).map((r) => (
+                <li key={r.place}><b>{r.place}.º</b> ({r.votes} votos{r.tied ? ' ⚠️ empate' : ''}) {r.phrase} <span className="small muted">· {r.authors.join(', ')}</span></li>
+              ))}
+            </ol>
           </>
         )}
 
@@ -104,7 +92,7 @@ export default function GiftAdmin({ players, dashboardMode }) {
           {dashboardMode !== 'gift'
             ? <button className="btn small" onClick={() => call('admin_set_dashboard', { p_mode: 'gift' })}>📺 Mostrar en pantalla</button>
             : <button className="btn small" onClick={() => call('admin_set_dashboard', { p_mode: 'leaderboard' })}>📺 Volver a tabla general</button>}
-          {s !== 'none' && <button className="btn small ghost-btn" onClick={() => call('admin_gift_cancel', {}, s === 'results' ? '¿Limpiar el Regalo Loco? (si no revelaste el 1.º, sus puntos se quitan)' : '¿Cancelar esta ronda?')}>✕ {s === 'results' ? 'Limpiar' : 'Cancelar'}</button>}
+          {s !== 'none' && <button className="btn small ghost-btn" onClick={() => call('admin_gift_cancel', {}, s === 'results' ? '¿Limpiar El Regalo? (los puntos se conservan)' : '¿Cancelar esta ronda?')}>✕ {s === 'results' ? 'Limpiar' : 'Cancelar'}</button>}
         </div>
       </section>
 
@@ -201,11 +189,11 @@ function GiftSettings({ settings, onSaved }) {
   return (
     <section className="card form">
       <h3>⚙️ Tiempo y puntos</h3>
-      <label className="pts-field">⏱ Segundos para escribir (0 = sin tiempo)
+      <label className="pts-field">⏱ Segundos por pregunta (0 = sin tiempo)
         <input type="number" min="0" max="600" value={s.seconds} onChange={(e) => setS({ ...s, seconds: e.target.value })} />
       </label>
       <div className="pts-grid three">{field('p1', '🥇 1.º')}{field('p2', '🥈 2.º')}{field('p3', '🥉 3.º')}</div>
-      <p className="hint">Se dan a <b>los 3 autores</b> de cada frase ganadora (quien eligió el objeto, el uso y la reacción). Se suman al revelar el 1.º.</p>
+      <p className="hint">Se dan a <b>los 3 autores</b> de cada frase ganadora (quien eligió el objeto, el uso y la reacción). Se suman al cerrar la votación.</p>
       {msg && <div className={msg.type === 'error' ? 'error' : 'success'}>{msg.text}</div>}
       <button className="btn" onClick={save}>Guardar</button>
     </section>

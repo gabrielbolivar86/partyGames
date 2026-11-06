@@ -14,7 +14,7 @@ import WolfPlay from '../components/WolfPlay'
 // Juegos que pueden aparecer como pestaña
 const GAMES = {
   wolf: { emoji: '🐺', name: 'Hombre Lobo', short: 'Lobo' },
-  gift: { emoji: '🎁', name: 'El Regalo Loco', short: 'Regalo' },
+  gift: { emoji: '🎁', name: 'El Regalo', short: 'Regalo' },
   impostor: { emoji: '🃏', name: 'El Impostor', short: 'Impostor' },
   persona: { emoji: '🕵️', name: '¿Quién es el personaje?', short: 'Personaje', newRound: true },
 }

@@ -8,6 +8,7 @@
 - **Fase 6:** El Regalo Loco, más el QR del wifi en la pantalla. Ver [la sección de la fase 6](#fase-6-el-regalo-loco-y-wifi).
 - **Fase 7:** Hombre Lobo, etapa 1: narrador, baraja sugerida, noche simultánea, alcalde y TV con la mesa. Ver [la sección de la fase 7](#fase-7-hombre-lobo-etapa-1).
 - **Fase 8:** cada juego en su pestaña a pantalla completa, aviso "¡Empezó!", todos entran automáticamente, "⏸️ Me ausento un rato" y temporizador del Regalo Loco. Ver [la sección de la fase 8](#fase-8-pestañas-de-juegos-me-ausento-un-rato-y-temporizador-del-regalo).
+- **Fase 9:** El Regalo más rápido: una pregunta a la vez con su tiempo, y resultados de golpe. Ver [la sección de la fase 9](#fase-9-el-regalo-más-rápido).
 
 **Stack:** React + Vite · Supabase (base de datos, tiempo real y login anónimo) · Vercel o GitHub Pages. Costo: $0.
 
@@ -367,7 +368,21 @@ Para quien tiene que salir un momento (por ejemplo, a ver a sus hijos):
 - Por defecto hay **30 s para escribir** (Admin → 🎁 Regalo → ⚙️ Tiempo y puntos; **0 = sin tiempo**).
 - El tiempo se ve en los celulares, en la TV y en el admin. El admin puede sumar **＋15 s / ＋30 s**.
 - Lo escrito **se guarda solo** al dejar de escribir. Al llegar a 0, la escritura se cierra sola y lo que falte se rellena al azar.
-- 💡 30 s es poco para 3 partes. Si ves que no alcanza, súbelo a 45–60 s.
+- 💡 30 s es poco para 3 partes. (Desde la fase 9 el tiempo es por pregunta.)
+
+---
+
+## Fase 9: El Regalo más rápido
+
+### Instalar
+1. Supabase → **SQL Editor → New query** → pega todo `supabase/10_fase9_regalo_rapido.sql` → **Run**. No borra nada y se puede correr varias veces.
+2. `git add . && git commit -m "Fase 9: regalo rapido" && git push`
+
+### Cambios
+- El juego ahora se llama **El Regalo**.
+- **Una pregunta a la vez:** "¿Qué le vas a regalar a Mari?" → **Siguiente** → "¿Para qué sirve?" → **Siguiente** → "¿Qué exclama?".
+- **30 s por pregunta** (Admin → 🎁 Regalo → ⚙️ *Segundos por pregunta*; 0 = sin tiempo). Todos avanzan a la par: la 1.ª cierra a los 30 s, la 2.ª a los 60 s y la 3.ª a los 90 s. Si se acaba el tiempo, se guarda lo escrito y pasa sola a la siguiente. Quien termina antes puede adelantarse.
+- **Resultados de golpe:** al tocar **🏆 Cerrar votación y mostrar ganadores**, la TV muestra el podio completo y los puntos se suman al instante. Ya no hay revelación 3.º → 2.º → 1.º.
 
 ---
 
@@ -412,6 +427,7 @@ supabase/
   07_fase6_regalo_wifi.sql     El Regalo Loco y wifi
   08_fase7_lobo.sql            Hombre Lobo (etapa 1)
   09_fase8_ausentes_pestanas.sql  ausentes, pestañas, Lobo automático, temporizador del Regalo
+  10_fase9_regalo_rapido.sql      El Regalo: tiempo por pregunta y resultados de golpe
 src/
   lib/supabase.js         cliente de Supabase
   lib/urls.js             URLs de registro y dashboard

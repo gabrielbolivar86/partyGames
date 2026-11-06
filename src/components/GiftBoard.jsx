@@ -4,20 +4,20 @@ import { GiftTimer } from './GiftGame'
 
 const MEDALS = { 1: '🥇', 2: '🥈', 3: '🥉' }
 
-// Pantalla de El Regalo Loco: progreso de escritura → lectura de frases → votación → podio
+// Pantalla de El Regalo: progreso de escritura → lectura de frases → votación → podio
 export default function GiftBoard() {
   const { data, refresh } = useLiveRpc('get_gift_board', ['gift_game'])
   if (!data) return <div className="reveal"><p className="muted">Cargando…</p></div>
   if (data.status === 'none') {
-    return <div className="reveal"><h1 className="spooky reveal-title">🎁 El Regalo Loco</h1><p className="reveal-sub">Muy pronto…</p></div>
+    return <div className="reveal"><h1 className="spooky reveal-title">🎁 El Regalo</h1><p className="reveal-sub">Muy pronto…</p></div>
   }
 
   if (data.status === 'writing') {
     const pct = data.progress.total ? Math.round((data.progress.done / data.progress.total) * 100) : 0
     return (
       <div className="reveal">
-        <h1 className="spooky reveal-title">🎁 El Regalo Loco</h1>
-        <p className="reveal-sub">Escriban en su celular: <b>un regalo</b>, <b>para qué sirve</b> y <b>una reacción</b>… ¡a ciegas! 🙈</p>
+        <h1 className="spooky reveal-title">🎁 El Regalo</h1>
+        <p className="reveal-sub">Escriban en su celular: <b>un regalo</b>, <b>para qué sirve</b> y <b>qué exclamó</b> 🙈</p>
         <GiftTimer data={data} onExpire={refresh} big />
         <div className="gift-bar"><span style={{ width: `${pct}%` }} /></div>
         <div className="reveal-sub">{pct}% listo · {data.players} participantes</div>
@@ -78,7 +78,7 @@ function GiftPodium({ data }) {
 
   return (
     <div className="reveal gift-results">
-      <h1 className="spooky reveal-title">🎁 Los regalos más locos</h1>
+      <h1 className="spooky reveal-title">🎁 Los mejores regalos</h1>
       {visible.length === 0 && !count && <p className="reveal-sub">🥁 Y los ganadores son…</p>}
       <div className="gift-winners">
         {visible.map((p) => (
