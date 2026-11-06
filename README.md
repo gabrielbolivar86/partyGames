@@ -4,6 +4,7 @@
 - **Fase 2:** votación del mejor disfraz con revelación en pantalla, gestión de invitados y opción de borrar todo para una nueva fiesta. Ver [la sección de la fase 2](#fase-2-mejor-disfraz-y-limpieza).
 - **Fase 3:** caza de códigos secretos de 6 caracteres, con hoja para imprimir y tablero en pantalla. Ver [la sección de la fase 3](#fase-3-caza-de-códigos).
 - **Fase 4:** ¿Quién es el personaje?, con rondas de datos curiosos, votación con tiempo y revelación con gráfico. Ver [la sección de la fase 4](#fase-4-quién-es-el-personaje).
+- **Fase 5:** El Impostor, más la tabla congelada y los resultados finales de la noche. Ver [la sección de la fase 5](#fase-5-el-impostor-y-resultados-finales).
 
 **Stack:** React + Vite · Supabase (base de datos, tiempo real y login anónimo) · Vercel o GitHub Pages. Costo: $0.
 
@@ -161,7 +162,8 @@ El panel de admin también muestra estas URLs en la pestaña **📺 Pantalla**.
 | 🎭 Disfraces | Abrir y cerrar la votación, revelar el podio y configurar los puntos. |
 | 🔍 Códigos | Crear e imprimir códigos, empezar o terminar la caza, reglas de puntos (fase 3). |
 | 🕵️ Personaje | Lanzar rondas, revelar, descartar datos y configurar las reglas: tiempo, puntos por adivinar y bonus del dueño (fase 4). |
-| 📺 Pantalla | Elegir qué muestra el dashboard y ver los enlaces. |
+| 🃏 Impostor | Elegir jugadores, número de impostores y palabra; abrir votaciones de defensa o eliminación (fase 5). |
+| 📺 Pantalla | Elegir qué muestra el dashboard, 🔒 congelar la tabla, 🏆 resultados finales y enlaces. |
 | 🧹 Ajustes | **Reiniciar puntos y votaciones**, o **Borrar todo (nueva fiesta)**: elimina a todos menos a los admins y permite renombrar la fiesta. Se confirma escribiendo `BORRAR`. |
 
 ### Cómo correr el concurso en la fiesta
@@ -244,6 +246,36 @@ Al reiniciar desde **🧹 Ajustes**, las rondas se borran pero los datos se cons
 
 ---
 
+## Fase 5: El Impostor y resultados finales
+
+### Instalar
+1. Supabase → **SQL Editor → New query** → pega todo `supabase/06_fase5_impostor_final.sql` → **Run**. No borra nada y se puede correr varias veces.
+2. `git add . && git commit -m "Fase 5: impostor y resultados finales" && git push`
+
+### El Impostor (Admin → 🃏 Impostor)
+1. **Elige a los jugadores.** Todos vienen marcados; toca un nombre para sacarlo.
+2. **Número de impostores:** la app sugiere cuántos y explica por qué, pero lo controlas con − / ＋.
+3. **Palabra:** 🎲 al azar del banco, con filtro opcional de categoría, o ✍️ una tuya con su pista.
+4. **▶︎ Repartir y empezar.** La pantalla cambia sola y muestra el **orden para hablar**.
+5. Cada jugador **mantiene presionada** su carta para verla. La tripulación ve la palabra; el impostor ve "ERES IMPOSTOR" y una pista general.
+6. **Votaciones:**
+   - **🗣 Defensa:** en la TV se ve en vivo **quién votó a quién**, pero nadie sale. Sirve para que el más votado se defienda.
+   - **☠️ Eliminación:** al cerrar, sale el más votado (con empate, nadie sale) y la TV muestra si **era impostor o inocente**.
+   - Mientras la votación está abierta, puedes cambiar entre defensa y eliminación.
+7. **Fin de la ronda:**
+   - **🛡 Gana la tripulación** cuando eliminan a todos los impostores: **+5** a cada tripulante.
+   - **🕵️ Ganan los impostores** si igualan en número a la tripulación, o si uno adivina la palabra: **+12** a cada impostor. Cada impostor tiene **un intento** para adivinar, aunque ya lo hayan eliminado.
+   - También puedes terminar a mano (🏁) eligiendo quién ganó.
+
+**Banco de palabras:** 67 palabras en 6 categorías (Lugares de La Paz, Comida paceña, Cotidiano y cultura, Países, Objetos, Animales), con **2 pistas generales** cada una. El impostor recibe una de las dos al azar. Las pistas no delatan la categoría y algunas tienen doble sentido a propósito (Llama → "Fuego", Reloj → "Muñeca", Chile → "Picante"). Las palabras ya usadas se evitan mientras queden otras.
+
+### Final de la noche (Admin → 📺 Pantalla)
+- **🔒 Congelar tabla** (opcional): desde ese momento la TV y los celulares muestran los puntos de ese instante, y los juegos siguen sumando a escondidas. Tú, como admin, ves los puntos reales.
+- **🏆 Resultados de la noche:** la TV muestra **a todos con sus puntos**, el podio y el mejor disfraz. Si la tabla estaba congelada, cada uno muestra cuánto sumó al final ("+17 al final").
+- **🧹 Ajustes → Reiniciar** también descongela la tabla.
+
+---
+
 ## Cómo funciona el tiempo real aquí
 
 ```
@@ -281,6 +313,7 @@ supabase/
   03_fase2_disfraces.sql  concurso de disfraces, modos de pantalla, gestión y reinicio
   04_fase3_codigos.sql    caza de códigos
   05_fase4_personaje.sql  ¿Quién es el personaje?
+  06_fase5_impostor_final.sql  El Impostor, congelar tabla y resultados finales
 src/
   lib/supabase.js         cliente de Supabase
   lib/urls.js             URLs de registro y dashboard
@@ -306,6 +339,11 @@ src/
   components/FactTips.jsx       explicación e ideas para escribir datos curiosos
   components/PersonaBoard.jsx   ¿Quién es el personaje? (pantalla)
   hooks/usePersona.js           estado del juego + cuenta regresiva sincronizada
+  hooks/useLiveRpc.js           RPC + tiempo real genérico
+  lib/impostor.js               sugerencia de impostores
+  components/ImpostorGame.jsx   El Impostor (carta, votar, adivinar)
+  components/ImpostorBoard.jsx  El Impostor (pantalla)
+  components/FinalResults.jsx   resultados de la noche (pantalla)
   components/LeaderboardList.jsx
 ```
 

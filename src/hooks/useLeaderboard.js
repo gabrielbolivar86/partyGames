@@ -19,7 +19,7 @@ export function useLeaderboard() {
   }, [])
 
   useEffect(() => { refresh() }, [refresh])
-  useRealtimeRefresh(['points_ledger', 'players'], refresh)
+  useRealtimeRefresh(['points_ledger', 'players', 'dashboard_state'], refresh)
 
   return { rows, loading, error, refresh }
 }

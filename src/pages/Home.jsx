@@ -3,9 +3,13 @@ import LeaderboardList from '../components/LeaderboardList'
 import CostumeVote from '../components/CostumeVote'
 import CodeHunt from '../components/CodeHunt'
 import PersonaGame, { MyFactCard } from '../components/PersonaGame'
+import ImpostorGame from '../components/ImpostorGame'
+import { useDashboard } from '../hooks/useDashboard'
 
 export default function Home({ me }) {
   const { rows, loading } = useLeaderboard()
+  const dash = useDashboard()
+  const frozen = dash.data?.frozen && dash.data?.mode !== 'final'
   const mine = rows.find((r) => r.player_id === me.player.id)
 
   return (
@@ -21,12 +25,14 @@ export default function Home({ me }) {
         </div>
       </section>
 
+      <ImpostorGame myId={me.player.id} />
       <PersonaGame />
       <CodeHunt />
       <CostumeVote />
 
       <section className="card">
         <h3>🏆 Tabla general</h3>
+        {frozen && <p className="frozen-note">🔒 Tabla congelada: los últimos puntos se revelan al final de la noche.</p>}
         {loading ? <p className="muted">Cargando…</p> : <LeaderboardList rows={rows} highlightId={me.player.id} compact />}
       </section>
 

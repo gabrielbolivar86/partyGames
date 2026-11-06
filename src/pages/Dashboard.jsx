@@ -6,6 +6,8 @@ import { joinUrl } from '../lib/urls'
 import CostumeReveal from '../components/CostumeReveal'
 import HuntBoard from '../components/HuntBoard'
 import PersonaBoard from '../components/PersonaBoard'
+import ImpostorBoard from '../components/ImpostorBoard'
+import FinalResults from '../components/FinalResults'
 
 /**
  * Pantalla para la TV/proyector. No necesita login (solo lectura).
@@ -25,10 +27,16 @@ export default function Dashboard() {
   if (data?.mode === 'persona') {
     return <div className="dash"><PersonaBoard /></div>
   }
-  return <LeaderboardScreen eventName={data?.event_name} />
+  if (data?.mode === 'impostor') {
+    return <div className="dash"><ImpostorBoard /></div>
+  }
+  if (data?.mode === 'final') {
+    return <div className="dash"><FinalResults /></div>
+  }
+  return <LeaderboardScreen eventName={data?.event_name} frozen={data?.frozen} />
 }
 
-function LeaderboardScreen({ eventName }) {
+function LeaderboardScreen({ eventName, frozen }) {
   const { rows, loading, error } = useLeaderboard()
   const deltas = useDeltas(rows)
   const showQr = !window.location.hash.includes('noqr')
@@ -43,6 +51,7 @@ function LeaderboardScreen({ eventName }) {
         <div className="dash-meta">{eventName ? `${eventName} · ` : ''}{rows.length} invitados</div>
       </header>
 
+      {frozen && <div className="frozen-banner">🔒 Tabla congelada · los últimos puntos se revelan al final</div>}
       {error && <div className="error">{error}</div>}
       {loading && <div className="center-text muted">Cargando…</div>}
 

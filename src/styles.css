@@ -403,3 +403,81 @@ a.btn { text-align: center; text-decoration: none; display: block; }
 .caught-banner { margin-top: 1.5vh; font-weight: 800; font-size: clamp(1.2rem, 2.2vw, 2.4rem); padding: .6vh 2vw; border-radius: 999px; animation: revealIn .8s .4s cubic-bezier(.2, 1.4, .4, 1) both; }
 .caught-banner.caught { background: #ff4d6d26; color: #ffc2cd; }
 .caught-banner.free { background: #39d98a26; color: var(--green); }
+
+/* =====================================================================
+   FASE 5 · El Impostor + Resultados finales
+   ===================================================================== */
+.live-imp { border-color: var(--orange); box-shadow: 0 0 30px #ff7a1a33; }
+.secret-card { user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; touch-action: none; margin: 10px 0; border-radius: 16px; min-height: 150px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-align: center; padding: 16px; background: repeating-linear-gradient(45deg, #2a1d45, #2a1d45 10px, #231839 10px, #231839 20px); border: 2px dashed var(--purple); cursor: pointer; }
+.secret-card.open { background: #0d0a14; border-style: solid; border-color: var(--green); }
+.secret-card.open.imp { border-color: var(--red); background: #2a0d14; }
+.secret-q { font-size: 2.6rem; }
+.secret-word { font-size: 2rem; font-weight: 800; color: var(--green); }
+.secret-role { font-size: 1.6rem; font-weight: 800; color: var(--red); }
+.secret-sub { font-size: 1.1rem; }
+.kind-badge { display: inline-block; padding: 4px 12px; border-radius: 999px; font-weight: 700; font-size: .9em; background: #9b5cff26; color: #d6c2ff; }
+.kind-badge.elimination { background: #ff4d6d26; color: #ffc2cd; }
+.imp-vote { margin-top: 8px; }
+.imp-guess { margin-top: 10px; padding: 10px; border-radius: 12px; background: #ff4d6d14; border: 1px solid #ff4d6d44; display: grid; gap: 8px; }
+.imp-result { padding: 10px 12px; border-radius: 12px; background: #9b5cff1a; border: 1px solid #9b5cff44; margin: 8px 0; }
+.imp-result.good { background: #39d98a1a; border-color: var(--green); }
+.imp-result.bad { background: #ff4d6d1a; border-color: var(--red); }
+.imp-result.big { font-size: clamp(1.2rem, 2.2vw, 2.4rem); padding: 2vh 2vw; text-align: center; animation: revealIn .8s cubic-bezier(.2, 1.4, .4, 1) both; }
+.imp-final { text-align: center; padding: 14px; border-radius: 14px; display: grid; gap: 6px; }
+.imp-final.crew { background: #39d98a1f; border: 1px solid var(--green); }
+.imp-final.impostors { background: #ff4d6d1f; border: 1px solid var(--red); }
+.imp-final.big { font-size: clamp(1.1rem, 1.8vw, 2rem); margin-bottom: 2vh; animation: revealIn .9s cubic-bezier(.2, 1.4, .4, 1) both; }
+.imp-winner { font-size: 1.4em; font-weight: 800; }
+.imp-word b { color: var(--orange); }
+
+/* Admin impostor */
+.check-grid { display: flex; flex-wrap: wrap; gap: 6px; max-height: 220px; overflow: auto; }
+.check-chip { display: inline-flex !important; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 999px; border: 1px solid var(--line); background: #0d0a1466; font-weight: 600 !important; font-size: .85rem !important; cursor: pointer; }
+.check-chip input { display: none; }
+.check-chip.on { background: var(--purple); border-color: var(--purple); color: #fff; }
+.imp-k { display: flex; justify-content: space-between; align-items: center; }
+.imp-k-n { font-size: 1.8rem; font-weight: 800; color: var(--orange); min-width: 40px; text-align: center; }
+.imp-open { display: grid; gap: 8px; }
+select { width: 100%; font: inherit; color: var(--text); background: #0d0a1499; border: 1px solid var(--line); border-radius: 12px; padding: 12px; }
+.pts-grid.two { grid-template-columns: repeat(2, 1fr); }
+
+/* Pantalla impostor */
+.imp-screen { display: flex; flex-direction: column; gap: 2vh; flex: 1; }
+.imp-body { display: grid; grid-template-columns: minmax(280px, 34%) 1fr; gap: 3vw; }
+.imp-body h2 { font-size: clamp(1.1rem, 1.8vw, 2rem); margin: 0 0 1.5vh; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.imp-order { list-style: none; margin: 0; padding: 0; display: grid; gap: .8vh; }
+.imp-order li { display: flex; align-items: center; gap: 1vw; padding: 1vh 1vw; border-radius: 12px; background: #1d1531cc; font-size: clamp(1rem, 1.6vw, 1.8rem); }
+.imp-order li.dead { opacity: .5; text-decoration: line-through; }
+.imp-order li.is-imp { border: 2px solid var(--red); opacity: 1; }
+.imp-order .ord { width: 1.8em; height: 1.8em; border-radius: 50%; background: var(--purple); display: grid; place-items: center; font-weight: 800; font-size: .8em; flex: 0 0 auto; }
+.imp-order .who { flex: 1; font-weight: 700; }
+.role-tag { font-size: .7em; padding: 2px 10px; border-radius: 999px; background: #3a2f55; text-decoration: none; }
+.imp-wait { font-size: clamp(1.3rem, 2.4vw, 2.6rem); text-align: center; padding: 6vh 2vw; color: var(--muted); }
+.imp-wait b { color: var(--orange); }
+.imp-tally { display: grid; gap: 1.6vh; margin-top: 2vh; }
+.imp-tally-head { display: grid; grid-template-columns: minmax(120px, 24%) 1fr 3em; gap: 1vw; align-items: center; font-size: clamp(1rem, 1.7vw, 1.9rem); }
+.imp-voters { color: var(--muted); font-size: clamp(.85rem, 1.2vw, 1.3rem); padding-left: calc(24% + 1vw); }
+@media (max-width: 800px) { .imp-body { grid-template-columns: 1fr; } .imp-voters { padding-left: 0; } }
+
+/* Congelar + final */
+.frozen-banner { text-align: center; background: #9b5cff26; color: #d6c2ff; border: 1px solid #9b5cff66; border-radius: 999px; padding: .6vh 2vw; font-weight: 700; font-size: clamp(1rem, 1.5vw, 1.6rem); align-self: center; }
+.frozen-note { background: #9b5cff1a; border-radius: 10px; padding: 8px 10px; font-size: .85rem; color: #d6c2ff; }
+.final { position: relative; min-height: 94vh; display: flex; flex-direction: column; align-items: center; gap: 2vh; overflow: hidden; }
+.final-title { font-size: clamp(2.6rem, 6vw, 6.5rem); margin: 0; }
+.final-podium { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2vw; align-items: end; width: min(1200px, 94vw); }
+.final-pod { text-align: center; border-radius: 22px; padding: 2.4vh 1vw; background: linear-gradient(180deg, #2b1d4a, #160f27); border: 3px solid var(--line); animation: revealIn 1s cubic-bezier(.2, 1.4, .4, 1) both; }
+.final-pod.p1 { border-color: #ffcf40; box-shadow: 0 0 80px #ffcf4066; padding-bottom: 5vh; }
+.final-pod.p2 { border-color: #cfd6e6; padding-bottom: 3vh; }
+.final-pod.p3 { border-color: #d98a4a; }
+.final-pod .medal { font-size: clamp(2.6rem, 5vw, 5.5rem); }
+.final-pod .pname { font-size: clamp(1.4rem, 3vw, 3.2rem); font-weight: 800; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.final-pod .ppts { font-size: clamp(1.8rem, 3.6vw, 4rem); font-weight: 800; color: var(--orange); }
+.final-pod .ppts small { font-size: .4em; color: var(--muted); }
+.late { display: inline-block; background: var(--green); color: #04210f; font-weight: 800; border-radius: 999px; padding: 1px 10px; font-size: clamp(.8rem, 1.1vw, 1.2rem); }
+.final-costume { font-size: clamp(1.1rem, 1.8vw, 2rem); background: #ff7a1a1f; border: 1px solid #ff7a1a66; border-radius: 999px; padding: .8vh 2vw; animation: revealIn .8s 1s both; }
+.final-costume b { color: var(--orange); }
+.final-list { list-style: none; margin: 0; padding: 0; width: min(1400px, 94vw); display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1vh 1.5vw; }
+.final-list li { display: flex; align-items: center; gap: 1vw; padding: 1vh 1vw; border-radius: 12px; background: #1d1531cc; font-size: clamp(1rem, 1.4vw, 1.5rem); animation: revealIn .5s ease both; }
+.final-list .pos { width: 2.2em; text-align: center; color: var(--muted); font-weight: 800; }
+.final-list .who { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.final-list .pts { font-weight: 800; color: var(--orange2); min-width: 2.5em; text-align: right; }
