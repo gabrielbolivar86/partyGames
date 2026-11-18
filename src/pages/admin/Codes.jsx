@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { supabase, errorMessage } from '../../lib/supabase'
 import { useRealtimeRefresh } from '../../hooks/useRealtimeRefresh'
+import { printCodesUrl } from '../../lib/urls'
 
 const STATUS = {
   not_started: { label: 'Sin empezar', cls: '' },
@@ -48,7 +49,7 @@ export default function CodesAdmin({ dashboardMode }) {
 
   if (!ov) return <section className="card"><p className="muted">Cargando…</p>{error && <div className="error">{error}</div>}</section>
   const st = STATUS[ov.status]
-  const printUrl = window.location.origin + window.location.pathname + '#/imprimir-codigos'
+  const printUrl = printCodesUrl()
 
   return (
     <>

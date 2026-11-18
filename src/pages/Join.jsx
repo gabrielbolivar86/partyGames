@@ -2,14 +2,14 @@ import { useEffect, useMemo, useState } from 'react'
 import { supabase, errorMessage } from '../lib/supabase'
 import FactTips from '../components/FactTips'
 
-export default function Join({ notice, clearNotice, onDone }) {
+export default function Join({ party, notice, clearNotice, onDone }) {
   const [tab, setTab] = useState('new')
 
   return (
     <div className="screen join">
       <div className="hero">
         <div className="hero-emoji">🎃👻🦇</div>
-        <h1 className="spooky">Fiesta de Halloween</h1>
+        <h1 className="spooky">{party?.name || 'Fiesta de Halloween'}</h1>
         <p className="muted">Regístrate para sumar puntos durante la noche</p>
       </div>
 
@@ -22,7 +22,7 @@ export default function Join({ notice, clearNotice, onDone }) {
         <button className={tab === 'link' ? 'active' : ''} onClick={() => setTab('link')}>Ya tengo perfil</button>
       </div>
 
-      {tab === 'new' ? <RegisterForm onDone={onDone} /> : <LinkForm onDone={onDone} />}
+      {tab === 'new' ? <RegisterForm onDone={onDone} /> : <LinkForm partyId={party?.id} onDone={onDone} />}
     </div>
   )
 }
@@ -92,7 +92,7 @@ function RegisterForm({ onDone }) {
   )
 }
 
-function LinkForm({ onDone }) {
+function LinkForm({ partyId, onDone }) {
   const [players, setPlayers] = useState([])
   const [query, setQuery] = useState('')
   const [selected, setSelected] = useState(null)
@@ -100,9 +100,10 @@ function LinkForm({ onDone }) {
   const [error, setError] = useState(null)
 
   useEffect(() => {
-    supabase.from('players').select('id, name, nickname, costume').eq('approved', true).order('name')
+    if (!partyId) return
+    supabase.from('players').select('id, name, nickname, costume').eq('event_id', partyId).eq('approved', true).order('name')
       .then(({ data, error }) => error ? setError(error.message) : setPlayers(data || []))
-  }, [])
+  }, [partyId])
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()

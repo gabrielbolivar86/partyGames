@@ -10,6 +10,7 @@ import PersonaGame, { MyFactCard } from '../components/PersonaGame'
 import ImpostorGame from '../components/ImpostorGame'
 import GiftGame from '../components/GiftGame'
 import WolfPlay from '../components/WolfPlay'
+import { gameEnabled } from '../lib/games'
 
 // Juegos que pueden aparecer como pestaña
 const GAMES = {
@@ -29,7 +30,9 @@ const label = (g) => (g.id === 'wolf' && g.narrator ? 'Narrar' : GAMES[g.id].sho
 
 export default function Home({ me }) {
   const { data: mg, refresh: refreshGames } = useMyGames()
-  const all = mg?.games || []
+  const dash = useDashboard()
+  const partyGames = dash.data?.games
+  const all = (mg?.games || []).filter((g) => gameEnabled(partyGames, g.id))
   const games = all.filter((g) => GAMES[g.id])
   const onMenu = { codes: all.some((g) => g.id === 'codes'), costume: all.some((g) => g.id === 'costume') }
   const away = !!mg?.away

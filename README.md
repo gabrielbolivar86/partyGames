@@ -9,6 +9,7 @@
 - **Fase 7:** Hombre Lobo, etapa 1: narrador, baraja sugerida, noche simultánea, alcalde y TV con la mesa. Ver [la sección de la fase 7](#fase-7-hombre-lobo-etapa-1).
 - **Fase 8:** cada juego en su pestaña a pantalla completa, aviso "¡Empezó!", todos entran automáticamente, "⏸️ Me ausento un rato" y temporizador del Regalo Loco. Ver [la sección de la fase 8](#fase-8-pestañas-de-juegos-me-ausento-un-rato-y-temporizador-del-regalo).
 - **Fase 9:** El Regalo más rápido: una pregunta a la vez con su tiempo, y resultados de golpe. Ver [la sección de la fase 9](#fase-9-el-regalo-más-rápido).
+- **Fase 10:** varias fiestas a la vez: dueño, anfitriones con enlace y contraseña, página "Mi fiesta", juegos a elegir y wifi opcional. Ver [la sección de la fase 10](#fase-10-varias-fiestas-anfitriones-y-juegos-a-elegir).
 
 **Stack:** React + Vite · Supabase (base de datos, tiempo real y login anónimo) · Vercel o GitHub Pages. Costo: $0.
 
@@ -383,6 +384,38 @@ Para quien tiene que salir un momento (por ejemplo, a ver a sus hijos):
 - **Una pregunta a la vez:** "¿Qué le vas a regalar a Mari?" → **Siguiente** → "¿Para qué sirve?" → **Siguiente** → "¿Qué exclama?".
 - **30 s por pregunta** (Admin → 🎁 Regalo → ⚙️ *Segundos por pregunta*; 0 = sin tiempo). Todos avanzan a la par: la 1.ª cierra a los 30 s, la 2.ª a los 60 s y la 3.ª a los 90 s. Si se acaba el tiempo, se guarda lo escrito y pasa sola a la siguiente. Quien termina antes puede adelantarse.
 - **Resultados de golpe:** al tocar **🏆 Cerrar votación y mostrar ganadores**, la TV muestra el podio completo y los puntos se suman al instante. Ya no hay revelación 3.º → 2.º → 1.º.
+
+---
+
+## Fase 10: varias fiestas, anfitriones y juegos a elegir
+
+### Instalar (en este orden)
+1. Supabase → **SQL Editor** → pega todo `supabase/11_fase10_multifiesta.sql` → **Run**. No borra nada y se puede correr varias veces.
+2. Abre `supabase/12_hacerme_dueno.sql`, cambia `'Gabriel'` por tu nombre exacto y córrelo. Desde ese momento los dispositivos con los que entraste como Gabriel son **dueños** de la app.
+3. `git add . && git commit -m "Fase 10: varias fiestas" && git push`
+
+### Roles
+- **👑 Dueño** (tú): en `#/owner` creas fiestas. Cada fiesta tiene un **enlace** (ej. `halloween-ana`) y una **contraseña de anfitrión**. Al crearla ves un mensaje listo para copiar y mandárselo a tu amigo. La contraseña queda cifrada: si se pierde, toca **🔑 Nueva contraseña**. También puedes ir al panel desde la 👑 de la barra superior.
+- **🔑 Anfitrión**: abre `#/p/<enlace>/anfitrion`, escribe su nombre y la contraseña y queda como admin **solo de esa fiesta**. Varias personas pueden entrar con la misma contraseña (co-anfitriones).
+- **👻 Invitados**: se registran en `#/p/<enlace>/` como siempre; el anfitrión los aprueba.
+
+### Enlaces de cada fiesta
+| Para qué | Enlace |
+|---|---|
+| Invitados (el QR de la TV lleva aquí) | `#/p/<enlace>/` |
+| Pantalla / TV | `#/p/<enlace>/dashboard` |
+| Anfitrión | `#/p/<enlace>/anfitrion` |
+
+La fiesta que ya existía sigue siendo `halloween-2026`; los enlaces viejos (`#/` y `#/dashboard`) llevan a ella.
+
+### 🏠 Mi fiesta (nueva primera pestaña del admin)
+- Enlace + QR para invitados y enlace para la TV, con botón para copiar.
+- **Juegos de esta fiesta**: cada uno con descripción, cuántas personas y cuánto dura. Los que se apagan desaparecen del panel, de la pantalla y de los celulares.
+- **Wifi opcional**: apagado por defecto. Solo si lo activas la pantalla muestra el QR del wifi. **🗑 Borrar datos del wifi** lo elimina de la base. Tu wifi guardado de antes quedó **oculto**.
+- Además, la contraseña del wifi y la del anfitrión ya no se pueden leer desde la app (antes la tabla `events` era de lectura pública).
+
+### Cómo funciona por dentro
+La app manda el enlace de la fiesta en cada petición (header `x-party`) y `active_event_id()` lo usa para elegir la fiesta, así todos los juegos existentes funcionan sin cambios. Un mismo celular puede estar en varias fiestas (un perfil por fiesta), y ser admin de una no da permisos en otra.
 
 ---
 

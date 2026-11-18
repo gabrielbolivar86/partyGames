@@ -27,8 +27,11 @@ export default function GuestApp() {
     )
   }
 
+  // Fase 10: el servidor dice null si el enlace apunta a una fiesta que no existe
+  if (me && 'party' in me && !me.party) return <PartyNotFound isOwner={me.is_owner} />
+
   if (!me || me.status === 'none') {
-    return <Join notice={notice} clearNotice={clearNotice} onDone={(status) => setMe(status)} />
+    return <Join party={me?.party} notice={notice} clearNotice={clearNotice} onDone={(status) => setMe(status)} />
   }
 
   if (me.status === 'pending') {
@@ -41,7 +44,8 @@ export default function GuestApp() {
   return (
     <div className="screen">
       <header className="topbar">
-        <div className="brand">🎃 <span>Halloween</span></div>
+        <div className="brand">🎃 <span>{me.party?.name || 'Halloween'}</span></div>
+        {me.is_owner && <a className="small" href="#/owner" title="Panel del dueño">👑</a>}
         {isAdmin && (
           <label className="switch" title="Cambiar entre modo invitado y modo admin">
             <span>{showAdmin ? 'Admin' : 'Invitado'}</span>
@@ -51,6 +55,18 @@ export default function GuestApp() {
         )}
       </header>
       {showAdmin ? <AdminPanel me={me} /> : <Home me={me} />}
+    </div>
+  )
+}
+
+function PartyNotFound({ isOwner }) {
+  return (
+    <div className="screen center">
+      <div className="card">
+        <h2>🦇 Esta fiesta no existe</h2>
+        <p>Revisa el enlace que te mandó tu anfitrión: puede tener un error o la fiesta ya fue borrada.</p>
+        {isOwner && <a className="btn" href="#/owner">👑 Ir al panel del dueño</a>}
+      </div>
     </div>
   )
 }

@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { supabase, errorMessage } from '../../lib/supabase'
-import { joinUrl, dashboardUrl } from '../../lib/urls'
-import WifiSettings from './Wifi'
+import { modeEnabled } from '../../lib/games'
 
 const MODES = [
   { id: 'leaderboard', label: '🏆 Tabla general' },
@@ -14,7 +13,7 @@ const MODES = [
   { id: 'final', label: '🏆 Resultados de la noche (final)' },
 ]
 
-export default function Screen({ dashboardMode, frozen }) {
+export default function Screen({ dashboardMode, frozen, games }) {
   const [error, setError] = useState(null)
 
   async function setMode(mode) {
@@ -34,7 +33,7 @@ export default function Screen({ dashboardMode, frozen }) {
         <h3>📺 ¿Qué muestra la pantalla?</h3>
         {error && <div className="error">{error}</div>}
         <div className="mode-list">
-          {MODES.map((m) => (
+          {MODES.filter((m) => modeEnabled(games, m.id)).map((m) => (
             <button key={m.id} className={`pick ${dashboardMode === m.id ? 'active' : ''}`} onClick={() => setMode(m.id)}>
               {m.label} {dashboardMode === m.id && <span className="muted small">· en pantalla</span>}
             </button>
@@ -52,12 +51,7 @@ export default function Screen({ dashboardMode, frozen }) {
           : <button className="btn" onClick={() => freeze(true)}>🔒 Congelar tabla ahora</button>}
         <p className="small muted">{frozen ? 'Estado: congelada 🔒 (tú, como admin, ves los puntos reales).' : 'Estado: en vivo.'}</p>
       </section>
-      <WifiSettings />
-      <section className="card">
-        <h3>🔗 Enlaces</h3>
-        <p className="small">Dashboard (abrir en la TV): <br /><a href={dashboardUrl()} target="_blank" rel="noreferrer">{dashboardUrl()}</a></p>
-        <p className="small">Registro de invitados (el QR del dashboard lleva aquí): <br /><a href={joinUrl()}>{joinUrl()}</a></p>
-      </section>
+      <p className="small muted center-text">Los enlaces de la pantalla y de los invitados están en 🏠 Mi fiesta.</p>
     </>
   )
 }

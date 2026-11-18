@@ -1,10 +1,13 @@
-import { HashRouter, Routes, Route } from 'react-router-dom'
-import { isConfigured } from './lib/supabase'
+import { HashRouter, Routes, Route, Navigate, useParams } from 'react-router-dom'
+import { isConfigured, setParty } from './lib/supabase'
+import { DEFAULT_PARTY, readLastParty, saveLastParty } from './lib/urls'
 import GuestApp from './pages/GuestApp'
 import Dashboard from './pages/Dashboard'
 import PrintCodes from './pages/PrintCodes'
+import HostLogin from './pages/HostLogin'
+import Owner from './pages/Owner'
 
-// HashRouter (#/dashboard) funciona igual en Vercel y en GitHub Pages sin configuración extra.
+// HashRouter (#/p/<fiesta>/dashboard) funciona igual en Vercel y en GitHub Pages sin configuración extra.
 export default function App() {
   if (!isConfigured) {
     return (
@@ -22,10 +25,36 @@ export default function App() {
   return (
     <HashRouter>
       <Routes>
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/imprimir-codigos" element={<PrintCodes />} />
-        <Route path="/*" element={<GuestApp />} />
+        <Route path="/owner" element={<NoParty><Owner /></NoParty>} />
+        <Route path="/p/:slug/*" element={<PartyScope />} />
+        {/* Enlaces viejos (antes de la fase 10) → la fiesta original */}
+        <Route path="/dashboard" element={<Navigate to={`/p/${DEFAULT_PARTY}/dashboard`} replace />} />
+        <Route path="/imprimir-codigos" element={<Navigate to={`/p/${DEFAULT_PARTY}/imprimir-codigos`} replace />} />
+        <Route path="*" element={<Navigate to={`/p/${readLastParty() || DEFAULT_PARTY}/`} replace />} />
       </Routes>
     </HashRouter>
+  )
+}
+
+function NoParty({ children }) {
+  setParty(null)
+  return children
+}
+
+// Todo lo que está dentro de /p/<slug>/ habla con el servidor sobre ESA fiesta
+function PartyScope() {
+  const { slug: raw } = useParams()
+  const slug = raw.toLowerCase()
+  // Se fija antes de que los hijos pidan datos (sus efectos corren después del render)
+  setParty(slug)
+  saveLastParty(slug)
+
+  return (
+    <Routes key={slug}>
+      <Route path="dashboard" element={<Dashboard />} />
+      <Route path="imprimir-codigos" element={<PrintCodes />} />
+      <Route path="anfitrion" element={<HostLogin />} />
+      <Route path="*" element={<GuestApp />} />
+    </Routes>
   )
 }
