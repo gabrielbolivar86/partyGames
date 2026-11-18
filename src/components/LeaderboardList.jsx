@@ -1,3 +1,4 @@
+import { Icon } from './Icon'
 const MEDALS = { 1: '🥇', 2: '🥈', 3: '🥉' }
 
 export default function LeaderboardList({ rows, highlightId, compact = false }) {
@@ -10,7 +11,7 @@ export default function LeaderboardList({ rows, highlightId, compact = false }) 
           <span className="who">
             <strong>{r.name}</strong>
             {r.nickname && <span className="muted"> “{r.nickname}”</span>}
-            {r.away && <span className="away-tag" title="En pausa"> ⏸️</span>}
+            {r.away && <span className="away-tag" title="En pausa"> <Icon name="IconPlayerPause" size={16} /></span>}
           </span>
           <span className="pts">{r.points}</span>
         </li>

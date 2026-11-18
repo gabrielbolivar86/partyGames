@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import Spinner from '../components/Spinner'
+import { Icon } from '../components/Icon'
 
 // Hoja para imprimir los códigos (solo admin). Cada tarjeta muestra el código en grande para recortar y esconder.
 export default function PrintCodes() {
@@ -19,7 +20,7 @@ export default function PrintCodes() {
     return (
       <div className="screen center">
         <div className="card">
-          <h2>🔒 Solo el admin</h2>
+          <h2>Solo el admin</h2>
           <p>{error}</p>
           <p className="muted small">Abre esta página en un dispositivo vinculado a tu perfil de admin (usa "Ya tengo perfil" en esta computadora y apruébalo).</p>
         </div>
@@ -31,16 +32,16 @@ export default function PrintCodes() {
   return (
     <div className="print-page">
       <div className="print-toolbar no-print">
-        <button className="btn primary" onClick={() => window.print()}>🖨 Imprimir</button>
+        <button className="btn primary" onClick={() => window.print()}><Icon name="IconPrinter" />Imprimir</button>
         <label className="check"><input type="checkbox" checked={showLabels} onChange={(e) => setShowLabels(e.target.checked)} /> Imprimir ubicación (pequeño)</label>
         <span className="muted small">{codes.length} códigos · recórtalos y escóndelos</span>
       </div>
       <div className="print-grid">
         {codes.map((c) => (
           <div key={c.id} className="print-card">
-            <div className="print-title">🔍 Código secreto <b>#{c.number}</b></div>
+            <div className="print-title">Código secreto <b>#{c.number}</b></div>
             <div className="print-pin">{c.pin}</div>
-            <div className="print-help">Escribe este código en la app 🎃 ¡Rápido, antes que los demás!</div>
+            <div className="print-help">Escribe este código en la app. ¡Rápido, antes que los demás!</div>
             {showLabels && c.label && <div className="print-label">📍 {c.label}</div>}
           </div>
         ))}

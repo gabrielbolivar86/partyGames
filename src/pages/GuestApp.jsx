@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Icon, ThemeIcon } from '../components/Icon'
 import { useMe } from '../hooks/useMe'
 import Join from './Join'
 import Waiting from './Waiting'
@@ -20,7 +21,7 @@ export default function GuestApp() {
     return (
       <div className="screen center">
         <div className="card">
-          <h2>😵 Algo salió mal</h2>
+          <h2>Algo salió mal</h2>
           <p>{error}</p>
           <button className="btn" onClick={() => window.location.reload()}>Reintentar</button>
         </div>
@@ -45,8 +46,8 @@ export default function GuestApp() {
   return (
     <div className="screen">
       <header className="topbar">
-        <div className="brand">🎃 <span>{me.party?.name || 'Halloween'}</span></div>
-        {me.is_owner && <a className="small" href="#/owner" title="Panel del dueño">👑</a>}
+        <div className="brand"><ThemeIcon size={26} /><span>{me.party?.name || 'Juegos de fiesta'}</span></div>
+        {me.is_owner && <a className="btn small" href="#/owner" title="Panel del dueño" aria-label="Panel del dueño"><Icon name="IconCrown" /></a>}
         {isAdmin && (
           <label className="switch" title="Cambiar entre modo invitado y modo admin">
             <span>{showAdmin ? 'Admin' : 'Invitado'}</span>
@@ -64,9 +65,9 @@ function PartyNotFound({ isOwner }) {
   return (
     <div className="screen center">
       <div className="card">
-        <h2>🦇 Esta fiesta no existe</h2>
+        <h2>Esta fiesta no existe</h2>
         <p>Revisa el enlace que te mandó tu anfitrión: puede tener un error o la fiesta ya fue borrada.</p>
-        {isOwner && <a className="btn" href="#/owner">👑 Ir al panel del dueño</a>}
+        {isOwner && <a className="btn" href="#/owner"><Icon name="IconCrown" />Ir al panel del dueño</a>}
       </div>
     </div>
   )

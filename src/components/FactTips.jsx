@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Icon } from './Icon'
 
 const EXAMPLES = [
   'Me quedé dormido en el cine… viendo una película de terror',
@@ -31,12 +32,12 @@ export default function FactTips() {
   return (
     <div className="fact-tips">
       <p>Algo <b>gracioso o curioso</b> de ti que pocos sepan. Sale en pantalla sin tu nombre y, al final de la ronda, se revela que eres tú.</p>
-      <p className="fact-bonus">🎁 Puntos extra si sale, <b>¡x2 si no te atrapan!</b></p>
-      <p className="fact-warn">⚠️ Nada muy personal.</p>
+      <p className="fact-bonus">Puntos extra si sale, <b>¡x2 si no te atrapan!</b></p>
+      <p className="fact-warn">Nada muy personal.</p>
       <div className="fact-examples">
         <span className="small muted">Ideas:</span>
         <ul>{examples.map((e) => <li key={e}>“{e}”</li>)}</ul>
-        <button type="button" className="link-btn" onClick={() => setExamples(pick(3, examples))}>🔄 Otras ideas</button>
+        <button type="button" className="link-btn" onClick={() => setExamples(pick(3, examples))}><Icon name="IconRefresh" size={18} /> Otras ideas</button>
       </div>
     </div>
   )

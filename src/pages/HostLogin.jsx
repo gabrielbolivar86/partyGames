@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase, errorMessage, ensureSession, getParty } from '../lib/supabase'
 import Spinner from '../components/Spinner'
+import { Icon } from '../components/Icon'
 
 const MODE_KEY = 'pg-admin-mode'
 
@@ -49,7 +50,7 @@ export default function HostLogin() {
   if (status && !party) {
     return (
       <div className="screen center">
-        <div className="card"><h2>🦇 Esta fiesta no existe</h2><p>Revisa el enlace que te mandaron.</p></div>
+        <div className="card"><h2>Esta fiesta no existe</h2><p>Revisa el enlace que te mandaron.</p></div>
       </div>
     )
   }
@@ -57,8 +58,8 @@ export default function HostLogin() {
   return (
     <div className="screen join">
       <div className="hero">
-        <div className="hero-emoji">🎃🔑</div>
-        <h1 className="spooky">{party?.name || 'Anfitrión'}</h1>
+        <div className="hero-emoji"><Icon name="IconKey" size={40} /></div>
+        <h1 className="display">{party?.name || 'Anfitrión'}</h1>
         <p className="muted">Entrada para el anfitrión de la fiesta</p>
       </div>
 
@@ -79,7 +80,7 @@ export default function HostLogin() {
           <label>Contraseña de anfitrión
             <div className="row nowrap">
               <input type={show ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="off" required />
-              <button className="btn small ghost-btn" type="button" onClick={() => setShow((s) => !s)}>{show ? '🙈' : '👁'}</button>
+              <button className="btn small ghost-btn" type="button" onClick={() => setShow((s) => !s)} aria-label={show ? 'Ocultar contraseña' : 'Mostrar contraseña'}><Icon name={show ? 'IconEyeOff' : 'IconEye'} /></button>
             </div>
           </label>
           {error && <div className="error">{error}</div>}

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Icon, ThemeIcon } from '../components/Icon'
 import { supabase, errorMessage } from '../lib/supabase'
 
 export default function Waiting({ me, onChange, onCheck }) {
@@ -17,7 +18,7 @@ export default function Waiting({ me, onChange, onCheck }) {
   return (
     <div className="screen center">
       <div className="card waiting">
-        <div className="ghost">👻</div>
+        <div className="hero-emoji" style={{ margin: '0 auto 12px' }}><ThemeIcon size={40} /></div>
         <h2>¡Hola, {me.player.nickname || me.player.name}!</h2>
         <p>{isLink
           ? 'Pedimos al admin que apruebe este celular para tu perfil.'
@@ -25,7 +26,7 @@ export default function Waiting({ me, onChange, onCheck }) {
         <p className="muted small">Puedes dejar esta pantalla abierta, se actualiza sola.</p>
         {error && <div className="error">{error}</div>}
         <div className="row">
-          <button className="btn" onClick={onCheck}>Revisar</button>
+          <button className="btn secondary" onClick={onCheck}><Icon name="IconRefresh" />Revisar</button>
           <button className="btn ghost-btn" onClick={cancel} disabled={busy}>Cancelar</button>
         </div>
       </div>

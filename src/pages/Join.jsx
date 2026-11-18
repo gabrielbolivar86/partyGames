@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { ThemeIcon } from '../components/Icon'
 import { supabase, errorMessage } from '../lib/supabase'
 import FactTips from '../components/FactTips'
 
@@ -8,8 +9,8 @@ export default function Join({ party, notice, clearNotice, onDone }) {
   return (
     <div className="screen join">
       <div className="hero">
-        <div className="hero-emoji">🎃👻🦇</div>
-        <h1 className="spooky">{party?.name || 'Fiesta de Halloween'}</h1>
+        <div className="hero-emoji"><ThemeIcon size={40} /></div>
+        <h1 className="display">{party?.name || 'Juegos de fiesta'}</h1>
         <p className="muted">Regístrate para sumar puntos durante la noche</p>
       </div>
 
@@ -67,7 +68,7 @@ function RegisterForm({ onDone }) {
       <div className="toggle-row">
         <span>¿Vienes disfrazado?</span>
         <div className="seg">
-          <button type="button" className={form.hasCostume ? 'active' : ''} onClick={() => setForm({ ...form, hasCostume: true })}>Sí 🧛</button>
+          <button type="button" className={form.hasCostume ? 'active' : ''} onClick={() => setForm({ ...form, hasCostume: true })}>Sí</button>
           <button type="button" className={!form.hasCostume ? 'active' : ''} onClick={() => setForm({ ...form, hasCostume: false })}>No</button>
         </div>
       </div>
@@ -79,7 +80,7 @@ function RegisterForm({ onDone }) {
       {!form.hasCostume && <p className="hint">Sin disfraz no compites por el mejor disfraz, pero juegas todo lo demás.</p>}
 
       <div className="fact-block">
-        <label>Un dato curioso o anécdota tuya 🤫 <span className="muted small">(opcional)</span>
+        <label>Un dato curioso o anécdota tuya <span className="muted small">(opcional)</span>
           <textarea value={form.funFact} onChange={set('funFact')} maxLength={200} rows={3}
             placeholder="Escribe tu dato aquí…" />
         </label>

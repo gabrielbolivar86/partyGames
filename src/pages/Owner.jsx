@@ -4,6 +4,7 @@ import { hostUrl, joinUrl, dashboardUrl } from '../lib/urls'
 import { GAME_CATALOG } from '../lib/games'
 import { getTheme } from '../lib/themes'
 import ThemePicker from '../components/ThemePicker'
+import { Icon } from '../components/Icon'
 
 // Panel del dueño de la app: crear fiestas y darles anfitrión (enlace + contraseña)
 export default function Owner() {
@@ -28,7 +29,7 @@ export default function Owner() {
   return (
     <div className="screen">
       <header className="topbar">
-        <div className="brand">👑 <span>Mis fiestas</span></div>
+        <div className="brand"><Icon name="IconCrown" size={26} /><span>Mis fiestas</span></div>
       </header>
       <main className="content">
         {error && (
@@ -80,7 +81,7 @@ function CreateParty({ onCreated }) {
 
   return (
     <form className="card form" onSubmit={submit}>
-      <h3>➕ Nueva fiesta</h3>
+      <h3><Icon name="IconPlus" />Nueva fiesta</h3>
       <label>Nombre de la fiesta
         <input value={name} maxLength={60} required placeholder="Ej. Halloween en casa de Ana"
           onChange={(e) => { setName(e.target.value); if (!slugTouched) setSlug(slugify(e.target.value)) }} />
@@ -93,7 +94,7 @@ function CreateParty({ onCreated }) {
       <label>Contraseña del anfitrión
         <div className="row nowrap">
           <input value={password} onChange={(e) => setPassword(e.target.value)} minLength={6} required autoComplete="off" />
-          <button className="btn small ghost-btn" type="button" onClick={() => setPassword(randomPassword())} title="Generar otra">🎲</button>
+          <button className="btn small ghost-btn" type="button" onClick={() => setPassword(randomPassword())} title="Generar otra" aria-label="Generar otra contraseña"><Icon name="IconDice5" /></button>
         </div>
       </label>
       <div>
@@ -114,7 +115,7 @@ function HostCard({ info, onClose }) {
     `Ahí verás el enlace para tus invitados y el de la TV.`
   return (
     <section className="card form">
-      <h3>🔑 Datos para el anfitrión</h3>
+      <h3><Icon name="IconKey" />Datos para el anfitrión</h3>
       <p className="hint">Cópialos ahora: la contraseña no se vuelve a mostrar (puedes generar otra cuando quieras).</p>
       <CopyLine label="Enlace de anfitrión" value={hostUrl(info.slug)} />
       <CopyLine label="Contraseña" value={info.password} />
@@ -136,7 +137,7 @@ export function CopyLine({ label, value, multiline }) {
         {multiline
           ? <textarea readOnly value={value} rows={4} onFocus={(e) => e.target.select()} />
           : <input readOnly value={value} onFocus={(e) => e.target.select()} />}
-        <button className="btn small" type="button" onClick={copy}>{done ? '✓' : '📋'}</button>
+        <button className="btn small" type="button" onClick={copy} aria-label="Copiar"><Icon name={done ? 'IconCheck' : 'IconCopy'} /></button>
       </div>
     </div>
   )
@@ -178,13 +179,13 @@ function PartyRow({ p, onPassword, onDeleted }) {
           <CopyLine label="Pantalla / TV" value={dashboardUrl(p.slug)} />
           <div className="row">
             <a className="btn small" href={`#/p/${p.slug}/`}>Abrir fiesta</a>
-            <button className="btn small" onClick={newPassword}>{p.has_password ? '🔑 Nueva contraseña' : '🔑 Crear contraseña'}</button>
+            <button className="btn small" onClick={newPassword}><Icon name="IconKey" />{p.has_password ? 'Nueva contraseña' : 'Crear contraseña'}</button>
           </div>
           <details>
             <summary className="small muted">Borrar fiesta…</summary>
             <p className="hint">Se borran sus invitados, puntos y juegos. Escribe <code>{p.slug}</code> para confirmar.</p>
             <input value={confirm} onChange={(e) => setConfirm(e.target.value)} />
-            <button className="btn danger" disabled={confirm !== p.slug} onClick={remove}>🗑 Borrar para siempre</button>
+            <button className="btn danger" disabled={confirm !== p.slug} onClick={remove}><Icon name="IconTrash" />Borrar para siempre</button>
           </details>
           {error && <div className="error">{error}</div>}
         </>

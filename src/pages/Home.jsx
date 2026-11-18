@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Icon } from '../components/Icon'
 import { supabase, errorMessage } from '../lib/supabase'
 import { useLeaderboard } from '../hooks/useLeaderboard'
 import { useMyGames } from '../hooks/useMyGames'
@@ -14,10 +15,10 @@ import { gameEnabled } from '../lib/games'
 
 // Juegos que pueden aparecer como pestaña
 const GAMES = {
-  wolf: { emoji: '🐺', name: 'Hombre Lobo', short: 'Lobo' },
-  gift: { emoji: '🎁', name: 'El Regalo', short: 'Regalo' },
-  impostor: { emoji: '🃏', name: 'El Impostor', short: 'Impostor' },
-  persona: { emoji: '🕵️', name: '¿Quién es el personaje?', short: 'Personaje', newRound: true },
+  wolf: { icon: 'IconMoon', name: 'Hombre Lobo', short: 'Lobo' },
+  gift: { icon: 'IconGift', name: 'El Regalo', short: 'Regalo' },
+  impostor: { icon: 'IconSpy', name: 'El Impostor', short: 'Impostor' },
+  persona: { icon: 'IconUserQuestion', name: '¿Quién es el personaje?', short: 'Personaje', newRound: true },
 }
 // Caza de códigos y voto de disfraz duran toda la noche: van en el menú, no como pestaña
 
@@ -89,11 +90,11 @@ function GameTabs({ games, open, setOpen }) {
   return (
     <nav className="game-tabs">
       <button className={`game-tab home ${!open ? 'active' : ''}`} onClick={() => setOpen(null)}>
-        {open ? '← Menú' : '🏠 Menú'}
+        <Icon name={open ? 'IconArrowLeft' : 'IconHome'} size={18} />Menú
       </button>
       {games.map((g) => (
         <button key={g.id} className={`game-tab ${open === g.id ? 'active' : ''}`} onClick={() => setOpen(g.id)}>
-          {GAMES[g.id].emoji} {label(g)}
+          <Icon name={GAMES[g.id].icon} size={18} />{label(g)}
           {g.attention && open !== g.id && <i className="dot" title="Te toca" />}
         </button>
       ))}
@@ -108,9 +109,9 @@ function StartBanner({ g, onEnter, onLater }) {
   return (
     <div className="start-banner" role="dialog">
       <div className="start-card">
-        <div className="start-emoji">{info.emoji}</div>
-        <div className="start-title spooky">{title}</div>
-        <button className="btn primary big-btn" onClick={onEnter}>Entrar →</button>
+        <div className="hero-emoji"><Icon name={info.icon} size={44} /></div>
+        <div className="start-title">{title}</div>
+        <button className="btn primary big-btn" onClick={onEnter}>Entrar<Icon name="IconArrowRight" /></button>
         <button className="link-btn" onClick={onLater}>Ahora no</button>
       </div>
     </div>
@@ -129,7 +130,7 @@ function Menu({ me, games, onMenu, away, setOpen, refreshGames }) {
       <section className="card me-card">
         <div>
           <h2>{me.player.nickname || me.player.name}</h2>
-          <p className="muted">{me.player.has_costume ? `🧛 ${me.player.costume}` : 'Sin disfraz'}</p>
+          <p className="muted">{me.player.has_costume ? me.player.costume : 'Sin disfraz'}</p>
         </div>
         <div className="me-score">
           <div className="big">{mine ? mine.points : 0}</div>
@@ -138,19 +139,19 @@ function Menu({ me, games, onMenu, away, setOpen, refreshGames }) {
       </section>
 
       <section className="card">
-        <h3>🎮 Juegos</h3>
+        <h3><Icon name="IconDeviceGamepad2" />Juegos</h3>
         {games.length === 0
-          ? <p className="muted">Nada por ahora. ¡Atento a la pantalla! 📺</p>
+          ? <p className="muted">Nada por ahora. ¡Atento a la pantalla!</p>
           : (
             <div className="game-list">
               {games.map((g) => (
                 <button key={g.id} className={`game-btn ${g.attention ? 'attention' : ''}`} onClick={() => setOpen(g.id)}>
-                  <span className="game-btn-emoji">{GAMES[g.id].emoji}</span>
+                  <span className="hero-emoji" style={{ width: 48, height: 48, borderRadius: 14, transform: 'none', boxShadow: 'none' }}><Icon name={GAMES[g.id].icon} size={26} /></span>
                   <span className="grow">
                     <b>{g.id === 'wolf' && g.narrator ? 'Hombre Lobo · narrar' : GAMES[g.id].name}</b>
-                    <span className="small muted">{g.attention ? '👉 ¡Te toca!' : g.live ? 'En curso' : 'Ver resultado'}</span>
+                    <span className="small muted">{g.attention ? '¡Te toca!' : g.live ? 'En curso' : 'Ver resultado'}</span>
                   </span>
-                  <span className="game-btn-go">Entrar →</span>
+                  <span className="game-btn-go" aria-hidden="true"><Icon name="IconArrowRight" /></span>
                 </button>
               ))}
             </div>
@@ -161,8 +162,8 @@ function Menu({ me, games, onMenu, away, setOpen, refreshGames }) {
       {onMenu.codes && <CodeHunt />}
 
       <section className="card">
-        <h3>🏆 Tabla general</h3>
-        {frozen && <p className="frozen-note">🔒 Tabla congelada: los últimos puntos se revelan al final de la noche.</p>}
+        <h3><Icon name="IconTrophy" />Tabla general</h3>
+        {frozen && <p className="frozen-note"><Icon name="IconLock" size={16} /> Tabla congelada: los últimos puntos se revelan al final de la noche.</p>}
         {loading ? <p className="muted">Cargando…</p> : <LeaderboardList rows={rows} highlightId={me.player.id} compact />}
       </section>
 
@@ -185,7 +186,7 @@ function AwayButton({ onChange }) {
       <span className="small muted">¿Necesitas hacer algo o ausentarte? Ponte en pausa.</span>
       <button className="btn small ghost-btn" onClick={() => {
         if (window.confirm('¿Ponerte en pausa? No jugarás hasta que vuelvas.')) setAway(true, onChange, setErr)
-      }}>⏸️ Ponerme en pausa</button>
+      }}><Icon name="IconPlayerPause" size={18} />Ponerme en pausa</button>
       {err && <div className="error">{err}</div>}
     </div>
   )
@@ -195,8 +196,8 @@ function AwayBar({ onChange }) {
   const [busy, setBusy] = useState(false)
   return (
     <div className="away-bar">
-      <span>⏸️ <b>Estás en pausa</b></span>
-      <button className="btn small primary" disabled={busy} onClick={async () => { setBusy(true); await setAway(false, onChange); setBusy(false) }}>▶︎ Ya volví</button>
+      <span className="row"><Icon name="IconPlayerPause" /><b>Estás en pausa</b></span>
+      <button className="btn small primary" disabled={busy} onClick={async () => { setBusy(true); await setAway(false, onChange); setBusy(false) }}><Icon name="IconPlayerPlay" size={18} />Ya volví</button>
     </div>
   )
 }
