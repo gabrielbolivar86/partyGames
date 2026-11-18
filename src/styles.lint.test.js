@@ -42,3 +42,36 @@ describe('estilos', () => {
     expect(bad).toEqual([])
   })
 })
+
+// Hallazgos de la revisión final (legibilidad)
+import { THEMES, contrast } from './lib/themes'
+
+function mix(a, b, pa) { // a al pa% + b, como color-mix(in srgb, a pa%, b)
+  const h = (x) => [1, 3, 5].map((i) => parseInt(x.slice(i, i + 2), 16))
+  const [A, B] = [h(a), h(b)]
+  return '#' + A.map((v, i) => Math.round(v * pa + B[i] * (1 - pa)).toString(16).padStart(2, '0')).join('')
+}
+
+describe('legibilidad', () => {
+  it('surface-2 es clara en todos los temas: el texto suave se lee encima', () => {
+    const m = css.match(/--surface-2:\s*color-mix\(in srgb, var\(--surface\) (\d+)%, var\(--page\)\)/)
+    expect(m, 'surface-2 debe mezclar sobre todo la superficie').not.toBeNull()
+    for (const t of THEMES) {
+      const s2 = mix(t.colors.surface, t.colors.page, Number(m[1]) / 100)
+      expect(contrast('#52525B', s2), t.id).toBeGreaterThanOrEqual(4.5)
+    }
+  })
+
+  it('carta secreta cerrada sobre superficie clara y texto suave en tinta al abrirla', () => {
+    expect(css).toMatch(/\.secret-card \{[^}]*background: var\(--surface\)/)
+    expect(css).toMatch(/\.secret-card\.open \.muted \{[^}]*color: var\(--ink\)/)
+  })
+
+  it('hay respaldo para navegadores sin color-mix (TVs viejas)', () => {
+    const block = css.match(/@supports not \(color: color-mix\(in srgb, red, blue\)\) \{([\s\S]*?)\n\}/)
+    expect(block, 'falta el bloque @supports').not.toBeNull()
+    for (const v of ['--line', '--surface-2', '--tint-ok', '--tint-danger', '--tint-warn', '--tint-primary', '--tint-secondary']) {
+      expect(block[1], v).toContain(v + ':')
+    }
+  })
+})

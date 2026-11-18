@@ -72,7 +72,7 @@
 /* ---------- Derivados (iguales en todos los temas) ---------- */
 :root, [data-theme] {
   --line: color-mix(in srgb, var(--ink) 22%, transparent);
-  --surface-2: color-mix(in srgb, var(--page) 45%, var(--surface));
+  --surface-2: color-mix(in srgb, var(--surface) 82%, var(--page));
   --shadow: 4px 4px 0 var(--ink);
   --shadow-sm: 2px 2px 0 var(--ink);
   --border: 2px solid var(--ink);
@@ -84,6 +84,22 @@
   /* Color de texto según dónde esté: sobre la página o sobre una superficie clara */
   --fg: var(--text-on-page);
   --fg-muted: var(--muted-on-page);
+}
+
+/* Navegadores sin color-mix (TVs viejas): colores planos que igual se leen */
+@supports not (color: color-mix(in srgb, red, blue)) {
+  :root, [data-theme] {
+    --line: var(--ink);
+    --surface-2: var(--surface);
+    --tint-ok: var(--surface);
+    --tint-danger: var(--surface);
+    --tint-warn: var(--surface);
+    --tint-primary: var(--surface);
+    --tint-secondary: var(--surface);
+  }
+  .countdown { background: var(--page); }
+  .start-banner { background: var(--page); }
+  .wolf-screen.night { background: transparent; }
 }
 
 /* Todo lo que es "superficie" usa tinta para el texto, también en Halloween */
@@ -516,9 +532,10 @@ a.btn { text-align: center; text-decoration: none; }
    FASE 5 · El Impostor + Resultados finales
    ===================================================================== */
 .live-imp { background: var(--tint-primary); }
-.secret-card { user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; touch-action: none; margin: 12px 0; border-radius: var(--radius); min-height: 160px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-align: center; padding: 16px; background: var(--secondary); color: var(--on-secondary); border: 3px dashed var(--ink); cursor: pointer; }
+.secret-card { user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; touch-action: none; margin: 12px 0; border-radius: var(--radius); min-height: 160px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-align: center; padding: 16px; background: var(--surface); color: var(--ink); border: 3px dashed var(--ink); cursor: pointer; }
 .secret-card.open { background: var(--question); color: var(--ink); border-style: solid; box-shadow: var(--shadow); }
 .secret-card.open.imp { background: var(--danger); }
+.secret-card.open .muted { color: var(--ink); }
 .secret-q { font-size: 2.6rem; }
 .secret-word { font-family: var(--font-display); font-size: 2.1rem; font-weight: 800; }
 .secret-role { font-family: var(--font-display); font-size: 1.7rem; font-weight: 800; }
