@@ -4,6 +4,7 @@ import Join from './Join'
 import Waiting from './Waiting'
 import Home from './Home'
 import AdminPanel from './AdminPanel'
+import Spinner from '../components/Spinner'
 
 const MODE_KEY = 'pg-admin-mode'
 
@@ -13,7 +14,7 @@ export default function GuestApp() {
 
   useEffect(() => { saveMode(adminMode) }, [adminMode])
 
-  if (loading) return <div className="screen center"><div className="spinner">🎃</div></div>
+  if (loading) return <div className="screen center"><Spinner /></div>
 
   if (error && !me) {
     return (

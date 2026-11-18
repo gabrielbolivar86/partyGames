@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase, errorMessage, ensureSession, getParty } from '../lib/supabase'
+import Spinner from '../components/Spinner'
 
 const MODE_KEY = 'pg-admin-mode'
 
@@ -43,7 +44,7 @@ export default function HostLogin() {
     else goToPanel()
   }
 
-  if (!status && !error) return <div className="screen center"><div className="spinner">🎃</div></div>
+  if (!status && !error) return <div className="screen center"><Spinner /></div>
 
   if (status && !party) {
     return (

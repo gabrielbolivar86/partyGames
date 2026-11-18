@@ -13,7 +13,7 @@ export default function PartyAdmin({ party, games, onGamesChanged }) {
       <section className="card form">
         <h3>🔗 Enlaces de {party?.name || 'la fiesta'}</h3>
         <div className="party-links">
-          <div className="qr-box"><QRCodeSVG value={joinUrl()} size={150} bgColor="#ffffff" fgColor="#0d0a14" /></div>
+          <div className="qr-box"><QRCodeSVG value={joinUrl()} size={150} bgColor="#ffffff" fgColor="#18181B" /></div>
           <div className="grow">
             <CopyLine label="👻 Invitados: mándales este enlace (o que escaneen el QR)" value={joinUrl()} />
             <CopyLine label="📺 Pantalla: ábrelo en la TV o en el computador conectado a ella" value={dashboardUrl()} />

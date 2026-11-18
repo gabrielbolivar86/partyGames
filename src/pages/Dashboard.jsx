@@ -91,12 +91,12 @@ function LeaderboardScreen({ eventName, frozen, wifi }) {
 
         {showQr && (
           <aside className="dash-qr">
-            <div className="qr-box"><QRCodeSVG value={joinUrl()} size={220} bgColor="#ffffff" fgColor="#0d0a14" /></div>
+            <div className="qr-box"><QRCodeSVG value={joinUrl()} size={220} bgColor="#ffffff" fgColor="#18181B" /></div>
             <h2>¿Acabas de llegar?</h2>
             <p>Escanea y regístrate 👻</p>
             {wifi && (
               <div className="wifi-box">
-                <div className="qr-box small-qr"><QRCodeSVG value={wifi.qr} size={180} bgColor="#ffffff" fgColor="#0d0a14" /></div>
+                <div className="qr-box small-qr"><QRCodeSVG value={wifi.qr} size={180} bgColor="#ffffff" fgColor="#18181B" /></div>
                 <h3>📶 Wifi: {wifi.ssid}</h3>
                 <p>Escanea para conectarte</p>
               </div>

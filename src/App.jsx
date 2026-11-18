@@ -6,6 +6,9 @@ import Dashboard from './pages/Dashboard'
 import PrintCodes from './pages/PrintCodes'
 import HostLogin from './pages/HostLogin'
 import Owner from './pages/Owner'
+import ThemeSync from './components/ThemeSync'
+import { applyTheme } from './lib/themes'
+import { useEffect } from 'react'
 
 // HashRouter (#/p/<fiesta>/dashboard) funciona igual en Vercel y en GitHub Pages sin configuración extra.
 export default function App() {
@@ -13,7 +16,7 @@ export default function App() {
     return (
       <div className="screen center">
         <div className="card">
-          <h2>⚙️ Falta configurar Supabase</h2>
+          <h2>Falta configurar Supabase</h2>
           <p>Crea el archivo <code>.env</code> (copia <code>.env.example</code>) con
             <code> VITE_SUPABASE_URL</code> y <code>VITE_SUPABASE_ANON_KEY</code>, y reinicia <code>npm run dev</code>.</p>
           <p className="muted">En Vercel o GitHub Pages se configuran como variables de entorno.</p>
@@ -38,6 +41,7 @@ export default function App() {
 
 function NoParty({ children }) {
   setParty(null)
+  useEffect(() => { applyTheme('fiesta'); document.title = 'Juegos de fiesta' }, [])
   return children
 }
 
@@ -50,11 +54,14 @@ function PartyScope() {
   saveLastParty(slug)
 
   return (
+    <>
+    <ThemeSync key={`theme-${slug}`} />
     <Routes key={slug}>
       <Route path="dashboard" element={<Dashboard />} />
       <Route path="imprimir-codigos" element={<PrintCodes />} />
       <Route path="anfitrion" element={<HostLogin />} />
       <Route path="*" element={<GuestApp />} />
     </Routes>
+    </>
   )
 }

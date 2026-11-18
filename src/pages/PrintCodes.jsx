@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
+import Spinner from '../components/Spinner'
 
 // Hoja para imprimir los códigos (solo admin). Cada tarjeta muestra el código en grande para recortar y esconder.
 export default function PrintCodes() {
@@ -25,7 +26,7 @@ export default function PrintCodes() {
       </div>
     )
   }
-  if (!codes) return <div className="screen center"><div className="spinner">🎃</div></div>
+  if (!codes) return <div className="screen center"><Spinner /></div>
 
   return (
     <div className="print-page">
