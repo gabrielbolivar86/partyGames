@@ -54,7 +54,7 @@ export default function CodesAdmin({ dashboardMode }) {
   return (
     <>
       <section className="card">
-        <h3>🔍 Caza de códigos <span className={`status ${st.cls}`}>{st.label}</span></h3>
+        <h3>Caza de códigos <span className={`status ${st.cls}`}>{st.label}</span></h3>
         {error && <div className="error">{error}</div>}
         <div className="stats">
           <div><b>{ov.codes.length}</b><span>códigos</span></div>
@@ -77,7 +77,7 @@ export default function CodesAdmin({ dashboardMode }) {
       </section>
 
       <section className="card form">
-        <h3>🔑 Códigos</h3>
+        <h3>Códigos</h3>
         <div className="row">
           <input type="number" min="1" max="50" value={count} onChange={(e) => setCount(e.target.value)} className="num" />
           <button className="btn" disabled={busy} onClick={() => call('admin_hunt_create_codes', { p_count: Number(count) })}>＋ Crear códigos</button>
@@ -131,7 +131,7 @@ function HuntSettings({ settings, onSaved }) {
 
   return (
     <section className="card form">
-      <h3>⚙️ Reglas</h3>
+      <h3>Reglas</h3>
       <div className="pts-grid five">
         {field('p1', '1.º')}
         {field('p2', '2.º')}

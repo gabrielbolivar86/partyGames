@@ -24,7 +24,7 @@ export default function PersonaAdmin({ dashboardMode }) {
   return (
     <>
       <section className="card">
-        <h3>🕵️ ¿Quién es el personaje?</h3>
+        <h3>¿Quién es el personaje?</h3>
         {error && <div className="error">{error}</div>}
         <div className="stats">
           <div><b>{ov.pool.available}</b><span>datos sin usar</span></div>
@@ -68,7 +68,7 @@ export default function PersonaAdmin({ dashboardMode }) {
 
       {ov.history.length > 0 && (
         <section className="card">
-          <h3>📜 Rondas jugadas</h3>
+          <h3>Rondas jugadas</h3>
           <ul className="ledger">
             {ov.history.map((h) => (
               <li key={h.number}>
@@ -126,7 +126,7 @@ function PersonaSettings({ settings, onSaved }) {
 
   return (
     <section className="card form">
-      <h3>⚙️ Reglas</h3>
+      <h3>Reglas</h3>
       <div className="pts-grid three">
         {field('seconds', '⏱ Segundos')}
         {field('correct', '✅ Adivinar')}

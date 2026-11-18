@@ -88,7 +88,7 @@ function Setup({ ov, players, busy, call }) {
 
   return (
     <section className="card form">
-      <h3>🕵️ Nueva ronda de El Impostor</h3>
+      <h3>Nueva ronda de El Impostor</h3>
 
       <div className="row">
         <b>Jugadores: {n}</b>
@@ -165,7 +165,7 @@ function RoundControls({ ov, busy, call }) {
       </section>
 
       <section className="card">
-        <h3>🗳 Votación {v.no > 0 && <span className="muted small">#{v.no}</span>}</h3>
+        <h3>Votación {v.no > 0 && <span className="muted small">#{v.no}</span>}</h3>
         {!open ? (
           <div className="imp-open">
             <button className="btn" disabled={busy} onClick={() => call('admin_impostor_open_vote', { p_kind: 'defense' })}>🗣 Abrir votación de defensa</button>
@@ -195,13 +195,13 @@ function RoundControls({ ov, busy, call }) {
 
       {r.guesses?.length > 0 && (
         <section className="card">
-          <h3>🎯 Intentos de adivinar</h3>
+          <h3>Intentos de adivinar</h3>
           <ul className="ledger">{r.guesses.map((g) => <li key={g.name}><b>{g.name}</b>: “{g.guess}” ❌</li>)}</ul>
         </section>
       )}
 
       <section className="card">
-        <h3>🏁 Terminar a mano</h3>
+        <h3>Terminar a mano</h3>
         <p className="hint">Si se acaba el tiempo o quieres cerrar la ronda: elige quién ganó (reparte los puntos).</p>
         <div className="row">
           <button className="btn small" disabled={busy} onClick={() => call('admin_impostor_finish', { p_winner: 'crew' }, '¿Dar la victoria a la tripulación?')}>🛡 Ganó la tripulación</button>
@@ -225,7 +225,7 @@ function ImpostorSettings({ settings, onSaved }) {
 
   return (
     <section className="card form">
-      <h3>⚙️ Puntos</h3>
+      <h3>Puntos</h3>
       <div className="pts-grid two">
         <label className="pts-field">🛡 Tripulación gana
           <input type="number" min="0" max="500" value={s.crew} onChange={(e) => setS({ ...s, crew: e.target.value })} />

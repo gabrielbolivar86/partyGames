@@ -33,7 +33,7 @@ export default function Requests({ pending }) {
 
   return (
     <section className="card">
-      <h3>🚪 Solicitudes {items.length > 0 && <span className="badge">{items.length}</span>}</h3>
+      <h3>Solicitudes {items.length > 0 && <span className="badge">{items.length}</span>}</h3>
       {error && <div className="error">{error}</div>}
       {items.length === 0 && <p className="muted">No hay solicitudes pendientes.</p>}
       <ul className="requests">

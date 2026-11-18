@@ -1,16 +1,17 @@
 import { useState } from 'react'
+import { Icon } from '../../components/Icon'
 import { supabase, errorMessage } from '../../lib/supabase'
 import { modeEnabled } from '../../lib/games'
 
 const MODES = [
-  { id: 'leaderboard', label: '🏆 Tabla general' },
-  { id: 'costume_reveal', label: '🎭 Revelación de disfraces' },
-  { id: 'codes', label: '🔍 Caza de códigos' },
-  { id: 'persona', label: '🕵️ ¿Quién es el personaje?' },
-  { id: 'impostor', label: '🃏 El Impostor' },
-  { id: 'gift', label: '🎁 El Regalo' },
-  { id: 'wolf', label: '🐺 Hombre Lobo' },
-  { id: 'final', label: '🏆 Resultados de la noche (final)' },
+  { id: 'leaderboard', label: 'Tabla general' },
+  { id: 'costume_reveal', label: 'Revelación de disfraces' },
+  { id: 'codes', label: 'Caza de códigos' },
+  { id: 'persona', label: '¿Quién es el personaje?' },
+  { id: 'impostor', label: 'El Impostor' },
+  { id: 'gift', label: 'El Regalo' },
+  { id: 'wolf', label: 'Hombre Lobo' },
+  { id: 'final', label: 'Resultados de la noche (final)' },
 ]
 
 export default function Screen({ dashboardMode, frozen, games }) {
@@ -30,7 +31,7 @@ export default function Screen({ dashboardMode, frozen, games }) {
   return (
     <>
       <section className="card">
-        <h3>📺 ¿Qué muestra la pantalla?</h3>
+        <h3><Icon name="IconDeviceTv" />¿Qué muestra la pantalla?</h3>
         {error && <div className="error">{error}</div>}
         <div className="mode-list">
           {MODES.filter((m) => modeEnabled(games, m.id)).map((m) => (
@@ -41,17 +42,17 @@ export default function Screen({ dashboardMode, frozen, games }) {
         </div>
       </section>
       <section className="card">
-        <h3>🔒 Final de la noche</h3>
+        <h3><Icon name="IconLock" />Final de la noche</h3>
         <p className="hint">
           <b>Congelar tabla</b>: desde ese momento la pantalla y los celulares muestran los puntos de ese instante; los juegos siguen sumando a escondidas.
-          Al mostrar <b>🏆 Resultados de la noche</b> se ve todo, con cuánto sumó cada uno al final.
+          Al mostrar <b>Resultados de la noche</b> se ve todo, con cuánto sumó cada uno al final.
         </p>
         {frozen
-          ? <button className="btn" onClick={() => freeze(false)}>🔓 Descongelar tabla</button>
-          : <button className="btn" onClick={() => freeze(true)}>🔒 Congelar tabla ahora</button>}
-        <p className="small muted">{frozen ? 'Estado: congelada 🔒 (tú, como admin, ves los puntos reales).' : 'Estado: en vivo.'}</p>
+          ? <button className="btn" onClick={() => freeze(false)}>Descongelar tabla</button>
+          : <button className="btn" onClick={() => freeze(true)}><Icon name="IconLock" size={18} />Congelar tabla ahora</button>}
+        <p className="small muted">{frozen ? 'Estado: congelada (tú, como admin, ves los puntos reales).' : 'Estado: en vivo.'}</p>
       </section>
-      <p className="small muted center-text">Los enlaces de la pantalla y de los invitados están en 🏠 Mi fiesta.</p>
+      <p className="small muted center-text">Los enlaces de la pantalla y de los invitados están en Mi fiesta.</p>
     </>
   )
 }

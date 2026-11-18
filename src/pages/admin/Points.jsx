@@ -39,7 +39,7 @@ export function PointsForm({ players }) {
 
   return (
     <section className="card form">
-      <h3>✨ Dar o quitar puntos</h3>
+      <h3>Dar o quitar puntos</h3>
       <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Buscar invitado…" />
       <div className="pick-list short">
         {filtered.map((p) => (
@@ -92,7 +92,7 @@ export function LedgerList() {
 
   return (
     <section className="card">
-      <h3>📜 Últimos movimientos</h3>
+      <h3>Últimos movimientos</h3>
       {error && <div className="error">{error}</div>}
       {items.length === 0 && <p className="muted">Todavía no hay puntos registrados.</p>}
       <ul className="ledger">

@@ -27,7 +27,7 @@ export default function Settings() {
 
   return (
     <section className="card form danger-zone">
-      <h3>🧹 Limpiar y reiniciar</h3>
+      <h3>Limpiar y reiniciar</h3>
 
       <button className={`pick ${scope === 'points' ? 'active' : ''}`} onClick={() => setScope('points')}>
         <strong>Reiniciar puntos y votaciones</strong>

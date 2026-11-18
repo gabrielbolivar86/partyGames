@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Icon } from '../../components/Icon'
 import { supabase, errorMessage } from '../../lib/supabase'
 
 // Wifi (opcional): solo aparece en la pantalla si el anfitrión lo activa.
@@ -32,7 +33,7 @@ export default function WifiSettings() {
     const show = error ? null : await supabase.rpc('admin_set_wifi_show', { p_show: true })
     const err = error || show?.error
     if (!err) setSaved(!!f.ssid)
-    setMsg(err ? { type: 'error', text: errorMessage(err) } : { type: 'ok', text: 'Guardado: el QR ya aparece en la pantalla 📶' })
+    setMsg(err ? { type: 'error', text: errorMessage(err) } : { type: 'ok', text: 'Guardado: el QR ya aparece en la pantalla' })
   }
 
   async function clear() {
@@ -44,7 +45,7 @@ export default function WifiSettings() {
 
   return (
     <section className="card form">
-      <h3>📶 Wifi en la pantalla (opcional)</h3>
+      <h3><Icon name="IconWifi" />Wifi en la pantalla (opcional)</h3>
       <label className="check">
         <input type="checkbox" checked={enabled} onChange={(e) => setShow(e.target.checked)} />
         <span>Mostrar un QR del wifi en la pantalla</span>
@@ -56,7 +57,7 @@ export default function WifiSettings() {
           <div className="row nowrap">
             <input type={reveal ? 'text' : 'password'} value={f.password} disabled={f.security === 'nopass'}
               onChange={(e) => setF({ ...f, password: e.target.value })} placeholder="Contraseña" autoComplete="off" />
-            <button className="btn small ghost-btn" type="button" onClick={() => setReveal((s) => !s)}>{reveal ? '🙈' : '👁'}</button>
+            <button className="btn small ghost-btn" type="button" onClick={() => setReveal((s) => !s)} aria-label={reveal ? 'Ocultar contraseña' : 'Mostrar contraseña'}><Icon name={reveal ? 'IconEyeOff' : 'IconEye'} /></button>
           </div>
           <select value={f.security} onChange={(e) => setF({ ...f, security: e.target.value })}>
             <option value="WPA">WPA / WPA2 / WPA3 (lo normal)</option>
@@ -67,7 +68,7 @@ export default function WifiSettings() {
           <p className="small muted">Tip: escanea el QR de la pantalla con tu celular para confirmar que conecta.</p>
         </>
       )}
-      {saved && <button className="btn small ghost-btn" onClick={clear}>🗑 Borrar datos del wifi</button>}
+      {saved && <button className="btn small ghost-btn" onClick={clear}><Icon name="IconTrash" size={18} />Borrar datos del wifi</button>}
       {msg && <div className={msg.type === 'error' ? 'error' : 'success'}>{msg.text}</div>}
     </section>
   )

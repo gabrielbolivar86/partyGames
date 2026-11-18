@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Icon } from '../components/Icon'
 import { useLeaderboard } from '../hooks/useLeaderboard'
 import { useDashboard } from '../hooks/useDashboard'
 import Requests, { usePendingRequests } from './admin/Requests'
@@ -16,17 +17,17 @@ import PartyAdmin from './admin/Party'
 import { tabEnabled } from '../lib/games'
 
 const TABS = [
-  { id: 'party', label: '🏠 Mi fiesta' },
-  { id: 'guests', label: '👥 Invitados' },
-  { id: 'points', label: '✨ Puntos' },
-  { id: 'costume', label: '🎭 Disfraces' },
-  { id: 'codes', label: '🔍 Códigos' },
-  { id: 'persona', label: '🕵️ Personaje' },
-  { id: 'impostor', label: '🃏 Impostor' },
-  { id: 'gift', label: '🎁 Regalo' },
-  { id: 'wolf', label: '🐺 Lobo' },
-  { id: 'screen', label: '📺 Pantalla' },
-  { id: 'settings', label: '🧹 Ajustes' },
+  { id: 'party', icon: 'IconHome', label: 'Mi fiesta' },
+  { id: 'guests', icon: 'IconUsers', label: 'Invitados' },
+  { id: 'points', icon: 'IconSparkles', label: 'Puntos' },
+  { id: 'costume', icon: 'IconMasksTheater', label: 'Disfraces' },
+  { id: 'codes', icon: 'IconSearch', label: 'Códigos' },
+  { id: 'persona', icon: 'IconUserQuestion', label: 'Personaje' },
+  { id: 'impostor', icon: 'IconSpy', label: 'Impostor' },
+  { id: 'gift', icon: 'IconGift', label: 'Regalo' },
+  { id: 'wolf', icon: 'IconMoon', label: 'Lobo' },
+  { id: 'screen', icon: 'IconDeviceTv', label: 'Pantalla' },
+  { id: 'settings', icon: 'IconSettings', label: 'Ajustes' },
 ]
 const TAB_KEY = 'pg-admin-tab'
 
@@ -53,7 +54,7 @@ export default function AdminPanel({ me }) {
       <nav className="admin-tabs">
         {tabs.map((t) => (
           <button key={t.id} className={current === t.id ? 'active' : ''} onClick={() => choose(t.id)}>
-            {t.label}
+            <Icon name={t.icon} size={18} />{t.label}
             {t.id === 'guests' && pending.items.length > 0 && <span className="badge">{pending.items.length}</span>}
           </button>
         ))}

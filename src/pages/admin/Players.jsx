@@ -40,7 +40,7 @@ export default function Players({ myId }) {
 
   return (
     <section className="card">
-      <h3>👥 Invitados <span className="muted small">{players.length} · {costumed} disfrazados{players.some((p) => p.away) ? ` · ⏸️ ${players.filter((p) => p.away).length} en pausa` : ''}</span></h3>
+      <h3>Invitados <span className="muted small">{players.length} · {costumed} disfrazados{players.some((p) => p.away) ? ` · ⏸️ ${players.filter((p) => p.away).length} en pausa` : ''}</span></h3>
       <p className="small muted">⏸️ pone a alguien en pausa (conserva su carta).</p>
       {error && <div className="error">{error}</div>}
       <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Buscar…" />

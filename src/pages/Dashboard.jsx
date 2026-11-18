@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { Icon, ThemeIcon } from '../components/Icon'
 import { QRCodeSVG } from 'qrcode.react'
 import { useLeaderboard } from '../hooks/useLeaderboard'
 import { useDashboard } from '../hooks/useDashboard'
@@ -55,11 +56,11 @@ function LeaderboardScreen({ eventName, frozen, wifi }) {
   return (
     <div className="dash">
       <header className="dash-head">
-        <h1 className="spooky">🎃 Tabla de la noche</h1>
+        <h1 className="display row" style={{ gap: '.4em' }}><ThemeIcon size="1em" />Tabla de la noche</h1>
         <div className="dash-meta">{eventName ? `${eventName} · ` : ''}{rows.length} invitados</div>
       </header>
 
-      {frozen && <div className="frozen-banner">🔒 Tabla congelada · los últimos puntos se revelan al final</div>}
+      {frozen && <div className="frozen-banner"><Icon name="IconLock" size="1em" /> Tabla congelada · los últimos puntos se revelan al final</div>}
       {error && <div className="error">{error}</div>}
       {loading && <div className="center-text muted">Cargando…</div>}
 
@@ -93,11 +94,11 @@ function LeaderboardScreen({ eventName, frozen, wifi }) {
           <aside className="dash-qr">
             <div className="qr-box"><QRCodeSVG value={joinUrl()} size={220} bgColor="#ffffff" fgColor="#18181B" /></div>
             <h2>¿Acabas de llegar?</h2>
-            <p>Escanea y regístrate 👻</p>
+            <p>Escanea y regístrate</p>
             {wifi && (
               <div className="wifi-box">
                 <div className="qr-box small-qr"><QRCodeSVG value={wifi.qr} size={180} bgColor="#ffffff" fgColor="#18181B" /></div>
-                <h3>📶 Wifi: {wifi.ssid}</h3>
+                <h3><Icon name="IconWifi" size="1em" />Wifi: {wifi.ssid}</h3>
                 <p>Escanea para conectarte</p>
               </div>
             )}

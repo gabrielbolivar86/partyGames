@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Icon } from '../../components/Icon'
 import { QRCodeSVG } from 'qrcode.react'
 import { supabase, errorMessage } from '../../lib/supabase'
 import { joinUrl, dashboardUrl, hostUrl } from '../../lib/urls'
@@ -12,16 +13,16 @@ export default function PartyAdmin({ party, games, theme, onGamesChanged }) {
   return (
     <>
       <section className="card form">
-        <h3>🔗 Enlaces de {party?.name || 'la fiesta'}</h3>
+        <h3><Icon name="IconLink" />Enlaces de {party?.name || 'la fiesta'}</h3>
         <div className="party-links">
           <div className="qr-box"><QRCodeSVG value={joinUrl()} size={150} bgColor="#ffffff" fgColor="#18181B" /></div>
           <div className="grow">
-            <CopyLine label="👻 Invitados: mándales este enlace (o que escaneen el QR)" value={joinUrl()} />
-            <CopyLine label="📺 Pantalla: ábrelo en la TV o en el computador conectado a ella" value={dashboardUrl()} />
+            <CopyLine label="Invitados: mándales este enlace (o que escaneen el QR)" value={joinUrl()} />
+            <CopyLine label="Pantalla: ábrelo en la TV o en el computador conectado a ella" value={dashboardUrl()} />
           </div>
         </div>
         <div className="row">
-          <a className="btn small" href={dashboardUrl()} target="_blank" rel="noreferrer">📺 Abrir pantalla aquí</a>
+          <a className="btn small" href={dashboardUrl()} target="_blank" rel="noreferrer"><Icon name="IconDeviceTv" size={18} />Abrir pantalla aquí</a>
         </div>
         <p className="small muted">¿Otro anfitrión? Que entre en {hostUrl()} con la misma contraseña.</p>
       </section>
@@ -50,7 +51,7 @@ function ThemeSection({ theme, onChanged }) {
 
   return (
     <section className="card">
-      <h3>Tema de la fiesta</h3>
+      <h3><Icon name="IconPalette" />Tema de la fiesta</h3>
       <p className="hint">Cambia los colores en tu panel, en la TV y en los celulares de todos, al momento.</p>
       {error && <div className="error">{error}</div>}
       <ThemePicker value={value} onChange={choose} busy={busy} />
@@ -77,7 +78,7 @@ function GamesPicker({ games, onChanged }) {
 
   return (
     <section className="card">
-      <h3>🎮 Juegos de esta fiesta</h3>
+      <h3><Icon name="IconDeviceGamepad2" />Juegos de esta fiesta</h3>
       <p className="hint">Los que apagues desaparecen del panel, de la pantalla y de los celulares. Puedes cambiarlo cuando quieras.</p>
       {error && <div className="error">{error}</div>}
       <div className="game-picker">
@@ -88,7 +89,7 @@ function GamesPicker({ games, onChanged }) {
             <span className="grow">
               <b>{g.name}</b>
               <span className="small">{g.description}</span>
-              <span className="small muted">👥 {g.players} · ⏱ {g.duration}</span>
+              <span className="small muted">{g.players} · {g.duration}</span>
             </span>
           </label>
         ))}

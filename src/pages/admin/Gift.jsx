@@ -27,7 +27,7 @@ export default function GiftAdmin({ players, dashboardMode }) {
   return (
     <>
       <section className="card">
-        <h3>🎁 El Regalo <span className={`status ${s === 'none' ? '' : 'ok'}`}>{STATUS[s]}</span></h3>
+        <h3>El Regalo <span className={`status ${s === 'none' ? '' : 'ok'}`}>{STATUS[s]}</span></h3>
         {error && <div className="error">{error}</div>}
 
         {s === 'writing' && (
@@ -188,7 +188,7 @@ function GiftSettings({ settings, onSaved }) {
   )
   return (
     <section className="card form">
-      <h3>⚙️ Tiempo y puntos</h3>
+      <h3>Tiempo y puntos</h3>
       <label className="pts-field">⏱ Segundos por pregunta (0 = sin tiempo)
         <input type="number" min="0" max="600" value={s.seconds} onChange={(e) => setS({ ...s, seconds: e.target.value })} />
       </label>

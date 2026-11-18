@@ -28,7 +28,7 @@ export default function WolfAdmin({ players, dashboardMode }) {
   return (
     <>
       <section className="card form">
-        <h3>🐺 Hombre Lobo <span className={`status ${active ? 'ok' : ''}`}>{STATUS[ov.status]}</span></h3>
+        <h3>Hombre Lobo <span className={`status ${active ? 'ok' : ''}`}>{STATUS[ov.status]}</span></h3>
         {error && <div className="error">{error}</div>}
 
         {!active ? (
@@ -115,7 +115,7 @@ function WolfSettings({ settings, onSaved }) {
   }
   return (
     <section className="card form">
-      <h3>⚙️ Puntos</h3>
+      <h3>Puntos</h3>
       <div className="pts-grid two">
         <label className="pts-field">🏆 Bando ganador<input type="number" min="0" max="500" value={s.win} onChange={(e) => setS({ ...s, win: e.target.value })} /></label>
         <label className="pts-field">💚 Extra si sobrevive<input type="number" min="0" max="500" value={s.survive} onChange={(e) => setS({ ...s, survive: e.target.value })} /></label>

@@ -42,7 +42,7 @@ export default function CostumeAdmin({ dashboardMode }) {
   return (
     <>
       <section className="card">
-        <h3>🎭 Mejor disfraz <span className={`status ${st.cls}`}>{st.label}</span></h3>
+        <h3>Mejor disfraz <span className={`status ${st.cls}`}>{st.label}</span></h3>
         {error && <div className="error">{error}</div>}
         <div className="stats">
           <div><b>{ov.candidates}</b><span>disfrazados</span></div>
@@ -74,7 +74,7 @@ export default function CostumeAdmin({ dashboardMode }) {
 
       {ov.status === 'closed' && (
         <section className="card">
-          <h3>🎬 Revelación en pantalla</h3>
+          <h3>Revelación en pantalla</h3>
           <p className="small muted">Estado: <b>{STEP_LABEL[ov.reveal_step]}</b> · Pantalla: <b>{onScreen ? 'mostrando revelación' : 'tabla general'}</b></p>
           {!onScreen && (
             <button className="btn primary" disabled={busy} onClick={() => call('admin_set_dashboard', { p_mode: 'costume_reveal' })}>
@@ -159,7 +159,7 @@ function PointsSettings({ ov, onSaved }) {
 
   return (
     <section className="card form">
-      <h3>⚙️ Puntos del concurso</h3>
+      <h3>Puntos del concurso</h3>
       <div className="pts-grid">
         {field('p1', '🥇 1.º')}
         {field('p2', '🥈 2.º')}
