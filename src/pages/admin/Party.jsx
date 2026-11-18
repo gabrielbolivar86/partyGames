@@ -5,9 +5,10 @@ import { joinUrl, dashboardUrl, hostUrl } from '../../lib/urls'
 import { GAME_CATALOG, ALL_GAME_IDS } from '../../lib/games'
 import { CopyLine } from '../Owner'
 import WifiSettings from './Wifi'
+import ThemePicker from '../../components/ThemePicker'
 
 // "Mi fiesta": enlaces para invitados y TV, juegos de la noche y wifi (opcional)
-export default function PartyAdmin({ party, games, onGamesChanged }) {
+export default function PartyAdmin({ party, games, theme, onGamesChanged }) {
   return (
     <>
       <section className="card form">
@@ -24,9 +25,36 @@ export default function PartyAdmin({ party, games, onGamesChanged }) {
         </div>
         <p className="small muted">¿Otro anfitrión? Que entre en {hostUrl()} con la misma contraseña.</p>
       </section>
+      <ThemeSection theme={theme} onChanged={onGamesChanged} />
       <GamesPicker games={games} onChanged={onGamesChanged} />
       <WifiSettings />
     </>
+  )
+}
+
+function ThemeSection({ theme, onChanged }) {
+  const [value, setValue] = useState(theme || 'fiesta')
+  const [error, setError] = useState(null)
+  const [busy, setBusy] = useState(false)
+  useEffect(() => { if (theme) setValue(theme) }, [theme])
+
+  async function choose(id) {
+    const prev = value
+    setValue(id)
+    setBusy(true)
+    const { error } = await supabase.rpc('admin_set_theme', { p_theme: id })
+    setBusy(false)
+    if (error) { setValue(prev); setError(errorMessage(error)) }
+    else { setError(null); onChanged?.() }
+  }
+
+  return (
+    <section className="card">
+      <h3>Tema de la fiesta</h3>
+      <p className="hint">Cambia los colores en tu panel, en la TV y en los celulares de todos, al momento.</p>
+      {error && <div className="error">{error}</div>}
+      <ThemePicker value={value} onChange={choose} busy={busy} />
+    </section>
   )
 }
 

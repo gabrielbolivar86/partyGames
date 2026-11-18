@@ -10,6 +10,7 @@
 - **Fase 8:** cada juego en su pestaña a pantalla completa, aviso "¡Empezó!", todos entran automáticamente, "⏸️ Me ausento un rato" y temporizador del Regalo Loco. Ver [la sección de la fase 8](#fase-8-pestañas-de-juegos-me-ausento-un-rato-y-temporizador-del-regalo).
 - **Fase 9:** El Regalo más rápido: una pregunta a la vez con su tiempo, y resultados de golpe. Ver [la sección de la fase 9](#fase-9-el-regalo-más-rápido).
 - **Fase 10:** varias fiestas a la vez: dueño, anfitriones con enlace y contraseña, página "Mi fiesta", juegos a elegir y wifi opcional. Ver [la sección de la fase 10](#fase-10-varias-fiestas-anfitriones-y-juegos-a-elegir).
+- **Fase 11:** nuevo estilo "cartas y stickers" y 8 temas por fiesta (Fiesta, Halloween, Navidad, baby showers, revelación, neutros). Ver [la sección de la fase 11](#fase-11-temas-por-fiesta).
 
 **Stack:** React + Vite · Supabase (base de datos, tiempo real y login anónimo) · Vercel o GitHub Pages. Costo: $0.
 
@@ -416,6 +417,28 @@ La fiesta que ya existía sigue siendo `halloween-2026`; los enlaces viejos (`#/
 
 ### Cómo funciona por dentro
 La app manda el enlace de la fiesta en cada petición (header `x-party`) y `active_event_id()` lo usa para elegir la fiesta, así todos los juegos existentes funcionan sin cambios. Un mismo celular puede estar en varias fiestas (un perfil por fiesta), y ser admin de una no da permisos en otra.
+
+---
+
+## Fase 11: temas por fiesta
+
+1. En Supabase → **SQL Editor**, corre `supabase/13_fase11_temas.sql` (se puede correr más de una vez). Tu fiesta `halloween-2026` queda con el tema Halloween; las demás, con "Fiesta".
+2. Publica el código (`git push`).
+
+**Elegir el tema:** el anfitrión entra a **🏠 Mi fiesta → Tema de la fiesta** y toca una carta. Cambia al momento en su panel, la TV y los celulares. El dueño también lo elige al crear la fiesta en `#/owner`.
+
+| Tema | Para qué |
+|---|---|
+| Fiesta (default) | Cualquier fiesta: coral, azul y mostaza |
+| Halloween | Fondo oscuro morado, naranja y verde baba |
+| Navidad | Rojo, verde pino y menta |
+| Baby shower niño | Azul cielo, aguamarina y amarillo |
+| Baby shower niña | Rosas: chicle, frambuesa y algodón |
+| Revelación de género | Rosa contra azul, pregunta en lila |
+| Neutro verde | Verde bosque, salvia y pistacho |
+| Neutro azul | Cobalto, azul medio y hielo |
+
+**Cómo funciona:** cada fiesta guarda su tema en `events.theme`; llega con `get_dashboard()` y `ThemeSync` pone `data-theme` en la página. Todos los colores viven en `src/styles.css` (un bloque por tema) y `src/lib/themes.js`. `npm test` revisa que el texto se lea en todos los temas y que no queden colores escritos a mano fuera de los temas.
 
 ---
 

@@ -2,6 +2,8 @@ import { useCallback, useEffect, useState } from 'react'
 import { supabase, errorMessage, ensureSession } from '../lib/supabase'
 import { hostUrl, joinUrl, dashboardUrl } from '../lib/urls'
 import { GAME_CATALOG } from '../lib/games'
+import { getTheme } from '../lib/themes'
+import ThemePicker from '../components/ThemePicker'
 
 // Panel del dueño de la app: crear fiestas y darles anfitrión (enlace + contraseña)
 export default function Owner() {
@@ -61,6 +63,7 @@ function CreateParty({ onCreated }) {
   const [slug, setSlug] = useState('')
   const [slugTouched, setSlugTouched] = useState(false)
   const [password, setPassword] = useState(randomPassword)
+  const [theme, setTheme] = useState('fiesta')
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState(null)
 
@@ -68,11 +71,11 @@ function CreateParty({ onCreated }) {
     e.preventDefault()
     setBusy(true)
     setError(null)
-    const { data, error } = await supabase.rpc('owner_create_party', { p_name: name, p_slug: slug, p_password: password })
+    const { data, error } = await supabase.rpc('owner_create_party', { p_name: name, p_slug: slug, p_password: password, p_theme: theme })
     setBusy(false)
     if (error) return setError(errorMessage(error))
     onCreated({ slug: data.slug, name: name.trim(), password })
-    setName(''); setSlug(''); setSlugTouched(false); setPassword(randomPassword())
+    setName(''); setSlug(''); setSlugTouched(false); setPassword(randomPassword()); setTheme('fiesta')
   }
 
   return (
@@ -93,6 +96,10 @@ function CreateParty({ onCreated }) {
           <button className="btn small ghost-btn" type="button" onClick={() => setPassword(randomPassword())} title="Generar otra">🎲</button>
         </div>
       </label>
+      <div>
+        <span className="small">Tema (el anfitrión lo puede cambiar después)</span>
+        <ThemePicker value={theme} onChange={setTheme} />
+      </div>
       {error && <div className="error">{error}</div>}
       <button className="btn primary" disabled={busy}>{busy ? 'Creando…' : 'Crear fiesta'}</button>
     </form>
@@ -160,7 +167,7 @@ function PartyRow({ p, onPassword, onDeleted }) {
       <div className="row" style={{ justifyContent: 'space-between' }}>
         <div>
           <h3 style={{ margin: 0 }}>{p.name}</h3>
-          <div className="small muted">/{p.slug} · {p.players} invitados · {p.hosts} anfitrión(es) {games && `· ${games}`}</div>
+          <div className="small muted">/{p.slug} · {p.players} invitados · {p.hosts} anfitrión(es) · {getTheme(p.theme).name} {games && `· ${games}`}</div>
         </div>
         <button className="btn small ghost-btn" onClick={() => setOpen((o) => !o)}>{open ? 'Cerrar' : 'Ver'}</button>
       </div>

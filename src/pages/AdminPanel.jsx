@@ -59,7 +59,7 @@ export default function AdminPanel({ me }) {
         ))}
       </nav>
 
-      {current === 'party' && <PartyAdmin party={me.party} games={games} onGamesChanged={dashboard.refresh} />}
+      {current === 'party' && <PartyAdmin party={me.party} games={games} theme={dashboard.data?.party?.theme} onGamesChanged={dashboard.refresh} />}
       {current === 'guests' && (<><Requests pending={pending} /><Players myId={me.player.id} /></>)}
       {current === 'points' && (<><PointsForm players={board.rows} /><LedgerList /></>)}
       {current === 'costume' && <CostumeAdmin dashboardMode={dashboardMode} />}
