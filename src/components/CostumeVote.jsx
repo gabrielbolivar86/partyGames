@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { Icon } from './Icon'
 import { supabase, errorMessage } from '../lib/supabase'
 import { useCostume } from '../hooks/useCostume'
 
@@ -19,7 +20,7 @@ export default function CostumeVote() {
   if (data.status === 'not_started') {
     return (
       <section className="card soon">
-        <h3>🎭 Mejor disfraz</h3>
+        <h3><Icon name="IconMasksTheater" />Mejor disfraz</h3>
         <p className="muted">La votación aún no empieza. Te avisaremos aquí mismo.</p>
       </section>
     )
@@ -28,9 +29,9 @@ export default function CostumeVote() {
   if (data.status === 'closed') {
     return (
       <section className="card">
-        <h3>🎭 Mejor disfraz</h3>
+        <h3><Icon name="IconMasksTheater" />Mejor disfraz</h3>
         {data.podium.length === 0
-          ? <p className="muted">¡Votación cerrada! 🤫 Resultados en la pantalla.</p>
+          ? <p className="muted">¡Votación cerrada! Resultados en la pantalla.</p>
           : <MiniPodium podium={data.podium} />}
       </section>
     )
@@ -111,7 +112,7 @@ function Ballot({ data }) {
   return (
     <section className="card costume">
       <div className="costume-head">
-        <h3>🎭 Vota por el mejor disfraz</h3>
+        <h3><Icon name="IconMasksTheater" />Vota por el mejor disfraz</h3>
         <SaveBadge state={saveState} />
       </div>
       <p className="hint">Tócalos en orden: el primero es tu 1.º lugar.</p>

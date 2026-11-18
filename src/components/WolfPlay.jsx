@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { Icon } from './Icon'
 import { supabase, errorMessage } from '../lib/supabase'
 import { useLiveRpc } from '../hooks/useLiveRpc'
 import { useCountdown } from '../hooks/usePersona'
@@ -17,14 +18,14 @@ export default function WolfPlay() {
   return (
     <section className="card wolf live-wolf">
       <div className="costume-head">
-        <h3>🐺 Hombre Lobo</h3>
+        <h3><Icon name="IconMoon" />Hombre Lobo</h3>
         {v.status === 'playing' && <PhasePill v={v} />}
       </div>
       {v.status === 'lobby' && <Lobby v={v} />}
       {v.status === 'setup' && (v.joined
-        ? <p className="hint">🃏 Preparando las cartas…</p>
+        ? <p className="hint">Preparando las cartas…</p>
         : <NotSeated v={v} />)}
-      {(v.status === 'playing' || v.status === 'finished') && (v.joined ? <Playing v={v} onDone={refresh} /> : <p className="hint">👀 Partida en curso: entras en la siguiente.</p>)}
+      {(v.status === 'playing' || v.status === 'finished') && (v.joined ? <Playing v={v} onDone={refresh} /> : <p className="hint">Partida en curso: entras en la siguiente.</p>)}
     </section>
   )
 }
@@ -42,7 +43,7 @@ function Lobby({ v }) {
   if (!v.joined) return <NotSeated v={v} />
   return (
     <>
-      <div className="success">✅ Estás en la mesa · {v.joined_count} jugadores</div>
+      <div className="success">Estás en la mesa · {v.joined_count} jugadores</div>
       <p className="hint">Narra <b>{v.narrator}</b>. Espera tu carta.</p>
     </>
   )
@@ -50,7 +51,7 @@ function Lobby({ v }) {
 
 function NotSeated({ v }) {
   return v.away
-    ? <p className="away-note">⏸️ Estás en pausa. Vuelve antes de que repartan para jugar.</p>
+    ? <p className="away-note"><Icon name="IconPlayerPause" size={18} /> Estás en pausa. Vuelve antes de que repartan para jugar.</p>
     : <p className="hint">Esta partida no juegas. Si quieres entrar, avísale a <b>{v.narrator}</b>.</p>
 }
 
@@ -63,7 +64,7 @@ function Playing({ v, onDone }) {
     return (
       <div className={`imp-final ${won ? 'crew' : 'impostors'}`}>
         <div className="imp-winner">{v.winner === 'wolves' ? '🐺 ¡Ganaron los lobos!' : '🏡 ¡Ganó la aldea!'}</div>
-        <div>Eras <b>{role.emoji} {role.name}</b>{won ? ' · ¡ganaste! 🎉' : ''}</div>
+        <div>Eras <b>{role.emoji} {role.name}</b>{won ? ' · ¡ganaste!' : ''}</div>
       </div>
     )
   }
@@ -81,7 +82,7 @@ function Playing({ v, onDone }) {
 
   return (
     <>
-      {v.away && <p className="away-note">⏸️ Estás en pausa. Tu carta se guarda.</p>}
+      {v.away && <p className="away-note"><Icon name="IconPlayerPause" size={18} /> Estás en pausa. Tu carta se guarda.</p>}
       <WolfCard v={v} />
       {v.neighbors && <p className="small muted">🪑 Siéntate entre <b>{v.neighbors[0]}</b> y <b>{v.neighbors[1]}</b>{v.is_mayor ? ' · 🎖️ Eres el alcalde' : ''}</p>}
       <p className="hint">{p.emoji} {p.player}</p>

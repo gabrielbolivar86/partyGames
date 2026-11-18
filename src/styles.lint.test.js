@@ -26,6 +26,14 @@ describe('estilos', () => {
     expect(css.match(/gradient\(|blur\(/g) || []).toEqual([])
   })
 
+  it('jsx: todo ícono usado está en el registro de Icon.jsx', () => {
+    const iconFile = fs.readFileSync(path.join(SRC, 'components', 'Icon.jsx'), 'utf8')
+    const registry = new Set(iconFile.match(/const ICONS = \{([\s\S]*?)\}/)[1].match(/Icon\w+/g))
+    const used = [...jsxFiles(SRC), path.join(SRC, 'lib', 'themes.js')].flatMap((f) =>
+      [...fs.readFileSync(f, 'utf8').matchAll(/['"](Icon[A-Z]\w+)['"]/g)].map((m) => `${path.relative(SRC, f)} ${m[1]}`))
+    expect(used.filter((u) => !registry.has(u.split(' ')[1]))).toEqual([])
+  })
+
   it('jsx: sin colores hex salvo los del QR', () => {
     const bad = jsxFiles(SRC).flatMap((f) =>
       (fs.readFileSync(f, 'utf8').match(/#[0-9a-fA-F]{6}\b/g) || [])

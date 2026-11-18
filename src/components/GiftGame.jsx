@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { Icon } from './Icon'
 import { supabase, errorMessage } from '../lib/supabase'
 import { useLiveRpc } from '../hooks/useLiveRpc'
 import { useCountdown } from '../hooks/usePersona'
@@ -16,16 +17,16 @@ export default function GiftGame() {
 
   return (
     <section className="card gift live-gift">
-      <h3>🎁 El Regalo</h3>
+      <h3><Icon name="IconGift" />El Regalo</h3>
       {data.status === 'writing' && (data.tasks?.length
         ? <Writing data={data} onSaved={refresh} />
-        : <><GiftTimer data={data} onExpire={refresh} /><p className="hint">{data.participant ? '✅ ¡Listo! Espera a los demás.' : '👀 Esta ronda no juegas. ¡Mira la pantalla!'}</p></>)}
-      {data.status === 'reading' && <p className="hint">📺 ¡Mira la pantalla! Luego votas tus 3 favoritos.</p>}
+        : <><GiftTimer data={data} onExpire={refresh} /><p className="hint">{data.participant ? '¡Listo! Espera a los demás.' : 'Esta ronda no juegas. ¡Mira la pantalla!'}</p></>)}
+      {data.status === 'reading' && <p className="hint">¡Mira la pantalla! Luego votas tus 3 favoritos.</p>}
       {data.status === 'voting' && <Voting data={data} onVoted={refresh} />}
       {data.status === 'results' && (
         data.podium?.length
           ? <ol className="gift-podium-mini">{data.podium.map((p) => <li key={p.place}><b>{MEDALS[p.place]}</b> {p.phrase}</li>)}</ol>
-          : <p className="hint">🥁 ¡Resultados en la pantalla!</p>
+          : <p className="hint">¡Resultados en la pantalla!</p>
       )}
     </section>
   )
@@ -51,7 +52,7 @@ function Writing({ data, onSaved }) {
     return (
       <>
         <GiftTimer data={data} onExpire={onSaved} hidden />
-        <div className="success">✅ ¡Listo! Espera a los demás.</div>
+        <div className="success">¡Listo! Espera a los demás.</div>
       </>
     )
   }
@@ -135,7 +136,7 @@ export function GiftTimer({ data, onExpire, big = false, hidden = false }) {
   if (!data.ends_at || hidden) return null
   return (
     <div className={`gift-timer ${left <= 10 ? 'hurry' : ''} ${big ? 'big' : ''}`}>
-      {expired ? '⏰ ¡Tiempo!' : `⏱ ${left >= 60 ? `${Math.floor(left / 60)}:${String(left % 60).padStart(2, '0')}` : `${left} s`}`}
+      {expired ? '¡Tiempo!' : `${left >= 60 ? `${Math.floor(left / 60)}:${String(left % 60).padStart(2, '0')}` : `${left} s`}`}
     </div>
   )
 }

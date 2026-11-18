@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Icon } from './Icon'
 import { supabase, errorMessage } from '../lib/supabase'
 import { useHunt } from '../hooks/useHunt'
 
@@ -37,7 +38,7 @@ export default function CodeHunt() {
   if (data.status === 'not_started') {
     return (
       <section className="card soon">
-        <h3>🔍 Caza de códigos</h3>
+        <h3><Icon name="IconSearch" />Caza de códigos</h3>
         <p className="muted">Pronto habrá códigos secretos escondidos por la casa…</p>
         {result && <div className={result.ok ? 'success' : 'error'}>{result.text}</div>}
       </section>
@@ -51,7 +52,7 @@ export default function CodeHunt() {
   return (
     <section className="card hunt">
       <div className="costume-head">
-        <h3>🔍 Caza de códigos</h3>
+        <h3><Icon name="IconSearch" />Caza de códigos</h3>
         <span className="save-badge">{data.max > 0 ? `${found}/${data.max}` : found} códigos</span>
       </div>
 
@@ -69,7 +70,7 @@ export default function CodeHunt() {
         </>
       )}
       {data.status === 'open' && limitReached && (
-        <p className="hint">¡Llegaste al máximo de {data.max} códigos! 🎉</p>
+        <p className="hint">¡Llegaste al máximo de {data.max} códigos!</p>
       )}
       {data.status === 'closed' && <p className="hint">La caza de códigos terminó.</p>}
 
@@ -84,7 +85,7 @@ export default function CodeHunt() {
         <ul className="hunt-mine">
           {data.mine.map((m) => (
             <li key={m.number}>
-              <span>🔑 Código #{m.number}</span>
+              <span className="row"><Icon name="IconKey" size={18} />Código #{m.number}</span>
               <span className="muted small">{m.position}.º</span>
               <b>+{m.points}</b>
             </li>

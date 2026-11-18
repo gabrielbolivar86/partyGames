@@ -6,7 +6,7 @@ import {
   IconSettings, IconTrash, IconRefresh, IconKey, IconEye, IconEyeOff, IconClock, IconWifi, IconLogout,
   IconMasksTheater, IconSearch, IconUserQuestion, IconSpy, IconGift, IconMoon, IconSun, IconBell, IconLock,
   IconPlayerPlay, IconPlayerPause, IconPlayerStop, IconPrinter, IconPalette, IconDeviceGamepad2, IconAlertTriangle,
-  IconInfoCircle, IconHandStop, IconDice5, IconSparkles, IconListNumbers, IconCoin, IconMicrophone2,
+  IconInfoCircle, IconHandStop, IconDice5, IconSparkles, IconListNumbers, IconCoin, IconMicrophone2, IconPencil,
 } from '@tabler/icons-react'
 import { getTheme } from '../lib/themes'
 
@@ -18,7 +18,7 @@ const ICONS = {
   IconSettings, IconTrash, IconRefresh, IconKey, IconEye, IconEyeOff, IconClock, IconWifi, IconLogout,
   IconMasksTheater, IconSearch, IconUserQuestion, IconSpy, IconGift, IconMoon, IconSun, IconBell, IconLock,
   IconPlayerPlay, IconPlayerPause, IconPlayerStop, IconPrinter, IconPalette, IconDeviceGamepad2, IconAlertTriangle,
-  IconInfoCircle, IconHandStop, IconDice5, IconSparkles, IconListNumbers, IconCoin, IconMicrophone2,
+  IconInfoCircle, IconHandStop, IconDice5, IconSparkles, IconListNumbers, IconCoin, IconMicrophone2, IconPencil,
 }
 
 // Íconos de trazo grueso y uniforme (Tabler). Uso: <Icon name="IconCrown" size={20} />

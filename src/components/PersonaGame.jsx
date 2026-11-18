@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { Icon } from './Icon'
 import { supabase, errorMessage } from '../lib/supabase'
 import { usePersonaRpc, useCountdown } from '../hooks/usePersona'
 import FactTips from './FactTips'
@@ -42,15 +43,15 @@ function Voting({ round, candidates, offset, onVoted }) {
   return (
     <section className="card persona live">
       <div className="costume-head">
-        <h3>🕵️ ¿Quién es el personaje? <span className="muted small">#{round.number}</span></h3>
-        <span className={`timer-pill ${left <= 5 ? 'hot' : ''}`}>{timeUp ? '⏰' : `${left}s`}</span>
+        <h3><Icon name="IconUserQuestion" />¿Quién es el personaje? <span className="muted small">#{round.number}</span></h3>
+        <span className={`timer-pill ${left <= 5 ? 'hot' : ''}`}>{timeUp ? <Icon name="IconClock" size={16} /> : `${left}s`}</span>
       </div>
       <blockquote className="persona-fact">“{round.fact}”</blockquote>
 
       {round.is_owner ? (
-        <div className="owner-box">🤫 <b>¡Es tu dato!</b> Ponte serio y no te hagas atrapar 😶</div>
+        <div className="owner-box"><b>¡Es tu dato!</b> Ponte serio y no te hagas atrapar.</div>
       ) : timeUp ? (
-        <p className="hint">¡Tiempo! {voted ? <>Votaste por <b>{voted.nickname || voted.name}</b>.</> : 'No alcanzaste a votar.'} Mira la pantalla 👀</p>
+        <p className="hint">¡Tiempo! {voted ? <>Votaste por <b>{voted.nickname || voted.name}</b>.</> : 'No alcanzaste a votar.'} Mira la pantalla.</p>
       ) : (
         <>
           <p className="hint">{voted ? <>Tu voto: <b>{voted.nickname || voted.name}</b> ✓ (puedes cambiarlo)</> : '¿De quién es?'}</p>
@@ -75,18 +76,18 @@ function Revealed({ round, settings }) {
 
   return (
     <section className="card persona">
-      <h3>🕵️ Ronda #{round.number}: ¡era…!</h3>
+      <h3><Icon name="IconUserQuestion" />Ronda #{round.number}: ¡era…!</h3>
       <blockquote className="persona-fact small-fact">“{round.fact}”</blockquote>
       <div className="persona-answer">{owner.nickname || owner.name}{owner.costume && <span className="muted small"> · {owner.costume}</span>}</div>
       {round.is_owner ? (
         <div className="hunt-result ok">
           <div className="hunt-pts">+{r.owner_points}</div>
-          <div>{r.caught ? 'Te atraparon 😅 pero ganas puntos por participar' : '¡No te atraparon! Puntos x2 😎'}</div>
+          <div>{r.caught ? 'Te atraparon, pero ganas puntos por participar' : '¡No te atraparon! Puntos x2'}</div>
         </div>
       ) : round.my_correct ? (
-        <div className="hunt-result ok"><div className="hunt-pts">+{settings.correct}</div><div>¡Adivinaste! 🎉</div></div>
+        <div className="hunt-result ok"><div className="hunt-pts">+{settings.correct}</div><div>¡Adivinaste!</div></div>
       ) : round.my_vote ? (
-        <div className="hunt-result err"><div>No era quien pensabas 😅</div></div>
+        <div className="hunt-result err"><div>No era quien pensabas</div></div>
       ) : (
         <p className="hint">No votaste en esta ronda.</p>
       )}
@@ -134,7 +135,7 @@ export function MyFactCard() {
 
   return (
     <section className="card form soon">
-      <h3>🤫 Mis datos curiosos <span className="muted small">{facts.length}/{MAX_FACTS}</span></h3>
+      <h3><Icon name="IconSparkles" />Mis datos curiosos <span className="muted small">{facts.length}/{MAX_FACTS}</span></h3>
 
       {facts.length === 0 && editing === null && (
         <p className="muted">Aún no tienes datos.</p>
@@ -149,8 +150,8 @@ export function MyFactCard() {
                   <span className="grow">“{f.text}”{f.used && <span className="tag used">ya salió</span>}</span>
                   {!f.used && (
                     <span className="row nowrap">
-                      <button className="btn small ghost-btn" onClick={() => open(f)}>✏️</button>
-                      <button className="btn small ghost-btn" onClick={() => remove(f)}>🗑</button>
+                      <button className="btn small ghost-btn" onClick={() => open(f)} aria-label="Editar"><Icon name="IconPencil" size={18} /></button>
+                      <button className="btn small ghost-btn" onClick={() => remove(f)} aria-label="Borrar"><Icon name="IconTrash" size={18} /></button>
                     </span>
                   )}
                 </>

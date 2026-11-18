@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { Icon } from './Icon'
 import { supabase, errorMessage } from '../lib/supabase'
 import { useLiveRpc } from '../hooks/useLiveRpc'
 import { useCountdown } from '../hooks/usePersona'
@@ -25,10 +26,10 @@ export default function WolfNarrator() {
   return (
     <section className="card wolf narrator">
       <div className="costume-head">
-        <h3>🐺 Panel del narrador</h3>
+        <h3><Icon name="IconMicrophone2" />Panel del narrador</h3>
         <span className="save-badge">{v.seats.length} jugadores</span>
       </div>
-      <p className="small muted">🤫 Solo tú ves esto. No juegas: narras y controlas el ritmo.</p>
+      <p className="small muted">Solo tú ves esto. No juegas: narras y controlas el ritmo.</p>
       {error && <div className="error">{error}</div>}
 
       {v.status === 'lobby' && <NarratorLobby v={v} busy={busy} call={call} />}
@@ -136,7 +137,7 @@ function DeckEditor({ v, busy, call }) {
       </div>
 
       <Bench v={v} call={call} />
-      <button className="btn primary" disabled={busy || !a.ok} onClick={deal}>🃏 Repartir cartas</button>
+      <button className="btn primary" disabled={busy || !a.ok} onClick={deal}>Repartir cartas</button>
       <button className="btn small ghost-btn" onClick={() => call('wolf_reopen_table', {})}>↩︎ Reabrir mesa</button>
     </>
   )
@@ -185,7 +186,7 @@ function NarratorGame({ v, busy, call }) {
 
       <button className="btn primary" disabled={busy} onClick={() => call('wolf_advance', {},
         waiting.length && done < waiting.length ? `Faltan ${waiting.length - done} por responder. Quien no actuó pierde su acción. ¿Avanzar?` : null)}>
-        ▶︎ Siguiente fase
+        <Icon name="IconPlayerPlay" size={18} />Siguiente fase
       </button>
 
       <SeatList v={v} call={call} />
