@@ -9,7 +9,7 @@ const MEDALS = { 1: '🥇', 2: '🥈', 3: '🥉' }
 /**
  * El Regalo (vista del invitado). Aparece solo cuando hay una ronda.
  * Escritura: 3 partes a ciegas (objeto para alguien, un uso, una reacción).
- * Votación: hasta 3 frases favoritas (no las propias).
+ * Votación: hasta 3 frases favoritas (también las propias).
  */
 export default function GiftGame() {
   const { data, refresh } = useLiveRpc('get_gift_status', ['gift_game'])
@@ -164,7 +164,7 @@ function Voting({ data, onVoted }) {
       <ul className="gift-vote">
         {data.phrases.map((p) => (
           <li key={p.id}>
-            <button type="button" disabled={p.mine} className={`gift-opt ${sel.has(p.id) ? 'active' : ''}`} onClick={() => toggle(p.id)}>
+            <button type="button" className={`gift-opt ${sel.has(p.id) ? 'active' : ''}`} onClick={() => toggle(p.id)}>
               <span className="gift-n">{p.n}</span>
               <span className="grow">{p.phrase}{p.mine && <span className="tag used"> participaste</span>}</span>
               <span className="gift-check">{sel.has(p.id) ? '★' : '☆'}</span>
